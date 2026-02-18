@@ -1,4 +1,4 @@
-# SESSION RESUME: GRID Project
+# SESSION: GRID Project
 
 ## Who I Am
 Solo developer, last 2 years, 25+ projects (React, TypeScript, Python, Three.js, 
@@ -78,3 +78,4 @@ E:\co\GRID\
 - I test and fact-check between sessions
 - Show me PowerShell queries when you need to see my filesystem
 - Keep responses fast unless detailed explanation is needed
+Any questions or PowerShell queries for Windows are welcome (I'll send back the results)

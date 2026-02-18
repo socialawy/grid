@@ -24,6 +24,20 @@ One file. Five outputs. Any machine. No server required.
 - Every task ends with: working demo + test + doc + handover note
 - Stop at any phase, what exists still works
 
+## Importatn concepts
+
+### ASCII 
+> Is the American Standard Code for Information Interchange.
+       It is a 7-bit code.
+
+### MIME type
+> A MIME (Multipurpose Internet Mail Extension) type is an Internet standard for identifying the type of object that is being transferred across the Internet. MIME types include many variants of text, audio, image, and video data.
+
+### LLVM 
+> The LLVM Compiler Infrastructure 
+
+The LLVM Project is a collection of modular and reusable compiler and toolchain technologies. Despite its name, LLVM has little to do with traditional virtual machines. The name "LLVM" itself is not an acronym; it is the full name of the project.
+
 ----
 
 # ARCHITECTURE: THE FIVE-CONSUMER GRID
@@ -94,7 +108,7 @@ A .grid file is JSON containing:
               └─────────────┘
 ```
 
-## Degradation Ladder (Verified Stack from Q1-Q7)
+## Degradation Ladder (Verified Stack from Q1-Q7 research)
 
 TIER 0 — OFFLINE FLOOR (phone, airplane mode)
   Renderer:   Custom WebGL2 grid (or Canvas2D fallback)

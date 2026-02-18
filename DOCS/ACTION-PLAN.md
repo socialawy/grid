@@ -416,3 +416,229 @@ Task 1.2: WebGPU upgrade path (auto-fallback)
 Task 1.3: textmode.js interop bridge
 Task 1.4: Unified input system (keyboard, mouse, touch)
 Task 1.5: Procedural generators v2 (density-aware, all channels)
+
+--
+
+# Task 1.1: WebGL2 Instanced Grid Renderer — Architecture
+
+## Core Idea
+One instanced draw call renders the entire grid. Each cell = one instance of a unit quad. A font atlas texture maps char indices to glyphs. Position is derived from gl_InstanceID — no per-instance position data needed.
+
+## File Structure
+```
+src/renderers/
+  canvas-renderer.js        ← existing
+  webgl2-renderer.js        ← Task 1.1 (main)
+src/rendering/
+  font-atlas.js             ← charset → atlas texture + UV lookup
+  instance-buffer.js        ← frame + canvas → Float32Array (pure math, no GL)
+  shaders.js                ← GLSL source strings (inline, no file loading)
+  ```
+## Public API Contract (mirrors canvas-renderer exactly)
+```js
+function createWebGL2Renderer(canvasEl, grid, options = {}) {
+  // options: { fontSize?, showGrid?, fps?, onFrameChange? }
+  
+  return {
+    renderFrame(),           // render current frame
+    nextFrame(),             // advance + render
+    prevFrame(),             // rewind + render  
+    goTo(index),             // jump + render
+    play(),                  // start animation loop
+    pause(),                 // stop animation loop
+    stop(),                  // pause + goTo(0)
+    togglePlay(),            // returns new isPlaying
+    setGrid(newGrid),        // swap grid, rebuild atlas if charset changed
+    setOptions(newOptions),  // fontSize/showGrid/fps/onFrameChange
+    eventToGrid(event),      // → { gridX, gridY, pixelX, pixelY }
+    destroy(),               // release GL resources
+    get currentFrame,        // index
+    get frameCount,          // grid.frames.length
+    get playing,             // bool
+    get cellSize,            // { width, height }
+  };
+}
+```
+- Drop-in swap: anywhere createRenderer works, createWebGL2Renderer works.
+
+## Font Atlas Design (font-atlas.js)
+```
+Input:  charset string, fontSize, fontFamily
+Output: { texture: ImageData, uvMap: Map<char, {u, v, w, h}>, cols, rows, cellW, cellH }
+```
+- Render each unique char in charset to an OffscreenCanvas (fallback: document.createElement('canvas'))
+- White text on transparent black — shader multiplies by fg color
+- Pack into a grid layout (e.g., 16 chars per row)
+- Atlas texture is power-of-2 padded
+- Space char gets an explicit entry (index 0)
+- defaultChar always present, used for cells not in charset
+- Rebuild only when charset or fontSize changes
+
+## Instance Buffer Layout (instance-buffer.js)
+Per-instance: 5 floats, 20 bytes
+
+Attribute	| Type	| Divisor	| Description
+--------- |-------|---------|------------
+a_charIndex	| float	| 1	| Index into atlas UV map
+a_fgR	| float	| 1	| Foreground red (0–1)
+a_fgG	| float	| 1	| Foreground green (0–1)
+a_fgB	| float	| 1	| Foreground blue (0–1)
+a_density	| float	| 1	| Density (0–1), for future effects
+
+- Total buffer: width × height × 5 × 4 bytes
+
+200×100 = 400KB ✓
+500×500 = 5MB ✓
+1000×1000 = 20MB (viable, note for future viewport culling)
+
+### Position is NOT in the buffer. Computed in vertex shader:
+```glsl
+int cellX = gl_InstanceID % int(u_gridSize.x);
+int cellY = gl_InstanceID / int(u_gridSize.x);
+```
+- Build function is pure — no GL dependency:
+```js
+Build function is pure — no GL dependency:
+```
+## Shaders (shaders.js)
+- Vertex:
+```glsl
+#version 300 es
+in vec2 a_quad;          // unit quad corners (0,0)→(1,1), 4 verts
+in float a_charIndex;    // per-instance
+in float a_fgR, a_fgG, a_fgB;  // per-instance
+in float a_density;      // per-instance
+
+uniform vec2 u_gridSize;     // (width, height) in cells
+uniform vec2 u_cellSize;     // pixel size per cell
+uniform vec2 u_resolution;   // canvas pixel size
+uniform vec2 u_atlasGrid;    // atlas layout (cols, rows)
+
+out vec2 v_uv;
+out vec3 v_fg;
+out vec2 v_cellLocal;    // for grid lines
+out float v_density;
+
+void main() {
+  float cellX = float(gl_InstanceID % int(u_gridSize.x));
+  float cellY = float(gl_InstanceID / int(u_gridSize.x));
+
+  vec2 pos = (vec2(cellX, cellY) + a_quad) * u_cellSize;
+  gl_Position = vec4((pos / u_resolution) * 2.0 - 1.0, 0.0, 1.0);
+  gl_Position.y *= -1.0;
+
+  // Atlas UV
+  int idx = int(a_charIndex);
+  float au = float(idx % int(u_atlasGrid.x)) / u_atlasGrid.x;
+  float av = float(idx / int(u_atlasGrid.x)) / u_atlasGrid.y;
+  v_uv = vec2(au, av) + a_quad / u_atlasGrid;
+
+  v_fg = vec3(a_fgR, a_fgG, a_fgB);
+  v_cellLocal = a_quad;
+  v_density = a_density;
+}
+```
+### Fragment
+```glsl
+#version 300 es
+precision mediump float;
+
+in vec2 v_uv;
+in vec3 v_fg;
+in vec2 v_cellLocal;
+in float v_density;
+
+uniform sampler2D u_atlas;
+uniform vec3 u_bg;
+uniform float u_showGrid;
+uniform vec3 u_gridColor;
+
+out vec4 outColor;
+
+void main() {
+  // Grid lines
+  if (u_showGrid > 0.5) {
+    float edge = 0.03;
+    if (v_cellLocal.x < edge || v_cellLocal.y < edge) {
+      outColor = vec4(u_gridColor, 1.0);
+      return;
+    }
+  }
+
+  float alpha = texture(u_atlas, v_uv).a;
+  outColor = vec4(mix(u_bg, v_fg, alpha), 1.0);
+}
+```
+## Initialization Flow
+```text
+createWebGL2Renderer(canvas, grid, opts)
+  │
+  ├─ getWebGL2Context(canvas)
+  │    └─ fails? → return null (caller falls back to Canvas2D)
+  │
+  ├─ buildFontAtlas(charset, fontSize, fontFamily)
+  │    └─ → atlas texture + charIndexMap
+  │
+  ├─ compileShaders(vertSrc, fragSrc)
+  ├─ setupQuadVAO()          // unit quad + index buffer
+  ├─ uploadAtlasTexture()
+  ├─ buildInstanceBuffer()   // from frame 0
+  ├─ setupInstanceAttributes()
+  │
+  └─ renderFrame()           // first paint
+```
+## Render Flow (per frame)
+```text
+renderFrame()
+  ├─ buildInstanceBuffer(currentFrame, canvas, charIndexMap)
+  ├─ gl.bufferData(ARRAY_BUFFER, instanceData, DYNAMIC_DRAW)
+  ├─ gl.clear()
+  └─ gl.drawArraysInstanced(TRIANGLE_STRIP, 0, 4, width * height)
+```
+- One draw call. Always.
+
+## Fallback Strategy
+- The factory (built in Task 1.2, but the pattern is set now):
+```js
+function createBestRenderer(canvasEl, grid, options) {
+  // Try WebGPU first (Task 1.2)
+  // Try WebGL2
+  const gl = canvasEl.getContext('webgl2');
+  if (gl) return createWebGL2Renderer(canvasEl, grid, options);
+  // Fall back to Canvas2D
+  return createRenderer(canvasEl, grid, options);
+}
+```
+- For Task 1.1, createWebGL2Renderer itself returns null if context fails — the caller handles fallback.
+
+## Performance Targets
+Metric | Target | Rationale
+:--- | :---: | :---
+80×24 render | < 1ms | Terminal-size grid, must be instant
+200×100 render | < 2ms | Standard GRID canvas
+500×500 render | < 8ms | Large canvas, still 120fps
+1000×1000 render | < 16ms | Max spec size, 60fps floor
+Atlas build | < 50ms | One-time init cost
+Buffer rebuild | < 5ms (200×100) | Per-frame during animation
+
+## Test Plan
+tests/test-webgl2-renderer.js
+  ├─ Atlas: charset → correct UV count, all chars mapped
+  ├─ Buffer: known frame → expected Float32Array values
+  ├─ Hex parse: "#ff0000" → [1, 0, 0]
+  ├─ API parity: every canvas-renderer method exists on webgl2
+  ├─ Fallback: null context → returns null
+  ├─ Grid lines: toggle reflects in uniform
+  ├─ Frame navigation: goTo/next/prev update currentFrame
+  ├─ Performance: 200×100 buffer build < 5ms
+  └─ Integration: create → render → setGrid → destroy (no GL errors)
+
+## What I Won't Do Yet
+- Viewport culling (defer until 1000×1000 perf profiled)
+- Per-cell background colors (uniform bg for now, per-cell in v2)
+- Density-based shader effects (attribute is there, shader ignores it for now)
+- Selection/hover highlight (Task 1.4 — input system)
+
+--
+
+## 
