@@ -1,4 +1,4 @@
-/**
+﻿/**
  * webgl2-renderer.js — WebGL2 Instanced Grid Renderer
  * Drop-in replacement for canvas-renderer.js.
  * Same public API. One draw call. Font atlas texture.
@@ -428,7 +428,7 @@ function _createProgram(gl, vertSrc, fragSrc) {
 if (module !== undefined && module.exports !== undefined) {
   module.exports = { createWebGL2Renderer };
 }
-if (globalThis !== undefined && globalThis.window !== undefined) {
+if (globalThis?.window) {
   globalThis.WebGL2Renderer = { createWebGL2Renderer };
 }
 export { createWebGL2Renderer };

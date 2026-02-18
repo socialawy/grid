@@ -1,4 +1,4 @@
-/**
+﻿/**
  * instance-buffer.js — Frame + Canvas → Float32Array for WebGL2 instancing
  * Pure function. Zero GL dependency. Zero DOM.
  *
@@ -105,7 +105,7 @@ function buildInstanceBuffer(frame, canvas, charIndexMap, defaultIndex) {
 
     // Char index
     const idx = charIndexMap.get(cell.char);
-    buffer[offset] = idx !== undefined ? idx : defaultIndex;
+    buffer[offset] = idx ?? defaultIndex;
 
     // Color
     const color = cell.color ? parseHexColor(cell.color) : defColor;
@@ -114,9 +114,7 @@ function buildInstanceBuffer(frame, canvas, charIndexMap, defaultIndex) {
     buffer[offset + 3] = color[2];
 
     // Density
-    buffer[offset + 4] = cell.density !== undefined
-      ? cell.density
-      : _quickDensity(cell.char);
+    buffer[offset + 4] = cell.density ?? _quickDensity(cell.char);
   }
 
   return buffer;

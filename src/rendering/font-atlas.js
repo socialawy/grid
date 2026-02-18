@@ -1,4 +1,4 @@
-/**
+﻿/**
  * font-atlas.js — Charset → Font Atlas Texture + UV Lookup
  * Pure logic (uses OffscreenCanvas or DOM canvas for glyph rendering).
  * No WebGL dependency — outputs ImageData + metadata.
@@ -147,7 +147,7 @@ function buildFontAtlas(charset, options = {}) {
  */
 function getCharIndex(charIndexMap, char, defaultIndex) {
   const idx = charIndexMap.get(char);
-  return idx !== undefined ? idx : defaultIndex;
+  return idx ?? defaultIndex;
 }
 
 // --- Internal helpers ---

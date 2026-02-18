@@ -1,4 +1,4 @@
-/**
+﻿/**
  * grid-core.js — Pure Logic Library for .grid Format v0.1.0
  * Zero DOM. Zero dependencies. Pure functions.
  * Works in: Browser, Node.js, Deno, Bun
@@ -50,23 +50,27 @@ function generateId() {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
     return crypto.randomUUID();
   }
-  // Fallback for environments without crypto.randomUUID
-  const hex = '0123456789abcdef';
-  const segments = [8, 4, 4, 4, 12];
-  let uuid = '';
-  for (let s = 0; s < segments.length; s++) {
-    if (s > 0) uuid += '-';
-    for (let i = 0; i < segments[s]; i++) {
-      if (s === 2 && i === 0) {
-        uuid += '4'; // version 4
-      } else if (s === 3 && i === 0) {
-        uuid += hex[8 + Math.floor(Math.random() * 4)]; // variant
-      } else {
-        uuid += hex[Math.floor(Math.random() * 16)];
-      }
-    }
+  // Secure fallback using crypto.getRandomValues
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+    bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant 10
+    const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+    return [
+      hex.slice(0, 8),
+      hex.slice(8, 12),
+      hex.slice(12, 16),
+      hex.slice(16, 20),
+      hex.slice(20, 32)
+    ].join('-');
   }
-  return uuid;
+  // Absolute fallback (no crypto)  timestamp-derived, still valid UUID v4 shape
+  const ts = Date.now().toString(16).padStart(12, '0');
+  const rnd = Array.from({ length: 20 }, (_, i) =>
+    ((ts.codePointAt(i % ts.length) * 7 + i * 13) % 16).toString(16)
+  ).join('');
+  return `${rnd.slice(0, 8)}-${rnd.slice(8, 12)}-4${rnd.slice(13, 16)}-8${rnd.slice(17, 20)}-${ts}`;
 }
 
 // ============================================================
