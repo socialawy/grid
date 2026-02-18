@@ -1,0 +1,1360 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "name": "Creative Showcase - Digital Garden",
+    "created": "2026-02-18T09:37:00Z",
+    "modified": "2026-02-18T09:37:00Z",
+    "author": "GRID v0.1.0",
+    "description": "A living digital garden with visual flowers, musical tones, spatial depth, narrative poetry, and AI-generated patterns"
+  },
+  "canvas": {
+    "width": 40,
+    "height": 20,
+    "charset": "@#$%&*+=-.~<>^v◊○●♦♣♠♥♦♪♫☀☁☂❄✿❀❁❂❃❄❅❆❇❈❉❊❋❌❍❎❏❐❑❒❓❔❕❖❗❘❙❚❛❜❝❞❟❠❡❢❣❤❥❦❧❨❩❪❫❬❭❮❯❰❱❲❳❴❵❶❷❸❹❺❻❼❽❾❿➀➁➂➃➄➅➆➇➈➉➊➋➌➍➎➏➐➑➒➓➔➕➖➗➘➙➚➛➜➝➞➟➠➡➢➣➤➥➦➧➨➩➪➫➬➭➮➯➰➱➲➳➴➵➶➷➸➹➺➻➼➽➾➿",
+    "defaultChar": ".",
+    "defaultColor": "#001122",
+    "background": "#000511",
+    "fontFamily": "Courier New",
+    "fontSize": 14
+  },
+  "palette": [
+    {
+      "id": "flower",
+      "colors": [
+        "#ff6b9d",
+        "#feca57",
+        "#48dbfb",
+        "#ff9ff3"
+      ]
+    },
+    {
+      "id": "stem",
+      "colors": [
+        "#27ae60",
+        "#2ecc71",
+        "#16a085"
+      ]
+    },
+    {
+      "id": "magic",
+      "colors": [
+        "#9b59b6",
+        "#8e44ad",
+        "#e74c3c",
+        "#f39c12"
+      ]
+    },
+    {
+      "id": "water",
+      "colors": [
+        "#3498db",
+        "#2980b9",
+        "#1abc9c"
+      ]
+    }
+  ],
+  "frames": [
+    {
+      "id": "frame_001",
+      "index": 0,
+      "label": "Garden Awakening",
+      "duration": 200,
+      "cells": [
+        {
+          "x": 5,
+          "y": 15,
+          "char": "❀",
+          "color": "#ff6b9d",
+          "semantic": "entity",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "note": "C",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.7
+            },
+            "spatial": {
+              "z": 0.1,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "A single seed awakens",
+              "mood": "hopeful"
+            },
+            "ai": {
+              "pattern": "growth",
+              "confidence": 0.9,
+              "next_state": "sprout"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 14,
+          "char": "❁",
+          "color": "#feca57",
+          "semantic": "entity",
+          "density": 0.7,
+          "channel": {
+            "audio": {
+              "note": "E",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.6
+            },
+            "spatial": {
+              "z": 0.2,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Golden light touches earth",
+              "mood": "warm"
+            },
+            "ai": {
+              "pattern": "photosynthesis",
+              "confidence": 0.8,
+              "next_state": "bloom"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 16,
+          "char": "❂",
+          "color": "#48dbfb",
+          "semantic": "entity",
+          "density": 0.6,
+          "channel": {
+            "audio": {
+              "note": "G",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.5
+            },
+            "spatial": {
+              "z": 0.15,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Crystal dew forms",
+              "mood": "serene"
+            },
+            "ai": {
+              "pattern": "condensation",
+              "confidence": 0.7,
+              "next_state": "reflect"
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 15,
+          "char": "❃",
+          "color": "#ff9ff3",
+          "semantic": "entity",
+          "density": 0.9,
+          "channel": {
+            "audio": {
+              "note": "B",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.8
+            },
+            "spatial": {
+              "z": 0.05,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Mystic bloom dances",
+              "mood": "magical"
+            },
+            "ai": {
+              "pattern": "mutation",
+              "confidence": 0.95,
+              "next_state": "evolve"
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 16,
+          "char": "|",
+          "color": "#27ae60",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 10,
+          "y": 17,
+          "char": "|",
+          "color": "#27ae60",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 15,
+          "char": "|",
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 16,
+          "char": "|",
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 17,
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 30,
+          "y": 16,
+          "char": "|",
+          "color": "#16a085",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 30,
+          "y": 17,
+          "char": "|",
+          "color": "#16a085",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 8,
+          "y": 18,
+          "char": "~",
+          "color": "#3498db",
+          "semantic": "fluid",
+          "density": 0.3,
+          "channel": {
+            "audio": {
+              "note": "C#",
+              "octave": 3,
+              "duration": 0.5,
+              "velocity": 0.3
+            },
+            "spatial": {
+              "z": -0.1,
+              "normal": [
+                0,
+                0,
+                1
+              ]
+            },
+            "narrative": {
+              "text": "Water flows gently",
+              "mood": "calm"
+            },
+            "ai": {
+              "pattern": "erosion",
+              "confidence": 0.6,
+              "next_state": "meander"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 18,
+          "char": "~",
+          "color": "#2980b9",
+          "semantic": "fluid",
+          "density": 0.3,
+          "channel": {
+            "audio": {
+              "note": "D",
+              "octave": 3,
+              "duration": 0.5,
+              "velocity": 0.3
+            },
+            "spatial": {
+              "z": -0.1,
+              "normal": [
+                0,
+                0,
+                1
+              ]
+            },
+            "narrative": {
+              "text": "Stream whispers secrets",
+              "mood": "mysterious"
+            },
+            "ai": {
+              "pattern": "current",
+              "confidence": 0.7,
+              "next_state": "flow"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 18,
+          "char": "~",
+          "color": "#1abc9c",
+          "semantic": "fluid",
+          "density": 0.3,
+          "channel": {
+            "audio": {
+              "note": "D#",
+              "octave": 3,
+              "duration": 0.5,
+              "velocity": 0.3
+            },
+            "spatial": {
+              "z": -0.1,
+              "normal": [
+                0,
+                0,
+                1
+              ]
+            },
+            "narrative": {
+              "text": "Life springs eternal",
+              "mood": "renewing"
+            },
+            "ai": {
+              "pattern": "nourishment",
+              "confidence": 0.8,
+              "next_state": "sustain"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "char": "☀",
+          "color": "#f39c12",
+          "semantic": "emissive",
+          "density": 1,
+          "channel": {
+            "audio": {
+              "note": "A",
+              "octave": 5,
+              "duration": 1,
+              "velocity": 1
+            },
+            "spatial": {
+              "z": 10,
+              "normal": [
+                0,
+                -1,
+                0
+              ],
+              "emissive": true
+            },
+            "narrative": {
+              "text": "Sun watches over all",
+              "mood": "majestic"
+            },
+            "ai": {
+              "pattern": "celestial",
+              "confidence": 1,
+              "next_state": "radiate"
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 2,
+          "char": "☁",
+          "color": "#ecf0f1",
+          "semantic": "emissive",
+          "density": 0.2,
+          "channel": {
+            "audio": {
+              "note": "F",
+              "octave": 3,
+              "duration": 2,
+              "velocity": 0.2
+            },
+            "spatial": {
+              "z": 8,
+              "normal": [
+                0,
+                -1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Clouds drift slowly",
+              "mood": "dreamy"
+            },
+            "ai": {
+              "pattern": "weather",
+              "confidence": 0.9,
+              "next_state": "drift"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 1,
+          "char": "◊",
+          "color": "#9b59b6",
+          "semantic": "emissive",
+          "density": 0.5,
+          "channel": {
+            "audio": {
+              "note": "E",
+              "octave": 5,
+              "duration": 0.3,
+              "velocity": 0.6
+            },
+            "spatial": {
+              "z": 5,
+              "normal": [
+                0,
+                -1,
+                0
+              ],
+              "pulse": true
+            },
+            "narrative": {
+              "text": "Magic sparkles in air",
+              "mood": "enchanting"
+            },
+            "ai": {
+              "pattern": "arcane",
+              "confidence": 0.85,
+              "next_state": "transform"
+            }
+          }
+        }
+      ],
+      "layers": [
+        "visual",
+        "audio",
+        "spatial",
+        "narrative",
+        "ai"
+      ]
+    },
+    {
+      "id": "frame_002",
+      "index": 1,
+      "label": "Garden Growth",
+      "duration": 200,
+      "cells": [
+        {
+          "x": 5,
+          "y": 14,
+          "char": "❀",
+          "color": "#ff6b9d",
+          "semantic": "entity",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "note": "C",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.7
+            },
+            "spatial": {
+              "z": 0.1,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Stem reaches upward",
+              "mood": "growing"
+            },
+            "ai": {
+              "pattern": "growth",
+              "confidence": 0.9,
+              "next_state": "sprout"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 13,
+          "char": "❁",
+          "color": "#feca57",
+          "semantic": "entity",
+          "density": 0.7,
+          "channel": {
+            "audio": {
+              "note": "E",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.6
+            },
+            "spatial": {
+              "z": 0.2,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Petals unfurl slowly",
+              "mood": "blooming"
+            },
+            "ai": {
+              "pattern": "photosynthesis",
+              "confidence": 0.8,
+              "next_state": "bloom"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 15,
+          "char": "❂",
+          "color": "#48dbfb",
+          "semantic": "entity",
+          "density": 0.6,
+          "channel": {
+            "audio": {
+              "note": "G",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.5
+            },
+            "spatial": {
+              "z": 0.15,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Crystal catches light",
+              "mood": "sparkling"
+            },
+            "ai": {
+              "pattern": "refraction",
+              "confidence": 0.7,
+              "next_state": "shine"
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 14,
+          "char": "❃",
+          "color": "#ff9ff3",
+          "semantic": "entity",
+          "density": 0.9,
+          "channel": {
+            "audio": {
+              "note": "B",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.8
+            },
+            "spatial": {
+              "z": 0.05,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Colors swirl and dance",
+              "mood": "magical"
+            },
+            "ai": {
+              "pattern": "mutation",
+              "confidence": 0.95,
+              "next_state": "evolve"
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 15,
+          "char": "|",
+          "color": "#27ae60",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 10,
+          "y": 16,
+          "char": "|",
+          "color": "#27ae60",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 10,
+          "y": 17,
+          "char": "|",
+          "color": "#27ae60",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 14,
+          "char": "|",
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 15,
+          "char": "|",
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 16,
+          "char": "|",
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 17,
+          "char": "|",
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 30,
+          "y": 15,
+          "char": "|",
+          "color": "#16a085",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 30,
+          "y": 16,
+          "char": "|",
+          "color": "#16a085",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 30,
+          "y": 17,
+          "char": "|",
+          "color": "#16a085",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 8,
+          "y": 18,
+          "char": "~",
+          "color": "#3498db",
+          "semantic": "fluid",
+          "density": 0.3,
+          "channel": {
+            "audio": {
+              "note": "C#",
+              "octave": 3,
+              "duration": 0.5,
+              "velocity": 0.3
+            },
+            "spatial": {
+              "z": -0.1,
+              "normal": [
+                0,
+                0,
+                1
+              ]
+            },
+            "narrative": {
+              "text": "Water carves paths",
+              "mood": "persistent"
+            },
+            "ai": {
+              "pattern": "erosion",
+              "confidence": 0.6,
+              "next_state": "meander"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 18,
+          "char": "~",
+          "color": "#2980b9",
+          "semantic": "fluid",
+          "density": 0.3,
+          "channel": {
+            "audio": {
+              "note": "D",
+              "octave": 3,
+              "duration": 0.5,
+              "velocity": 0.3
+            },
+            "spatial": {
+              "z": -0.1,
+              "normal": [
+                0,
+                0,
+                1
+              ]
+            },
+            "narrative": {
+              "text": "Stream sings softly",
+              "mood": "soothing"
+            },
+            "ai": {
+              "pattern": "current",
+              "confidence": 0.7,
+              "next_state": "flow"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 18,
+          "char": "~",
+          "color": "#1abc9c",
+          "semantic": "fluid",
+          "density": 0.3,
+          "channel": {
+            "audio": {
+              "note": "D#",
+              "octave": 3,
+              "duration": 0.5,
+              "velocity": 0.3
+            },
+            "spatial": {
+              "z": -0.1,
+              "normal": [
+                0,
+                0,
+                1
+              ]
+            },
+            "narrative": {
+              "text": "Life nourishes all",
+              "mood": "giving"
+            },
+            "ai": {
+              "pattern": "nourishment",
+              "confidence": 0.8,
+              "next_state": "sustain"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "char": "☀",
+          "color": "#f39c12",
+          "semantic": "emissive",
+          "density": 1,
+          "channel": {
+            "audio": {
+              "note": "A",
+              "octave": 5,
+              "duration": 1,
+              "velocity": 1
+            },
+            "spatial": {
+              "z": 10,
+              "normal": [
+                0,
+                -1,
+                0
+              ],
+              "emissive": true
+            },
+            "narrative": {
+              "text": "Sun blesses the garden",
+              "mood": "blessed"
+            },
+            "ai": {
+              "pattern": "celestial",
+              "confidence": 1,
+              "next_state": "radiate"
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 2,
+          "char": "☁",
+          "color": "#ecf0f1",
+          "semantic": "emissive",
+          "density": 0.2,
+          "channel": {
+            "audio": {
+              "note": "F",
+              "octave": 3,
+              "duration": 2,
+              "velocity": 0.2
+            },
+            "spatial": {
+              "z": 8,
+              "normal": [
+                0,
+                -1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Clouds paint the sky",
+              "mood": "artistic"
+            },
+            "ai": {
+              "pattern": "weather",
+              "confidence": 0.9,
+              "next_state": "drift"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 1,
+          "char": "◊",
+          "color": "#e74c3c",
+          "semantic": "emissive",
+          "density": 0.5,
+          "channel": {
+            "audio": {
+              "note": "F#",
+              "octave": 5,
+              "duration": 0.3,
+              "velocity": 0.6
+            },
+            "spatial": {
+              "z": 5,
+              "normal": [
+                0,
+                -1,
+                0
+              ],
+              "pulse": true
+            },
+            "narrative": {
+              "text": "Magic intensifies",
+              "mood": "powerful"
+            },
+            "ai": {
+              "pattern": "arcane",
+              "confidence": 0.85,
+              "next_state": "transform"
+            }
+          }
+        }
+      ],
+      "layers": [
+        "visual",
+        "audio",
+        "spatial",
+        "narrative",
+        "ai"
+      ]
+    },
+    {
+      "id": "frame_003",
+      "index": 2,
+      "label": "Garden Flourish",
+      "duration": 200,
+      "cells": [
+        {
+          "x": 5,
+          "y": 13,
+          "char": "❀",
+          "color": "#ff6b9d",
+          "semantic": "entity",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "note": "C",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.7
+            },
+            "spatial": {
+              "z": 0.1,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Life reaches for light",
+              "mood": "aspiring"
+            },
+            "ai": {
+              "pattern": "growth",
+              "confidence": 0.9,
+              "next_state": "sprout"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 12,
+          "char": "❁",
+          "color": "#feca57",
+          "semantic": "entity",
+          "density": 0.7,
+          "channel": {
+            "audio": {
+              "note": "E",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.6
+            },
+            "spatial": {
+              "z": 0.2,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Beauty unfolds daily",
+              "mood": "graceful"
+            },
+            "ai": {
+              "pattern": "photosynthesis",
+              "confidence": 0.8,
+              "next_state": "bloom"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 14,
+          "char": "❂",
+          "color": "#48dbfb",
+          "semantic": "entity",
+          "density": 0.6,
+          "channel": {
+            "audio": {
+              "note": "G",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.5
+            },
+            "spatial": {
+              "z": 0.15,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Light bends through prism",
+              "mood": "spectral"
+            },
+            "ai": {
+              "pattern": "refraction",
+              "confidence": 0.7,
+              "next_state": "shine"
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 13,
+          "char": "❃",
+          "color": "#ff9ff3",
+          "semantic": "entity",
+          "density": 0.9,
+          "channel": {
+            "audio": {
+              "note": "B",
+              "octave": 4,
+              "duration": 0.2,
+              "velocity": 0.8
+            },
+            "spatial": {
+              "z": 0.05,
+              "normal": [
+                0,
+                1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Dreams take physical form",
+              "mood": "manifesting"
+            },
+            "ai": {
+              "pattern": "mutation",
+              "confidence": 0.95,
+              "next_state": "evolve"
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 14,
+          "char": "|",
+          "color": "#27ae60",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 10,
+          "y": 15,
+          "char": "|",
+          "color": "#27ae60",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 10,
+          "y": 16,
+          "char": "|",
+          "color": "#27ae60",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 10,
+          "y": 17,
+          "char": "|",
+          "color": "#27ae60",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 13,
+          "char": "|",
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 14,
+          "char": "|",
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 15,
+          "char": "|",
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 16,
+          "char": "|",
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 20,
+          "y": 17,
+          "char": "|",
+          "color": "#2ecc71",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 30,
+          "y": 14,
+          "char": "|",
+          "color": "#16a085",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 30,
+          "y": 15,
+          "char": "|",
+          "color": "#16a085",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 30,
+          "y": 16,
+          "char": "|",
+          "color": "#16a085",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 30,
+          "y": 17,
+          "char": "|",
+          "color": "#16a085",
+          "semantic": "boundary",
+          "density": 0.4
+        },
+        {
+          "x": 8,
+          "y": 18,
+          "char": "~",
+          "color": "#3498db",
+          "semantic": "fluid",
+          "density": 0.3,
+          "channel": {
+            "audio": {
+              "note": "C#",
+              "octave": 3,
+              "duration": 0.5,
+              "velocity": 0.3
+            },
+            "spatial": {
+              "z": -0.1,
+              "normal": [
+                0,
+                0,
+                1
+              ]
+            },
+            "narrative": {
+              "text": "Water remembers mountains",
+              "mood": "wise"
+            },
+            "ai": {
+              "pattern": "erosion",
+              "confidence": 0.6,
+              "next_state": "meander"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 18,
+          "char": "~",
+          "color": "#2980b9",
+          "semantic": "fluid",
+          "density": 0.3,
+          "channel": {
+            "audio": {
+              "note": "D",
+              "octave": 3,
+              "duration": 0.5,
+              "velocity": 0.3
+            },
+            "spatial": {
+              "z": -0.1,
+              "normal": [
+                0,
+                0,
+                1
+              ]
+            },
+            "narrative": {
+              "text": "Stream carries stories",
+              "mood": "storytelling"
+            },
+            "ai": {
+              "pattern": "current",
+              "confidence": 0.7,
+              "next_state": "flow"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 18,
+          "char": "~",
+          "color": "#1abc9c",
+          "semantic": "fluid",
+          "density": 0.3,
+          "channel": {
+            "audio": {
+              "note": "D#",
+              "octave": 3,
+              "duration": 0.5,
+              "velocity": 0.3
+            },
+            "spatial": {
+              "z": -0.1,
+              "normal": [
+                0,
+                0,
+                1
+              ]
+            },
+            "narrative": {
+              "text": "Water dreams of oceans",
+              "mood": "expansive"
+            },
+            "ai": {
+              "pattern": "nourishment",
+              "confidence": 0.8,
+              "next_state": "sustain"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "char": "☀",
+          "color": "#f39c12",
+          "semantic": "emissive",
+          "density": 1,
+          "channel": {
+            "audio": {
+              "note": "A",
+              "octave": 5,
+              "duration": 1,
+              "velocity": 1
+            },
+            "spatial": {
+              "z": 10,
+              "normal": [
+                0,
+                -1,
+                0
+              ],
+              "emissive": true
+            },
+            "narrative": {
+              "text": "Sun crowns the creation",
+              "mood": "triumphant"
+            },
+            "ai": {
+              "pattern": "celestial",
+              "confidence": 1,
+              "next_state": "radiate"
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 2,
+          "char": "☁",
+          "color": "#ecf0f1",
+          "semantic": "emissive",
+          "density": 0.2,
+          "channel": {
+            "audio": {
+              "note": "F",
+              "octave": 3,
+              "duration": 2,
+              "velocity": 0.2
+            },
+            "spatial": {
+              "z": 8,
+              "normal": [
+                0,
+                -1,
+                0
+              ]
+            },
+            "narrative": {
+              "text": "Clouds witness the magic",
+              "mood": "reverent"
+            },
+            "ai": {
+              "pattern": "weather",
+              "confidence": 0.9,
+              "next_state": "drift"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 1,
+          "char": "◊",
+          "color": "#8e44ad",
+          "semantic": "emissive",
+          "density": 0.5,
+          "channel": {
+            "audio": {
+              "note": "G",
+              "octave": 5,
+              "duration": 0.3,
+              "velocity": 0.6
+            },
+            "spatial": {
+              "z": 5,
+              "normal": [
+                0,
+                -1,
+                0
+              ],
+              "pulse": true
+            },
+            "narrative": {
+              "text": "Reality bends to will",
+              "mood": "transcendent"
+            },
+            "ai": {
+              "pattern": "arcane",
+              "confidence": 0.85,
+              "next_state": "transform"
+            }
+          }
+        }
+      ],
+      "layers": [
+        "visual",
+        "audio",
+        "spatial",
+        "narrative",
+        "ai"
+      ]
+    }
+  ],
+  "sequences": [
+    {
+      "id": "garden_growth",
+      "name": "Garden Growth Cycle",
+      "frames": [
+        "frame_001",
+        "frame_002",
+        "frame_003"
+      ],
+      "loop": true,
+      "fps": 5
+    }
+  ],
+  "project": {
+    "name": "Digital Garden",
+    "description": "A living ecosystem demonstrating all five GRID consumer channels working in harmony",
+    "created": "2026-02-18T09:37:00Z",
+    "author": "GRID Creative Engine",
+    "license": "MIT"
+  }
+}

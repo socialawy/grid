@@ -121,36 +121,45 @@ TIER 2 — PRO (workstation, online)
   Fallback:   Everything degrades to Tier 1 → Tier 0
 
 ## Project Structure
-Build with progress — add folders only when the phase needs them:
+Build with progress — folders added as phases needed:
 ```text
 GRID/
 ├── DOCS/
 │   ├── ACTION-PLAN.md
 │   ├── ARCHITECTURE.md
-│   └── HANDOVERS/              ← add now
+│   └── HANDOVERS/
 │       └── phase-0.md
 ├── schemas/
 │   ├── examples/
+│   │   ├── minimal.grid
+│   │   ├── heartbeat.grid
+│   │   └── mist-demo.grid
 │   ├── grid-spec-v0.1.0.md
 │   ├── grid.schema.json
 │   └── validate-examples.js
-├── src/                         ← add now
+├── src/
 │   ├── core/
 │   │   └── grid-core.js
 │   └── renderers/
 │       └── canvas-renderer.js
-├── tests/                       ← add at 0.5
-│   └── test-grid-core.js
-├── dist/                        ← add at 0.4 (single HTML goes here)
+├── tests/
+│   ├── test-grid-core.js
+│   ├── test-runner.html
+│   ├── package.json
+│   └── README.md
+├── dist/
 │   └── index.html
-├── README.md                    ← add now (short, grows with project)
-└── package.json                 ← only if needed (tests/validation)
+├── README.md
+├── .gitignore
+└── .windsurf/
+    └── workflows/
 ```
+- Don't pre-create Phase 3+ folders. When music lands, src/consumers/music/ appears. When 3D lands, src/consumers/spatial/ appears. The tree grows like a recursive tree — branches only when the depth demands it.
 ----
 
 # PHASED ROADMAP
 
-## PHASE 0: THE SEED (Week 1-2)
+## PHASE 0: THE SEED (x) 2026-02-18
 "A grid format that holds, and a renderer that proves it"
 
   0.1  Define .grid JSON schema (versioned, documented)
@@ -173,7 +182,7 @@ GRID/
 
 ---
 
-## PHASE 1: THE RENDERER (Week 3-5)
+## PHASE 1: THE RENDERER (~)
 "WebGL2 grid engine with progressive WebGPU upgrade"
 
   1.1  Custom WebGL2 instanced grid renderer

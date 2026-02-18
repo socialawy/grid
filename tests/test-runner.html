@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRID Core Test Suite - Browser Runner</title>
+<style>
+body {
+  font-family: 'Courier New', monospace;
+  background: #0a0a1a;
+  color: #c0c0d0;
+  margin: 0;
+  padding: 20px;
+  line-height: 1.4;
+}
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.header h1 {
+  color: #00ff88;
+  font-size: 24px;
+  margin: 0;
+}
+.header p {
+  color: #888;
+  margin: 5px 0;
+}
+.test-output {
+  background: #141428;
+  border: 1px solid #2a2a4a;
+  border-radius: 8px;
+  padding: 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.test-output:empty::before {
+  content: "Click 'Run Tests' to start...";
+  color: #555;
+  font-style: italic;
+}
+.pass {
+  color: #00ff88;
+}
+.fail {
+  color: #ff4466;
+}
+.info {
+  color: #00aaff;
+}
+.summary {
+  margin-top: 20px;
+  padding: 15px;
+  background: #1a1a3a;
+  border-radius: 8px;
+  border-left: 4px solid #00ff88;
+}
+.controls {
+  text-align: center;
+  margin-bottom: 20px;
+}
+button {
+  background: #00ff88;
+  color: #0a0a1a;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+button:hover {
+  background: #00cc70;
+  transform: translateY(-1px);
+}
+button:disabled {
+  background: #444;
+  color: #888;
+  cursor: not-allowed;
+  transform: none;
+}
+.status {
+  text-align: center;
+  margin: 10px 0;
+  font-size: 14px;
+}
+.running {
+  color: #ffcc00;
+}
+.success {
+  color: #00ff88;
+}
+.error {
+  color: #ff4466;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>▦ GRID Core Test Suite</h1>
+  <p>Browser-based testing for grid-core.js v0.1.0</p>
+</div>
+
+<div class="controls">
+  <button id="runBtn" onclick="runTests()">Run Tests</button>
+</div>
+
+<div class="status" id="status">Ready to run tests</div>
+
+<div class="test-output" id="output"></div>
+
+<script>
+// Load grid-core.js first
+const script = document.createElement('script');
+script.src = '../src/core/grid-core.js';
+script.onload = () => {
+  document.getElementById('runBtn').disabled = false;
+  document.getElementById('status').textContent = 'Tests loaded - ready to run';
+};
+script.onerror = () => {
+  document.getElementById('status').textContent = 'Error loading grid-core.js';
+  document.getElementById('status').className = 'status error';
+};
+document.head.appendChild(script);
+
+// Load test suite
+const testScript = document.createElement('script');
+testScript.src = 'test-grid-core.js';
+testScript.onload = () => {
+  console.log('Test suite loaded');
+};
+document.head.appendChild(testScript);
+
+async function runTests() {
+  const runBtn = document.getElementById('runBtn');
+  const output = document.getElementById('output');
+  const status = document.getElementById('status');
+  
+  runBtn.disabled = true;
+  status.textContent = 'Running tests...';
+  status.className = 'status running';
+  output.innerHTML = '';
+  
+  try {
+    // Capture console output
+    const originalLog = console.log;
+    const logs = [];
+    
+    console.log = (...args) => {
+      const message = args.join(' ');
+      logs.push(message);
+      
+      // Also display in the output div
+      const line = document.createElement('div');
+      line.textContent = message;
+      
+      // Color coding
+      if (message.includes('✅')) {
+        line.className = 'pass';
+      } else if (message.includes('❌')) {
+        line.className = 'fail';
+      } else if (message.includes('===') || message.includes('Grid creation time')) {
+        line.className = 'info';
+      }
+      
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    };
+    
+    // Run the tests
+    const results = await window.runTests();
+    
+    // Restore console.log
+    console.log = originalLog;
+    
+    // Show summary
+    const passed = results.filter(r => r.status === 'PASS').length;
+    const failed = results.filter(r => r.status === 'FAIL').length;
+    const total = results.length;
+    
+    const summary = document.createElement('div');
+    summary.className = 'summary';
+    summary.innerHTML = `
+      <strong>Test Summary</strong><br>
+      Passed: ${passed} | Failed: ${failed} | Total: ${total}<br>
+      Success Rate: ${((passed / total) * 100).toFixed(1)}%
+    `;
+    output.appendChild(summary);
+    
+    // Update status
+    if (failed === 0) {
+      status.textContent = `All tests passed! (${passed}/${total})`;
+      status.className = 'status success';
+    } else {
+      status.textContent = `${failed} test(s) failed (${passed}/${total})`;
+      status.className = 'status error';
+    }
+    
+  } catch (error) {
+    console.error('Test runner error:', error);
+    
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'fail';
+    errorDiv.textContent = `Test runner error: ${error.message}`;
+    output.appendChild(errorDiv);
+    
+    status.textContent = 'Test runner error';
+    status.className = 'status error';
+  } finally {
+    runBtn.disabled = false;
+  }
+}
+
+// Auto-run tests if ?run=true in URL
+if (window.location.search.includes('run=true')) {
+  window.addEventListener('load', () => {
+    setTimeout(runTests, 1000);
+  });
+}
+</script>
+
+</body>
+</html>
