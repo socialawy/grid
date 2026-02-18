@@ -79,6 +79,7 @@ function createWebGL2Renderer(canvasEl, grid, options = {}) {
     u_cellSize: gl.getUniformLocation(program, 'u_cellSize'),
     u_resolution: gl.getUniformLocation(program, 'u_resolution'),
     u_atlasGrid: gl.getUniformLocation(program, 'u_atlasGrid'),
+    u_cellUV: gl.getUniformLocation(program, 'u_cellUV'),
     u_atlas: gl.getUniformLocation(program, 'u_atlas'),
     u_bg: gl.getUniformLocation(program, 'u_bg'),
     u_showGrid: gl.getUniformLocation(program, 'u_showGrid'),
@@ -226,6 +227,7 @@ function createWebGL2Renderer(canvasEl, grid, options = {}) {
     gl.uniform2f(uni.u_cellSize, cellWidth, cellHeight);
     gl.uniform2f(uni.u_resolution, w, h);
     gl.uniform2f(uni.u_atlasGrid, atlas.cols, atlas.rows);
+    gl.uniform2f(uni.u_cellUV, atlas.cellW / atlas.atlasWidth, atlas.cellH / atlas.atlasHeight);
     gl.uniform3f(uni.u_bg, bg[0], bg[1], bg[2]);
     gl.uniform1f(uni.u_showGrid, showGrid ? 1 : 0);
 
@@ -425,7 +427,7 @@ function _createProgram(gl, vertSrc, fragSrc) {
 }
 
 // --- Exports ---
-if (module !== undefined && module.exports !== undefined) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = { createWebGL2Renderer };
 }
 if (globalThis?.window) {

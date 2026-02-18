@@ -1,14 +1,14 @@
-/**
+﻿/**
  * shaders.js — GLSL source strings for WebGL2 instanced grid renderer
  * No file loading. No compilation. Just source strings.
  *
  * @module shaders
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 const VERTEX_SHADER = `#version 300 es
 // Instanced grid vertex shader
-// Position derived from gl_InstanceID — no per-instance position attribute needed.
+// Position derived from gl_InstanceID.
 
 // Per-vertex (unit quad: 4 vertices)
 in vec2 a_quad;
@@ -25,6 +25,7 @@ uniform vec2 u_gridSize;     // grid (width, height) in cells
 uniform vec2 u_cellSize;     // cell size in pixels
 uniform vec2 u_resolution;   // canvas size in pixels
 uniform vec2 u_atlasGrid;    // atlas layout (cols, rows)
+uniform vec2 u_cellUV;       // single cell size in UV space (cellW/atlasW, cellH/atlasH)
 
 // Varyings
 out vec2 v_uv;
@@ -33,26 +34,22 @@ out vec2 v_cellLocal;
 out float v_density;
 
 void main() {
-  // Cell position from instance ID (row-major)
   float cellX = float(gl_InstanceID % int(u_gridSize.x));
   float cellY = float(gl_InstanceID / int(u_gridSize.x));
 
-  // Pixel position of this vertex
   vec2 pos = (vec2(cellX, cellY) + a_quad) * u_cellSize;
 
-  // NDC: [0, resolution] → [-1, 1], flip Y
   vec2 ndc = (pos / u_resolution) * 2.0 - 1.0;
   ndc.y *= -1.0;
   gl_Position = vec4(ndc, 0.0, 1.0);
 
-  // Atlas UV for this character
+  // Atlas UV — use actual pixel-derived cell size, not 1/cols
   int idx = int(a_charIndex);
   float atlasCol = float(idx % int(u_atlasGrid.x));
   float atlasRow = float(idx / int(u_atlasGrid.x));
-  vec2 atlasBase = vec2(atlasCol / u_atlasGrid.x, atlasRow / u_atlasGrid.y);
-  v_uv = atlasBase + a_quad / u_atlasGrid;
+  vec2 atlasBase = vec2(atlasCol * u_cellUV.x, atlasRow * u_cellUV.y);
+  v_uv = atlasBase + a_quad * u_cellUV;
 
-  // Pass-through
   v_fg = vec3(a_fgR, a_fgG, a_fgB);
   v_cellLocal = a_quad;
   v_density = a_density;
@@ -98,10 +95,10 @@ void main() {
 // --- Exports ---
 const Shaders = { VERTEX_SHADER, FRAGMENT_SHADER };
 
-if (module !== undefined && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = Shaders;
 }
-if (globalThis.window !== undefined) {
+if (typeof globalThis.window !== 'undefined') {
   globalThis.GridShaders = Shaders;
 }
 export { VERTEX_SHADER, FRAGMENT_SHADER };

@@ -120,6 +120,14 @@ function buildFontAtlas(charset, options = {}) {
     if (ch === defaultChar) defaultIndex = i;
   }
 
+
+  // Clear the space character cell to guarantee no subpixel artifacts
+  const spaceIdx = charIndexMap.get(' ');
+  if (spaceIdx !== undefined) {
+    const spCol = spaceIdx % cols;
+    const spRow = Math.floor(spaceIdx / cols);
+    ctx.clearRect(spCol * cellW, spRow * cellH, cellW, cellH);
+  }
   const imageData = ctx.getImageData(0, 0, atlasWidth, atlasHeight);
 
   return {
@@ -185,7 +193,7 @@ function _nextPow2(n) {
 // --- Exports ---
 const FontAtlas = { buildFontAtlas, getCharIndex };
 
-if (module !== undefined && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = FontAtlas;
 }
 if (globalThis.window !== undefined) {

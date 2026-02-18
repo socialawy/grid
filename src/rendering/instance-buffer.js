@@ -138,7 +138,7 @@ const InstanceBuffer = {
   getBufferByteSize
 };
 
-if (module !== undefined && module.exports) {
+if (typeof module !== 'undefined' && module.exports) {
   module.exports = InstanceBuffer;
 }
 if (globalThis.window !== undefined) {

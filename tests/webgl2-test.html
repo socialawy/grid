@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRID — WebGL2 Renderer Test</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0a;
+    color: #00ff00;
+    font-family: monospace;
+    padding: 20px;
+  }
+  h1 { font-size: 18px; margin-bottom: 10px; }
+  h2 { font-size: 14px; margin: 15px 0 5px; color: #aaa; }
+  .row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .panel {
+    border: 1px solid #333;
+    padding: 10px;
+  }
+  .panel label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  canvas { display: block; image-rendering: pixelated; }
+  #log {
+    background: #111;
+    border: 1px solid #333;
+    padding: 10px;
+    font-size: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+    white-space: pre;
+    margin-top: 10px;
+  }
+  .pass { color: #00ff00; }
+  .fail { color: #ff3333; }
+  .info { color: #6699ff; }
+  .skip { color: #ffaa00; }
+  .error { color: #ff6666; font-weight: bold; }
+  button {
+    background: #222;
+    color: #00ff00;
+    border: 1px solid #444;
+    padding: 6px 14px;
+    font-family: monospace;
+    font-size: 13px;
+    cursor: pointer;
+    margin: 3px;
+  }
+  button:hover { background: #333; }
+  .controls { margin: 10px 0; }
+</style>
+</head>
+<body>
+
+<h1>GRID — WebGL2 Renderer Test</h1>
+<p style="color:#666; font-size:12px; margin-bottom:10px;">
+  ⚠️ Must be served via HTTP (npx serve . from project root). file:// breaks ES module imports.
+</p>
+
+<div class="controls">
+  <button id="btn-run">Run All Tests</button>
+  <button id="btn-play">Play/Pause</button>
+  <button id="btn-grid">Toggle Grid</button>
+  <button id="btn-perf">Perf Benchmark</button>
+</div>
+
+<h2>Side-by-Side: Canvas2D (left) vs WebGL2 (right)</h2>
+<div class="row">
+  <div class="panel">
+    <label>Canvas2D</label>
+    <canvas id="canvas2d" width="400" height="300"></canvas>
+  </div>
+  <div class="panel">
+    <label>WebGL2 Instanced</label>
+    <canvas id="webgl2" width="400" height="300"></canvas>
+  </div>
+</div>
+
+<h2>Atlas Preview</h2>
+<div class="panel">
+  <label>Font Atlas Texture</label>
+  <canvas id="atlasPreview" style="border: 1px solid #444; background: #000;"></canvas>
+</div>
+
+<div id="log"></div>
+
+<script type="module">
+// ============================================================
+// LOGGING
+// ============================================================
+
+const logEl = document.getElementById('log');
+let passCount = 0;
+let failCount = 0;
+
+function log(msg, cls = '') {
+  const span = document.createElement('span');
+  span.className = cls;
+  span.textContent = msg + '\n';
+  logEl.appendChild(span);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function pass(name) { passCount++; log(`✅ ${name}`, 'pass'); }
+function fail(name, err) { failCount++; log(`❌ ${name}: ${err}`, 'fail'); }
+function info(msg) { log(`ℹ️  ${msg}`, 'info'); }
+
+// ============================================================
+// IMPORTS (with error catching)
+// ============================================================
+
+let GridCore, createRenderer, createWebGL2Renderer;
+let buildFontAtlas, getCharIndex;
+let FLOATS_PER_INSTANCE, buildInstanceBuffer, parseHexColor, getBufferByteSize;
+
+try {
+  const coreModule = await import('../src/core/grid-core.js');
+  GridCore = coreModule.default;
+  info('✓ grid-core.js loaded');
+} catch (e) {
+  log(`FATAL: Failed to load grid-core.js: ${e.message}`, 'error');
+}
+
+try {
+  const rendererModule = await import('../src/renderers/canvas-renderer.js');
+  createRenderer = rendererModule.createRenderer;
+  info('✓ canvas-renderer.js loaded');
+} catch (e) {
+  log(`FATAL: Failed to load canvas-renderer.js: ${e.message}`, 'error');
+}
+
+try {
+  const gl2Module = await import('../src/renderers/webgl2-renderer.js');
+  createWebGL2Renderer = gl2Module.createWebGL2Renderer;
+  info('✓ webgl2-renderer.js loaded');
+} catch (e) {
+  log(`FATAL: Failed to load webgl2-renderer.js: ${e.message}`, 'error');
+}
+
+try {
+  const atlasModule = await import('../src/rendering/font-atlas.js');
+  buildFontAtlas = atlasModule.buildFontAtlas;
+  getCharIndex = atlasModule.getCharIndex;
+  info('✓ font-atlas.js loaded');
+} catch (e) {
+  log(`FATAL: Failed to load font-atlas.js: ${e.message}`, 'error');
+}
+
+try {
+  const bufModule = await import('../src/rendering/instance-buffer.js');
+  FLOATS_PER_INSTANCE = bufModule.FLOATS_PER_INSTANCE;
+  buildInstanceBuffer = bufModule.buildInstanceBuffer;
+  parseHexColor = bufModule.parseHexColor;
+  getBufferByteSize = bufModule.getBufferByteSize;
+  info('✓ instance-buffer.js loaded');
+} catch (e) {
+  log(`FATAL: Failed to load instance-buffer.js: ${e.message}`, 'error');
+}
+
+// Bail if core modules missing
+if (!GridCore || !createRenderer || !createWebGL2Renderer) {
+  log('\nCannot continue — core modules failed to load.', 'error');
+  log('Make sure you are serving via HTTP: npx serve . from E:\\co\\GRID', 'error');
+  throw new Error('Module load failure');
+}
+
+// ============================================================
+// CREATE TEST GRID
+// ============================================================
+
+info('\nBuilding test grid...');
+
+const grid = GridCore.createGrid(40, 20, '@#$%&*+=-.~ GRIDWebgLl0123456789|', '#00ff00', {
+  name: 'WebGL2 Test'
+});
+
+let frame = grid.frames[0];
+const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff'];
+const chars = '@#$%&*+=-.~'.split('');
+
+// Diagonal pattern
+for (let i = 0; i < 20; i++) {
+  frame = GridCore.setCell(frame, i, i, {
+    char: chars[i % chars.length],
+    color: colors[i % colors.length],
+    density: i / 20
+  });
+}
+
+// Border
+for (let x = 0; x < 40; x++) {
+  frame = GridCore.setCell(frame, x, 0, { char: '-', color: '#666666' });
+  frame = GridCore.setCell(frame, x, 19, { char: '-', color: '#666666' });
+}
+for (let y = 0; y < 20; y++) {
+  frame = GridCore.setCell(frame, 0, y, { char: '|', color: '#666666' });
+  frame = GridCore.setCell(frame, 39, y, { char: '|', color: '#666666' });
+}
+
+// Corners
+frame = GridCore.setCell(frame, 0, 0, { char: '+', color: '#ffffff' });
+frame = GridCore.setCell(frame, 39, 0, { char: '+', color: '#ffffff' });
+frame = GridCore.setCell(frame, 0, 19, { char: '+', color: '#ffffff' });
+frame = GridCore.setCell(frame, 39, 19, { char: '+', color: '#ffffff' });
+
+// Text
+const text = 'GRID WebGL2';
+for (let i = 0; i < text.length; i++) {
+  frame = GridCore.setCell(frame, 14 + i, 10, { char: text[i], color: '#00ff00' });
+}
+
+grid.frames[0] = frame;
+
+// Second frame for animation
+let frame2 = GridCore.createFrame(grid, 'Frame 2');
+for (let i = 0; i < 20; i++) {
+  frame2 = GridCore.setCell(frame2, i + 2, i, {
+    char: chars[(i + 3) % chars.length],
+    color: colors[(i + 3) % colors.length],
+    density: (20 - i) / 20
+  });
+}
+grid.frames.push({ ...frame2, index: 1 });
+
+info(`Grid built: ${grid.canvas.width}×${grid.canvas.height}, ${grid.frames.length} frames, ${grid.frames[0].cells.length} cells in frame 0`);
+
+// ============================================================
+// INIT RENDERERS
+// ============================================================
+
+const canvas2dEl = document.getElementById('canvas2d');
+const webgl2El = document.getElementById('webgl2');
+
+let rendererC2D = null;
+let rendererGL = null;
+
+try {
+  rendererC2D = createRenderer(canvas2dEl, grid, { fontSize: 16, showGrid: false });
+  info('✓ Canvas2D renderer created');
+} catch (e) {
+  log(`Canvas2D renderer failed: ${e.message}`, 'error');
+}
+
+try {
+  rendererGL = createWebGL2Renderer(webgl2El, grid, { fontSize: 16, showGrid: false });
+  if (rendererGL) {
+    info('✓ WebGL2 renderer created');
+  } else {
+    log('WebGL2 context unavailable (returned null)', 'skip');
+  }
+} catch (e) {
+  log(`WebGL2 renderer failed: ${e.message}\n${e.stack}`, 'error');
+}
+
+// Show atlas
+if (rendererGL?.atlas) {
+  const ap = document.getElementById('atlasPreview');
+  ap.width = rendererGL.atlas.atlasWidth;
+  ap.height = rendererGL.atlas.atlasHeight;
+  const apCtx = ap.getContext('2d');
+  apCtx.putImageData(rendererGL.atlas.imageData, 0, 0);
+  info(`Atlas: ${rendererGL.atlas.atlasWidth}×${rendererGL.atlas.atlasHeight}, ${rendererGL.atlas.chars.length} chars, ${rendererGL.atlas.cols}×${rendererGL.atlas.rows} grid`);
+}
+
+// ============================================================
+// TESTS
+// ============================================================
+
+function runAllTests() {
+  passCount = 0;
+  failCount = 0;
+  logEl.innerHTML = '';
+  log('=== WebGL2 Renderer Browser Tests ===\n', 'info');
+
+  // --- parseHexColor ---
+  log('--- parseHexColor ---', 'info');
+
+  try {
+    const [r, g, b] = parseHexColor('#ff8800');
+    if (Math.abs(r - 1) < 0.01 && Math.abs(g - 0x88/255) < 0.01 && Math.abs(b) < 0.01) {
+      pass('parseHexColor #RRGGBB');
+    } else {
+      fail('parseHexColor #RRGGBB', `got [${r.toFixed(3)},${g.toFixed(3)},${b.toFixed(3)}]`);
+    }
+  } catch (e) { fail('parseHexColor #RRGGBB', e.message); }
+
+  try {
+    const [r, g, b] = parseHexColor(null);
+    if (Math.abs(g - 1) < 0.01) pass('parseHexColor null → fallback green');
+    else fail('parseHexColor null', `got [${r},${g},${b}]`);
+  } catch (e) { fail('parseHexColor null', e.message); }
+
+  // --- Font Atlas ---
+  log('\n--- Font Atlas ---', 'info');
+
+  try {
+    const atlas = buildFontAtlas('@#$. ', { fontSize: 16 });
+    if (atlas.charIndexMap.has('@') && atlas.charIndexMap.has(' ')) {
+      pass('buildFontAtlas basic charset');
+    } else {
+      fail('buildFontAtlas', 'missing expected chars');
+    }
+  } catch (e) { fail('buildFontAtlas', e.message); }
+
+  try {
+    const atlas = buildFontAtlas('@#$%&*+=-.~ ', { fontSize: 16 });
+    const w = atlas.atlasWidth;
+    const h = atlas.atlasHeight;
+    if ((w & (w - 1)) === 0 && (h & (h - 1)) === 0) {
+      pass(`Font atlas power-of-2: ${w}×${h}`);
+    } else {
+      fail('Font atlas power-of-2', `${w}×${h}`);
+    }
+  } catch (e) { fail('Font atlas power-of-2', e.message); }
+
+  try {
+    const charset = '@#$%&*+=-.~ ';
+    const atlas = buildFontAtlas(charset, { fontSize: 16 });
+    let allPresent = true;
+    for (const ch of charset) {
+      if (!atlas.uvMap.has(ch)) { allPresent = false; break; }
+      const uv = atlas.uvMap.get(ch);
+      if (uv.u < 0 || uv.v < 0 || uv.w <= 0 || uv.h <= 0) { allPresent = false; break; }
+    }
+    if (allPresent) pass('UV map has all chars with valid coords');
+    else fail('UV map', 'missing chars or invalid coords');
+  } catch (e) { fail('UV map', e.message); }
+
+  try {
+    const atlas = buildFontAtlas('@#$. ');
+    const idx = getCharIndex(atlas.charIndexMap, 'Z', atlas.defaultIndex);
+    if (idx === atlas.defaultIndex) pass('getCharIndex unknown → default');
+    else fail('getCharIndex unknown', `got ${idx}`);
+  } catch (e) { fail('getCharIndex unknown', e.message); }
+
+  // --- Instance Buffer ---
+  log('\n--- Instance Buffer ---', 'info');
+
+  try {
+    const cv = { width: 3, height: 2, charset: '@ ', defaultChar: ' ', defaultColor: '#00ff00' };
+    const fr = { cells: [] };
+    const cm = new Map([[' ', 0], ['@', 1]]);
+    const buf = buildInstanceBuffer(fr, cv, cm, 0);
+    if (buf.length === 30) pass('buildInstanceBuffer empty frame → 30 floats');
+    else fail('buildInstanceBuffer length', `expected 30, got ${buf.length}`);
+  } catch (e) { fail('buildInstanceBuffer empty', e.message); }
+
+  try {
+    const s = getBufferByteSize(200, 100);
+    if (s === 200 * 100 * 5 * 4) pass('getBufferByteSize 200×100 = 400,000 bytes');
+    else fail('getBufferByteSize', `expected ${200*100*5*4}, got ${s}`);
+  } catch (e) { fail('getBufferByteSize', e.message); }
+
+  // --- WebGL2 Renderer ---
+  log('\n--- WebGL2 Renderer ---', 'info');
+
+  if (!rendererGL) {
+    log('⏭️  Skipping WebGL2 renderer tests (no context)', 'skip');
+  } else {
+    // API parity
+    const requiredMethods = [
+      'renderFrame', 'nextFrame', 'prevFrame', 'goTo',
+      'play', 'pause', 'stop', 'togglePlay',
+      'setGrid', 'setOptions', 'eventToGrid', 'destroy'
+    ];
+    const requiredGetters = ['currentFrame', 'frameCount', 'playing', 'cellSize'];
+
+    let apiOk = true;
+    for (const m of requiredMethods) {
+      if (typeof rendererGL[m] !== 'function') {
+        fail(`API parity — missing method: ${m}`);
+        apiOk = false;
+      }
+    }
+    for (const g of requiredGetters) {
+      if (rendererGL[g] === undefined && rendererGL[g] !== 0 && rendererGL[g] !== false) {
+        fail(`API parity — missing getter: ${g}`);
+        apiOk = false;
+      }
+    }
+    if (apiOk) pass('API parity — all 12 methods + 4 getters present');
+
+    // Frame navigation
+    try {
+      rendererGL.goTo(0);
+      if (rendererGL.currentFrame === 0) pass('goTo(0)');
+      else fail('goTo(0)', `currentFrame=${rendererGL.currentFrame}`);
+    } catch (e) { fail('goTo(0)', e.message); }
+
+    try {
+      rendererGL.nextFrame();
+      if (rendererGL.currentFrame === 1) pass('nextFrame → 1');
+      else fail('nextFrame', `currentFrame=${rendererGL.currentFrame}`);
+    } catch (e) { fail('nextFrame', e.message); }
+
+    try {
+      rendererGL.prevFrame();
+      if (rendererGL.currentFrame === 0) pass('prevFrame → 0');
+      else fail('prevFrame', `currentFrame=${rendererGL.currentFrame}`);
+    } catch (e) { fail('prevFrame', e.message); }
+
+    // Cell size
+    try {
+      const cs = rendererGL.cellSize;
+      if (cs.width > 0 && cs.height > 0) pass(`cellSize: ${cs.width}×${cs.height}`);
+      else fail('cellSize', `${JSON.stringify(cs)}`);
+    } catch (e) { fail('cellSize', e.message); }
+
+    // Frame count
+    try {
+      if (rendererGL.frameCount === grid.frames.length) pass(`frameCount: ${rendererGL.frameCount}`);
+      else fail('frameCount', `expected ${grid.frames.length}, got ${rendererGL.frameCount}`);
+    } catch (e) { fail('frameCount', e.message); }
+
+    // Grid toggle
+    try {
+      rendererGL.setOptions({ showGrid: true });
+      rendererGL.renderFrame();
+      rendererGL.setOptions({ showGrid: false });
+      rendererGL.renderFrame();
+      pass('showGrid toggle (no crash)');
+    } catch (e) { fail('showGrid toggle', e.message); }
+
+    // setGrid
+    try {
+      rendererGL.setGrid(grid);
+      pass('setGrid round-trip (no crash)');
+    } catch (e) { fail('setGrid', e.message); }
+
+    // GL error check
+    try {
+      const err = rendererGL.gl.getError();
+      if (err === rendererGL.gl.NO_ERROR) pass('No GL errors after all operations');
+      else fail('GL errors present', `code: 0x${err.toString(16)}`);
+    } catch (e) { fail('GL error check', e.message); }
+  }
+
+  // --- Summary ---
+  log(`\n=== Results: ${passCount} passed, ${failCount} failed ===`,
+    failCount > 0 ? 'fail' : 'pass');
+}
+
+// ============================================================
+// BUTTON HANDLERS (addEventListener, not inline onclick)
+// ============================================================
+
+let gridVisible = false;
+
+document.getElementById('btn-run').addEventListener('click', runAllTests);
+
+document.getElementById('btn-play').addEventListener('click', () => {
+  if (rendererC2D) rendererC2D.togglePlay();
+  if (rendererGL) rendererGL.togglePlay();
+});
+
+document.getElementById('btn-grid').addEventListener('click', () => {
+  gridVisible = !gridVisible;
+  if (rendererC2D) rendererC2D.setOptions({ showGrid: gridVisible });
+  if (rendererGL) rendererGL.setOptions({ showGrid: gridVisible });
+});
+
+document.getElementById('btn-perf').addEventListener('click', () => {
+  log('\n=== Performance Benchmark ===', 'info');
+  if (!rendererGL) { log('No WebGL2 — cannot benchmark', 'fail'); return; }
+
+  const iterations = 100;
+
+  const c2dStart = performance.now();
+  for (let i = 0; i < iterations; i++) rendererC2D.renderFrame();
+  const c2dTime = performance.now() - c2dStart;
+
+  // Force GPU sync for accurate timing
+  rendererGL.gl.finish();
+  const glStart = performance.now();
+  for (let i = 0; i < iterations; i++) rendererGL.renderFrame();
+  rendererGL.gl.finish();
+  const glTime = performance.now() - glStart;
+
+  info(`Canvas2D: ${iterations} frames in ${c2dTime.toFixed(1)}ms (${(c2dTime/iterations).toFixed(2)}ms/frame)`);
+  info(`WebGL2:   ${iterations} frames in ${glTime.toFixed(1)}ms (${(glTime/iterations).toFixed(2)}ms/frame)`);
+  info(`Speedup:  ${(c2dTime / glTime).toFixed(1)}x`);
+});
+
+// Auto-run on load
+info('\n');
+runAllTests();
+</script>
+
+</body>
+</html> 
