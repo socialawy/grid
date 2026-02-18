@@ -1,0 +1,73 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+    "name": "Heartbeat",
+    "created": "2026-02-17T12:00:00Z",
+    "modified": "2026-02-17T12:30:00Z",
+    "author": "grid-dev",
+    "tags": ["demo", "music", "animation"]
+  },
+  "canvas": {
+    "width": 16,
+    "height": 8,
+    "charset": "@#$%&*+=-. ♥",
+    "defaultChar": " ",
+    "defaultColor": "#333333",
+    "background": "#0a0a0a"
+  },
+  "frames": [
+    {
+      "id": "beat_rest",
+      "index": 0,
+      "label": "Rest",
+      "duration": 400,
+      "cells": [
+        { "x": 7, "y": 4, "char": "♥", "color": "#660000", "density": 0.3, "semantic": "emissive" },
+        { "x": 8, "y": 4, "char": "♥", "color": "#660000", "density": 0.3, "semantic": "emissive" }
+      ],
+      "layers": ["visual", "audio"]
+    },
+    {
+      "id": "beat_hit",
+      "index": 1,
+      "label": "Hit",
+      "duration": 100,
+      "cells": [
+        { "x": 6, "y": 3, "char": "♥", "color": "#ff0044", "density": 0.9, "semantic": "emissive",
+          "channel": { "audio": { "note": "C", "octave": 4, "instrument": "kick", "velocity": 0.9 } } },
+        { "x": 7, "y": 3, "char": "♥", "color": "#ff0066", "density": 1.0, "semantic": "emissive",
+          "channel": { "audio": { "note": "C", "octave": 4, "instrument": "kick", "velocity": 1.0 } } },
+        { "x": 8, "y": 3, "char": "♥", "color": "#ff0066", "density": 1.0, "semantic": "emissive" },
+        { "x": 9, "y": 3, "char": "♥", "color": "#ff0044", "density": 0.9, "semantic": "emissive" },
+        { "x": 7, "y": 2, "char": "*", "color": "#ff4488", "density": 0.5, "semantic": "emissive" },
+        { "x": 8, "y": 2, "char": "*", "color": "#ff4488", "density": 0.5, "semantic": "emissive" },
+        { "x": 7, "y": 4, "char": "*", "color": "#ff4488", "density": 0.5, "semantic": "emissive" },
+        { "x": 8, "y": 4, "char": "*", "color": "#ff4488", "density": 0.5, "semantic": "emissive" }
+      ],
+      "layers": ["visual", "audio"]
+    }
+  ],
+  "sequences": [
+    {
+      "id": "seq_heartbeat",
+      "name": "Heartbeat Loop",
+      "frameIds": ["beat_rest", "beat_hit", "beat_rest", "beat_rest"],
+      "fps": 4,
+      "loop": true,
+      "consumers": ["visual", "audio"]
+    }
+  ],
+  "project": {
+    "bpm": 120,
+    "scale": "chromatic",
+    "key": "C",
+    "palette": {
+      "blood": "#ff0044",
+      "glow": "#ff4488",
+      "dark": "#660000",
+      "void": "#0a0a0a"
+    }
+  }
+}

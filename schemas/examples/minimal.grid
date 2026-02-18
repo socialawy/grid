@@ -1,0 +1,27 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "name": "Minimal Test",
+    "created": "2026-02-17T12:00:00Z",
+    "modified": "2026-02-17T12:00:00Z"
+  },
+  "canvas": {
+    "width": 10,
+    "height": 5,
+    "charset": "@#$%&*+=-.  ",
+    "defaultChar": ".",
+    "defaultColor": "#00ff00"
+  },
+  "frames": [
+    {
+      "id": "frame_001",
+      "index": 0,
+      "cells": [
+        { "x": 4, "y": 2, "char": "@" },
+        { "x": 5, "y": 2, "char": "@" }
+      ]
+    }
+  ]
+}

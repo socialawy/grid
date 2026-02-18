@@ -1,0 +1,103 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "c3d4e5f6-a7b8-4c9d-8e1f-2a3b4c5d6e7f",
+    "name": "The Mist — Demo Scene",
+    "created": "2026-02-17T12:00:00Z",
+    "modified": "2026-02-17T14:00:00Z",
+    "author": "grid-dev",
+    "tags": ["doxascope", "demo", "all-consumers"],
+    "notes": "Demonstrates all five consumer channels in a single grid frame."
+  },
+  "canvas": {
+    "width": 20,
+    "height": 10,
+    "charset": "@#$%&*+=-.:~^|█░▒▓ ",
+    "defaultChar": "░",
+    "defaultColor": "#222244",
+    "background": "#0a0a1a",
+    "fontFamily": "Courier New"
+  },
+  "frames": [
+    {
+      "id": "scene_001",
+      "index": 0,
+      "label": "Mist Clearing",
+      "cells": [
+        { "x": 0,  "y": 0, "char": "~", "color": "#334466", "density": 0.2, "semantic": "fluid" },
+        { "x": 1,  "y": 0, "char": "~", "color": "#334466", "density": 0.2, "semantic": "fluid" },
+        { "x": 2,  "y": 0, "char": "~", "color": "#445577", "density": 0.3, "semantic": "fluid" },
+        { "x": 10, "y": 0, "char": "~", "color": "#334466", "density": 0.2, "semantic": "fluid" },
+
+        { "x": 5,  "y": 5, "char": "@", "color": "#00ffcc", "density": 0.9, "semantic": "entity",
+          "channel": {
+            "audio": { "note": "E", "octave": 3, "instrument": "pad", "velocity": 0.6 },
+            "spatial": { "height": 2.0, "material": "emissive_teal", "collision": true },
+            "narrative": { "entityId": "adam", "state": "confused", "trigger": "on_approach" },
+            "ai": { "prompt": "lone figure in mist, teal glow, uncertain posture", "priority": 1.0 }
+          }
+        },
+
+        { "x": 15, "y": 3, "char": "+", "color": "#ffaa00", "density": 0.7, "semantic": "emissive",
+          "channel": {
+            "audio": { "note": "A", "octave": 4, "instrument": "bell", "velocity": 0.4 },
+            "spatial": { "height": 3.0, "material": "light_warm", "collision": false },
+            "narrative": { "entityId": "beacon", "state": "pulsing", "trigger": "on_look" },
+            "ai": { "prompt": "warm amber light source, beacon in fog", "priority": 0.8 }
+          }
+        },
+
+        { "x": 0,  "y": 9, "char": "█", "color": "#111122", "density": 1.0, "semantic": "boundary" },
+        { "x": 1,  "y": 9, "char": "█", "color": "#111122", "density": 1.0, "semantic": "boundary" },
+        { "x": 2,  "y": 9, "char": "▓", "color": "#1a1a33", "density": 0.85, "semantic": "solid",
+          "channel": { "spatial": { "height": 0.5, "material": "stone", "collision": true } }
+        },
+        { "x": 3,  "y": 9, "char": "▒", "color": "#222244", "density": 0.6, "semantic": "solid" },
+        { "x": 4,  "y": 9, "char": "░", "color": "#2a2a55", "density": 0.3, "semantic": "solid" },
+
+        { "x": 18, "y": 1, "char": "|", "color": "#444444", "density": 0.4, "semantic": "control",
+          "channel": {
+            "audio": { "note": "C", "octave": 2, "instrument": "drone", "velocity": 0.2 },
+            "spatial": { "height": 5.0, "material": "wireframe", "collision": false }
+          }
+        },
+
+        { "x": 10, "y": 8, "char": "^", "color": "#886644", "density": 0.5, "semantic": "solid",
+          "channel": { "spatial": { "height": 4.0, "material": "rock", "collision": true } }
+        },
+        { "x": 11, "y": 8, "char": "^", "color": "#886644", "density": 0.6, "semantic": "solid",
+          "channel": { "spatial": { "height": 4.5, "material": "rock", "collision": true } }
+        },
+        { "x": 10, "y": 7, "char": "^", "color": "#997755", "density": 0.7, "semantic": "solid",
+          "channel": { "spatial": { "height": 5.5, "material": "rock", "collision": true } }
+        }
+      ],
+      "layers": ["visual", "audio", "spatial", "narrative", "ai"]
+    }
+  ],
+  "sequences": [
+    {
+      "id": "seq_intro",
+      "name": "Mist Intro",
+      "frameIds": ["scene_001"],
+      "fps": 1,
+      "loop": false,
+      "consumers": ["visual", "audio", "spatial", "narrative", "ai"]
+    }
+  ],
+  "project": {
+    "bpm": 60,
+    "scale": "minor",
+    "key": "E",
+    "palette": {
+      "mist": "#334466",
+      "entity": "#00ffcc",
+      "beacon": "#ffaa00",
+      "ground": "#111122",
+      "rock": "#886644",
+      "void": "#0a0a1a"
+    },
+    "tier": 2
+  }
+}
