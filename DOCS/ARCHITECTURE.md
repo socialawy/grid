@@ -154,21 +154,30 @@ GRID/
 ├── src/
 │   ├── core/
 │   │   └── grid-core.js
-│   └── renderers/
-│       └── canvas-renderer.js
+│   ├── renderers/
+│   │   ├── canvas-renderer.js
+│   │   └── webgl2-renderer.js
+│   └── rendering/
+│       ├── font-atlas.js
+│       ├── instance-buffer.js
+│       └── shaders.js
 ├── tests/
 │   ├── test-grid-core.js
+│   ├── test-webgl2-modules.js
 │   ├── test-runner.html
+│   ├── webgl2-test.html
+│   ├── run-all.js
 │   ├── package.json
 │   └── README.md
 ├── dist/
 │   └── index.html
+├── package.json
 ├── README.md
 ├── .gitignore
 └── .windsurf/
     └── workflows/
 ```
-- Don't pre-create Phase 3+ folders. When music lands, src/consumers/music/ appears. When 3D lands, src/consumers/spatial/ appears. The tree grows like a recursive tree — branches only when the depth demands it.
+- Don't pre-create Phase 3+ folders. When music lands, src/consumers/music/ appears. When 3D lands, src/consumers/spatial/ appears. The tree grows like a recursive tree — branches only when depth demands it.
 ----
 
 # PHASED ROADMAP

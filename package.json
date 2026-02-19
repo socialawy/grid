@@ -1,0 +1,17 @@
+{
+  "name": "grid",
+  "version": "0.1.0",
+  "description": "GRID — Multi-channel ASCII art format and renderers",
+  "type": "module",
+  "main": "src/core/grid-core.js",
+  "scripts": {
+    "test": "node tests/run-all.js",
+    "test:core": "node tests/test-grid-core.js",
+    "test:webgl2": "node tests/test-webgl2-modules.js"
+  },
+  "keywords": ["ascii", "art", "renderer", "webgl", "canvas"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

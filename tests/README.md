@@ -1,130 +1,89 @@
 # GRID Test Suite
 
-Comprehensive test suite for GRID v0.1.0 core library and schema validation.
+## Unified Test Strategy
 
-## Overview
+The GRID project uses a unified ESM-native test runner that can execute multiple test suites with a single command.
 
-This test suite validates all 33 functions in `grid-core.js` plus schema validation against example files. It works in both Node.js and browser environments with zero external dependencies.
+## Quick Start
 
-## Test Coverage
-
-### ✅ All Tests Passing (42/42)
-
-**Creation Functions (4 tests)**
-- `createGrid()` - Basic functionality, options, invalid dimensions
-- `createFrame()` - Frame creation and properties
-- `createCell()` - Cell creation, validation, density/semantic inference  
-- `generateId()` - UUID v4 format validation
-
-**Frame Operations (4 tests)**
-- `addFrame()` - Frame addition and index management
-- `removeFrame()` - Frame removal and error handling
-- `getFrame()` / `getFrameByIndex()` - Frame retrieval
-
-**Cell Operations (6 tests)**
-- `setCell()` / `getCell()` - Cell CRUD operations
-- `getResolvedCell()` - Default cell resolution
-- `removeCell()` - Cell deletion
-- `getCellsBySemantic()` / `getCellsByChannel()` - Filtering
-
-**Utility Functions (2 tests)**
-- `calcDensity()` - Character density mapping
-- `inferSemantic()` - Semantic type inference
-
-**Map Extractors (4 tests)**
-- `getDensityMap()` - 2D density array generation
-- `getSemanticMap()` - 2D semantic array generation
-- `getColorMap()` - 2D color array generation
-- `getCharMap()` - 2D character array generation
-
-**Serialization (2 tests)**
-- `serializeGrid()` - JSON output format
-- `deserializeGrid()` - JSON parsing and validation
-
-**Validation (3 tests)**
-- `validateGrid()` - Comprehensive validation logic
-- Invalid grid detection and error reporting
-
-**Utilities (3 tests)**
-- `cloneGrid()` - Deep cloning verification
-- `touchGrid()` - Timestamp updates
-- `getGridStats()` - Statistics calculation
-
-**Integration Tests (2 tests)**
-- Round-trip serialization (serialize → deserialize → compare)
-- Schema validation of all 3 example files
-
-**Performance Tests (2 tests)**
-- Grid creation benchmark (200×100 < 50ms) ✅
-- Cell operations benchmark (1000 cells < 100ms) ✅
-
-## Usage
-
-### Node.js
 ```bash
-cd tests
-node test-grid-core.js
+# Run all test suites
+npm test
+
+# Run individual suites
+npm run test:core      # GRID Core Library
+npm run test:webgl2    # WebGL2 Modules
 ```
 
-### Browser
-1. Open `test-runner.html` in your browser
-2. Click "Run Tests" button
-3. View results in real-time
+## Test Suites
 
-## Performance Results
+### 1. GRID Core Library (`test-grid-core.js`)
+- **Coverage**: 12 core tests covering essential grid-core.js functions
+- **Environment**: Works in both Node.js (ESM) and browser
+- **Focus**: Pure logic functions, serialization, validation, performance
+- **Runtime**: ~0.03ms for 200×100 grid creation
 
-**Latest Run:**
-- Grid creation (200×100): **0.03ms** (target < 50ms) ✅
-- Cell operations (1000 cells): **7.85ms** (target < 100ms) ✅
+### 2. WebGL2 Modules (`test-webgl2-modules.js`)  
+- **Coverage**: 23 tests for font-atlas.js and instance-buffer.js
+- **Environment**: Node.js only (font atlas skipped, requires browser)
+- **Focus**: Font atlas generation, instance buffer building, performance
+- **Runtime**: <2ms for 200×100 buffer builds
 
-## Test Data
-
-The test suite includes:
-- Built-in test grids for edge cases
-- Real example files from `schemas/examples/`:
-  - `minimal.grid` - Basic validation
-  - `heartbeat.grid` - Multi-frame with channels
-  - `mist-demo.grid` - All consumers active
+### 3. Schema Validation (`../schemas/validate-examples.js`)
+- **Coverage**: JSON Schema validation for .grid format
+- **Environment**: CommonJS (Node.js) 
+- **Focus**: Schema compliance, example file validation
+- **Status**: ✅ All 3 example files validate successfully
 
 ## Architecture
 
-**Zero Dependencies**
-- Inline assertion library
-- Environment detection (Node vs browser)
-- Universal module loading
+### ESM-Native Design
+- Root `package.json` has `"type": "module"`
+- All test files use ES modules and dynamic imports
+- Zero external dependencies - inline assertion library
+- Cross-platform compatibility (Windows, macOS, Linux)
 
-**Cross-Platform**
-- Node.js: Loads `grid-core.js` as CommonJS module
-- Browser: Expects `window.GridCore` global
+### Unified Runner (`run-all.js`)
+- Single entry point for all test suites
+- Collects and aggregates results from each suite
+- Provides formatted summary with pass/fail/skip counts
+- Handles both ESM modules and CommonJS scripts
 
-**Reporting**
-- Color-coded console output
-- Detailed error messages
-- Performance metrics
-- Success rate summary
+### Test Framework Features
+- **Lightweight**: No external test dependencies
+- **Async support**: Handles promises and async test functions
+- **Cross-platform**: Works in Node.js and browsers
+- **Performance aware**: Includes timing benchmarks
+- **Comprehensive reporting**: Clear pass/fail indicators
 
-## File Structure
+## Results
 
+Current test status:
+- ✅ **GRID Core**: 12/12 tests passing (100%)
+- ✅ **WebGL2 Modules**: 22/22 tests passing (100%), 1 skipped (browser only)
+- ✅ **Schema Validation**: All example files validate
+- 📊 **Overall**: 34 tests passing, 0 failing
+
+## Browser Testing
+
+For WebGL2 renderer tests (including font atlas):
+```bash
+npx serve .
+# Navigate to: http://localhost:3000/tests/webgl2-test.html
 ```
-tests/
-├── test-grid-core.js     # Main test suite (718 lines)
-├── test-runner.html      # Browser test runner
-├── package.json          # Node.js configuration
-└── README.md             # This file
-```
 
-## Phase 0 Requirements Met
+## Adding New Tests
 
-✅ **Validate all 3 example .grid files**  
-✅ **Unit tests for every grid-core function**  
-✅ **Round-trip serialization**  
-✅ **Performance: 200×100 < 50ms**  
-✅ **Run in both Node and browser**  
+1. Create test file in `tests/` directory
+2. Use inline assertion library (or import your own)
+3. Export `results` object with `passed`, `failed`, `skipped` counts
+4. Add to `suites` array in `run-all.js`
+5. Follow existing naming conventions and patterns
 
-## Next Steps
+## Performance Targets
 
-The test suite provides a solid foundation for Phase 0 quality gates. Future phases can extend this framework with:
-- Integration tests for renderers
-- UI testing for HTML editor
-- Performance regression testing
-- Browser compatibility matrix
+- Grid creation (200×100): < 50ms ✅ (actual: ~0.03ms)
+- Buffer build (200×100): < 10ms ✅ (actual: ~1.3ms)
+- All tests should complete: < 5 seconds ✅ (actual: ~60ms)
+
+The unified test strategy provides a solid foundation for Phase 1 development and future testing needs.

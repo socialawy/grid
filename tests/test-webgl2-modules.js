@@ -362,4 +362,12 @@ console.log(`Skipped: ${skipped}`);
 console.log(`Total: ${passed + failed}`);
 console.log(`Success Rate: ${((passed / (passed + failed)) * 100).toFixed(1)}%\n`);
 
+// Export results for unified runner
+export const results = {
+  passed,
+  failed,
+  skipped,
+  summary: `WebGL2 Modules: ${passed} passed, ${failed} failed, ${skipped} skipped`
+};
+
 if (failed > 0) process.exit(1);
