@@ -157,13 +157,20 @@ GRID/
 │   ├── renderers/
 │   │   ├── canvas-renderer.js
 │   │   └── webgl2-renderer.js
-│   └── rendering/
-│       ├── font-atlas.js
-│       ├── instance-buffer.js
-│       └── shaders.js
+│   ├── rendering/
+│   │   ├── font-atlas.js
+│   │   ├── instance-buffer.js
+│   │   └── shaders.js
+│   ├── input/
+│   │   ├── key-bindings.js       ← Task 1.4: configurable shortcut map
+│   │   └── input-system.js       ← Task 1.4: unified mouse+touch+keyboard
+│   └── importers/
+│       └── image-importer.js     ← Task 1.6: image → .grid converter
 ├── tests/
 │   ├── test-grid-core.js
 │   ├── test-webgl2-modules.js
+│   ├── test-input-system.js      ← Task 1.4: 44 tests (Node, mock DOM)
+│   ├── test-image-importer.js    ← Task 1.6: 36 tests (Node, mock canvas)
 │   ├── test-runner.html
 │   ├── webgl2-test.html
 │   ├── run-all.js
@@ -208,7 +215,7 @@ GRID/
 ## PHASE 1: THE RENDERER (~)
 "WebGL2 grid engine with progressive WebGPU upgrade"
 
-  1.1  Custom WebGL2 instanced grid renderer
+  1.1  Custom WebGL2 instanced grid renderer (x)
        - Character atlas texture (runtime font loading)
        - Per-cell color, density, animation
        - Layer compositing (z-ordered grid layers)
@@ -216,10 +223,20 @@ GRID/
   1.3  textmode.js interop bridge
        - Import: read textmode.js sketch format → .grid
        - Export: write .grid → textmode.js compatible format
-  1.4  Input system (keyboard, mouse, touch — unified)
-  1.5  Procedural generators (port from your HTML proof-of-concept)
+  1.4  Input system (keyboard, mouse, touch — unified) (x)
+       - src/input/key-bindings.js — configurable shortcut map
+       - src/input/input-system.js — mouse+touch+keyboard → grid events
+       - Events: cellDown, cellMove, cellUp, cellHover, action
+       - dist/index.html wired: setupInputSystem() replaces raw DOM listeners
+  1.5  Procedural generators (port from HTML proof-of-concept `dist\index.html`)
        - Spiral, wave, mandala, noise, geometric
        - New: density-aware generators (respect semantic channel)
+  1.6  Image → .grid importer (x)   ← non-AI subset of Phase 5.4
+       - src/importers/image-importer.js — imageToGrid(img, opts) → Grid
+       - Pixel sampling: brightness → char ramp, RGB → color, density, semantic
+       - UI: 📷 Image button in header + sidebar, modal with live ASCII preview
+       - Zero AI, zero server — pure canvas getImageData() sampling
+       - Note: Phase 5.4 adds the AI-driven path on top of this foundation
 
   EXIT CRITERIA:
   ✓ 60fps grid rendering at 200x100 cells
@@ -227,6 +244,7 @@ GRID/
   ✓ textmode.js project imports successfully
   ✓ Touch works on mobile
   ✓ Procedural generators populate all 5 cell channels
+  ✓ Image → ASCII grid import works without AI or server
 
 ---
 

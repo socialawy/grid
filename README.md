@@ -116,16 +116,9 @@ See `DOCS/ACTION-PLAN.md` for the complete development roadmap. Phase 1 will foc
 
 ## License
 
-MIT License - see LICENSE file for details.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Submit a pull request
+Proprietary - see [LICENSE](file:///e:/co/GRID/LICENSE) file for details.
+Copyright (c) 2026 Socialawy. All rights reserved.
 
 ---
 
-**GRID v0.1.0** - Phase 0 Complete ✅
+**GRID v0.1.0** - Phase 1 Complete ✅

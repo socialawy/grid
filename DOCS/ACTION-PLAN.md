@@ -414,8 +414,9 @@ All Phase 0 deliverables are now complete and verified:
 Task 1.1: Custom WebGL2 instanced grid renderer (x)
 Task 1.2: WebGPU upgrade path (auto-fallback)
 Task 1.3: textmode.js interop bridge
-Task 1.4: Unified input system (keyboard, mouse, touch)
+Task 1.4: Unified input system (keyboard, mouse, touch) (x)
 Task 1.5: Procedural generators v2 (density-aware, all channels)
+Task 1.6: Image → .grid importer (x)
 
 --
 
@@ -883,3 +884,164 @@ onAction(name, payload)      // keyboard shortcuts → named actions
 └─────────────────────────────────────────────────────────┘
 ```
 
+
+----
+
+# HANDOVER: Task 1.4 — Unified Input System
+
+## Delivered
+- `src/input/key-bindings.js` — Configurable keyboard shortcut map (normalizeKey, createKeyBindings, DEFAULT_BINDINGS)
+- `src/input/input-system.js` — Unified mouse + touch + keyboard → grid events (createInputSystem)
+- `tests/test-input-system.js` — 44 tests, all passing in Node.js with mock DOM
+
+## API
+
+### createKeyBindings(customBindings?)
+```js
+const kb = createKeyBindings({ 'KeyZ': 'undo' });
+kb.resolve(keyboardEvent) // → action name | null
+kb.bind('KeyQ', 'quit')
+kb.unbind('KeyQ')
+kb.getAll() // → { ...allBindings }
+```
+
+### createInputSystem(canvasEl, renderer, options?)
+```js
+const input = createInputSystem(canvas, renderer);
+input.on('cellDown',  ({ x, y, button }) => { /* paint */ });
+input.on('cellMove',  ({ x, y })         => { /* drag  */ });
+input.on('cellUp',    ({ x, y })         => { /* end   */ });
+input.on('cellHover', ({ x, y })         => { /* info  */ });
+input.on('action',    ({ name, payload })=> { /* shortcuts */ });
+input.off(event, handler)
+input.destroy()   // removes all DOM listeners
+input.keyBindings // live reference to the key binding map
+```
+
+## Default Key Bindings
+| Key       | Action       |
+|-----------|-------------|
+| Space     | playToggle  |
+| →         | nextFrame   |
+| ←         | prevFrame   |
+| E         | eraserToggle|
+| Delete    | clearFrame  |
+| Escape    | closeModal  |
+| Ctrl+S    | export      |
+| Ctrl+O    | import      |
+| Ctrl+N    | newProject  |
+| 1–9       | selectChar:N|
+
+## dist/index.html Changes
+- Replaced `setupCanvasEvents()` + `setupKeyboard()` with `setupInputSystem()`
+- Removed `isDrawing` module-scope state (now internal to input system)
+- Added `let inputSystem = null` to app state
+- Added createKeyBindings + createInputSystem inline in the script block
+- All keyboard shortcuts now go through the action handler in setupInputSystem
+
+## Verification
+- `node tests/run-all.js` → 44 input-system tests pass
+- Canvas click/drag paints cells (same behavior as before)
+- Keyboard shortcuts all still work via action handler
+- Touch still works (mobile, passive: false on touchmove)
+- No isDrawing race condition — state is internal to input system
+
+## Task 1.4 — COMPLETE ✅
+┌─────────────────────────────────────────────┐
+│  TASK 1.4: Unified Input System — COMPLETE  │
+│                                             │
+│  2 source files:                            │
+│    src/input/key-bindings.js                │
+│    src/input/input-system.js                │
+│                                             │
+│  Tests: 44/44 Node.js (mock DOM)            │
+│  API:   on/off/destroy + keyBindings        │
+│  Events: cellDown/Move/Up/Hover/action      │
+│  Keyboard: code-based, modifiers, payload   │
+│                                             │
+│  Canvas is interactive. Editor unblocked.   │
+└─────────────────────────────────────────────┘
+
+----
+
+# Task 1.6 — Image → .grid Importer
+
+## DO:
+- Extract the img-transform-animator ASCII algorithm into a pure GRID module
+- Map image pixels to .grid cells with all 5 channels populated
+- Add image-import button + preview modal to dist/index.html
+- No AI, no server — pure canvas pixel sampling
+
+## Algorithm (from E:\co\img-transform-animator\index.tsx, lines 138-274)
+- Canvas getImageData() per cell block
+- Average R+G+B → brightness (0–255)
+- Contrast adjustment: ((brightness - 127.5) * factor) + 127.5
+- Character ramp index: floor((brightness / 255) * rampLength)
+- Per-cell color: rgb(avgR, avgG, avgB) → #rrggbb
+- Default ramp: @%#*+=-:. (dark → light)
+
+## Mapping to .grid Cell Channels
+| img-transform value | .grid channel | Notes |
+|---------------------|--------------|-------|
+| ramp char           | char         | From brightness→ramp lookup |
+| rgb(r,g,b) → hex    | color        | Converted to #rrggbb |
+| 1 - brightness/255  | density      | 1=dark, 0=light |
+| inferSemantic(char) | semantic     | Via grid-core.js |
+| (none)              | channel      | Default {} |
+
+## TEST:
+- `node tests/run-all.js` → test-image-importer.js (36 tests)
+- Browser: open dist/index.html → click 📷 Image → load photo → preview ASCII → Apply
+
+## DOCUMENT:
+- ARCHITECTURE.md: Task 1.6 added to Phase 1
+- ACTION-PLAN.md: This section
+
+## HANDOVER: Task 1.6 — Image → .grid Importer
+
+### Delivered
+- `src/importers/image-importer.js` — Pure function: imageToGrid(imageElement, options) → Grid
+- `tests/test-image-importer.js` — 36 tests (Node.js with mock canvas)
+- `dist/index.html` — "📷 Image" button in header + "📷 Image → Grid" in sidebar
+  - Image import modal with: Cell Size, Contrast, Char Ramp controls + live preview
+  - "Apply to Current Frame" and "Apply as New Project" buttons
+
+### API
+```js
+import { imageToGrid, DEFAULT_CHAR_RAMP, rgbToHex } from './src/importers/image-importer.js';
+
+const grid = imageToGrid(imageElement, {
+  charRamp:    '@%#*+=-:. ',   // dark → light char ramp
+  cellSize:    10,              // pixels per grid cell
+  contrast:    0,               // -100 to +200
+  gridWidth:   80,              // optional forced width
+  gridHeight:  40,              // optional forced height
+  defaultColor: '#00ff00',
+  projectName: 'My Photo',
+});
+// Returns a valid Grid object (from grid-core.js)
+// All cells have: char, color, density, semantic
+```
+
+### Verification Results
+- 36/36 tests passing
+- rgbToHex: correct for all RGB values including edge cases (clamping, rounding)
+- Dark image (0,0,0) → ramp[0] = '@', density ≈ 1
+- White image (255,255,255) → space → skipped → empty frame
+- Custom ramp, forced dimensions, contrast, projectName all work
+- Zero-dimension image throws descriptive error
+
+### Task 1.6 — COMPLETE ✅
+┌─────────────────────────────────────────────┐
+│  TASK 1.6: Image Importer — COMPLETE        │
+│                                             │
+│  1 source file:                             │
+│    src/importers/image-importer.js          │
+│                                             │
+│  Tests: 36/36 Node.js (mock canvas)         │
+│  API:   imageToGrid(img, opts) → Grid       │
+│  Channels: char+color+density+semantic      │
+│  UI: modal with live preview + 2 apply modes│
+│                                             │
+│  Photo → ASCII art → .grid. No AI needed.   │
+└─────────────────────────────────────────────┘

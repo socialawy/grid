@@ -116,8 +116,18 @@ async function runAllTests() {
       environment: 'node'
     },
     {
-      name: 'WebGL2 Modules (font-atlas, instance-buffer)', 
+      name: 'WebGL2 Modules (font-atlas, instance-buffer)',
       file: 'test-webgl2-modules.js',
+      environment: 'node'
+    },
+    {
+      name: 'Input System (key-bindings + input-system)',
+      file: 'test-input-system.js',
+      environment: 'node'
+    },
+    {
+      name: 'Image Importer (imageToGrid + rgbToHex)',
+      file: 'test-image-importer.js',
       environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues

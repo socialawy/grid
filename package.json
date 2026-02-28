@@ -9,9 +9,15 @@
     "test:core": "node tests/test-grid-core.js",
     "test:webgl2": "node tests/test-webgl2-modules.js"
   },
-  "keywords": ["ascii", "art", "renderer", "webgl", "canvas"],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "ascii",
+    "art",
+    "renderer",
+    "webgl",
+    "canvas"
+  ],
+  "author": "Socialawy",
+  "license": "UNLICENSED",
   "dependencies": {},
   "devDependencies": {}
 }
