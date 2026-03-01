@@ -589,25 +589,25 @@ function createInputSystem(canvasEl, rend, opts = {}) {
     const { gridX: x, gridY: y } = toGrid(e);
     emit('cellUp', { x, y });
   }
-  function synth(te) {
+  function extractTouch(te) {
     const t = te.touches[0] ?? te.changedTouches[0];
     return t ? { clientX: t.clientX, clientY: t.clientY } : null;
   }
   function onTouchStart(e) {
     e.preventDefault();
-    const s = synth(e); if (!s) return;
+    const s = extractTouch(e); if (!s) return;
     const { gridX: x, gridY: y } = toGrid(s);
     isDown = true; lastCell = { x, y }; emit('cellDown', { x, y, button: 0 });
   }
   function onTouchMove(e) {
     e.preventDefault(); if (!isDown) return;
-    const s = synth(e); if (!s) return;
+    const s = extractTouch(e); if (!s) return;
     const { gridX: x, gridY: y } = toGrid(s);
     if (x !== lastCell.x || y !== lastCell.y) { lastCell = { x, y }; emit('cellMove', { x, y }); }
   }
   function onTouchEnd(e) {
     if (!isDown) return; isDown = false;
-    const s = synth(e); if (!s) return;
+    const s = extractTouch(e); if (!s) return;
     const { gridX: x, gridY: y } = toGrid(s); emit('cellUp', { x, y });
   }
   function onKeyDown(e) {
