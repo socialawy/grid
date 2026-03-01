@@ -57,3 +57,4 @@ temp/
 # Local files
 *.local
 local-files/
+memory/

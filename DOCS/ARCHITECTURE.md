@@ -116,7 +116,7 @@ TIER 0 — OFFLINE FLOOR (phone, airplane mode)
   Audio:      Web Audio API oscillators
   Export:     JSON .grid files, SVG
   AI:         None. Pure procedural.
-  Footprint:  Single HTML file, < 200KB
+  Footprint:  Single HTML file, < 200~300KB
 
 TIER 1 — MID (laptop, browser)
   Renderer:   WebGPU auto-upgrade (Three.js r171+ pattern, Q2)
@@ -215,7 +215,7 @@ GRID/
 
 ---
 
-## PHASE 1: THE RENDERER (~)
+## PHASE 1: THE RENDERER (x) 2026-02-25
 "WebGL2 grid engine with progressive WebGPU upgrade"
 
   1.1  Custom WebGL2 instanced grid renderer (x)
@@ -255,7 +255,7 @@ GRID/
 
 ---
 
-## PHASE 2: PERSISTENCE & PROJECT (Week 6-7)
+## PHASE 2: PERSISTENCE & PROJECT (x) 2026-02-27
 "Save, load, organize — offline forever"
 
   2.1  OPFS storage layer (cross-browser)
@@ -279,7 +279,7 @@ GRID/
 
 ---
 
-## PHASE 3: THE MUSIC CONSUMER (Week 8-11)
+## PHASE 3: THE MUSIC CONSUMER (~) 2026-02-28
 "The grid plays"
 
   3.1  Grid-to-music mapping engine
@@ -322,7 +322,7 @@ GRID/
        - Instanced geometry from grid data
        - Material assignment from semantic channel
        - Camera presets (orbit, flyover, first-person)
-  4.3  VirtuaStudio Pro bridge
+  4.3  VirtuaStudio Pro bridge `E:\co\virtuastudio-pro`
        - Export .grid heightmap as VSP module input
        - Import VSP camera paths for grid-guided animation
   4.4  glTF export (static scenes)
