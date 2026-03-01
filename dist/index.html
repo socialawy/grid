@@ -1730,10 +1730,16 @@ function clearFrame() {
 // PLAYBACK
 // ================================================================
 function togglePlayback() {
+  if (playbackMode === 'music') { toggleMusicPlayback(); return; }
   const playing = renderer.toggle();
   document.getElementById('playBtn').textContent = playing ? '⏸ Pause' : '▶ Play';
 }
-function stopPlayback() { renderer.stop(); document.getElementById('playBtn').textContent = '▶ Play'; updateUI(); }
+function stopPlayback() {
+  if (playbackMode === 'music') { stopMusicPlayback(); return; }
+  renderer.stop();
+  document.getElementById('playBtn').textContent = '▶ Play';
+  updateUI();
+}
 
 // ----------------------------------------------------------------
 // MUSIC TRANSPORT
