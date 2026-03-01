@@ -222,6 +222,8 @@ label{font-size:11px;color:var(--dim);display:block;margin-bottom:2px}
         <button onclick="stopPlayback()" class="small">⏹</button>
       </div>
       <div class="sep"></div>
+      <button id="modeToggleBtn" onclick="togglePlaybackMode()" class="small" title="Switch between frame animation and music playback">Frames</button>
+      <div class="sep"></div>
       <label style="margin:0;display:flex;align-items:center;gap:4px">
         FPS <input type="number" id="fpsInput" value="10" min="1" max="60" style="width:45px"
                    onchange="updateFps(+this.value)">
@@ -1462,6 +1464,9 @@ let inputSystem = null;
 let selectedChar = '@';
 let selectedColor = '#00ff88';
 let eraserMode = false;
+let playbackMode = 'frames';   // 'frames' | 'music'
+let audioCtx = null;
+let synth = null;
 
 const COLORS = ['#00ff88','#00aaff','#ff4466','#ffcc00','#ff44ff','#44ffff','#ffffff','#ff8800','#88ff00','#8844ff','#ff0000','#00ff00','#4488ff','#888888','#cccccc','#444444'];
 
