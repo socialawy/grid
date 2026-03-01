@@ -159,6 +159,11 @@ async function runAllTests() {
       name: 'Synth Engine (Task 3.2 - Web Audio synthesis layer)',
       file: 'test-synth-engine.js',
       environment: 'node'
+    },
+    {
+      name: 'MIDI Output (Task 3.4 - Web MIDI scheduling)',
+      file: 'test-midi-output.js',
+      environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {
