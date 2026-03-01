@@ -139,6 +139,11 @@ async function runAllTests() {
       name: 'Serializer (compact, round-trip, migration, validation)',
       file: 'test-serializer.js',
       environment: 'node'
+    },
+    {
+      name: 'OPFS Store (save, load, delete, list, exists)',
+      file: 'test-opfs-store.js',
+      environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {
