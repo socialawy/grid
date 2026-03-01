@@ -1734,6 +1734,63 @@ function togglePlayback() {
   document.getElementById('playBtn').textContent = playing ? '⏸ Pause' : '▶ Play';
 }
 function stopPlayback() { renderer.stop(); document.getElementById('playBtn').textContent = '▶ Play'; updateUI(); }
+
+// ----------------------------------------------------------------
+// MUSIC TRANSPORT
+// ----------------------------------------------------------------
+function keyToMidi(key) {
+  const map = { C:60,'C#':61,D:62,'D#':63,E:64,F:65,'F#':66,G:67,'G#':68,A:69,'A#':70,B:71 };
+  return map[key] ?? 60;
+}
+
+function toggleMusicPlayback() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    synth = createSynthEngine(audioCtx);
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  if (synth.isPlaying) {
+    synth.pause();
+    document.getElementById('playBtn').textContent = '▶ Play';
+    return;
+  }
+  const bpm = grid.project.bpm || 120;
+  const scale = grid.project.scale || 'chromatic';
+  synth.play(grid, renderer.current, {
+    bpm,
+    scale,
+    rootNote: keyToMidi(grid.project.key || 'C'),
+    subdivision: 4,
+    loop: true,
+    onColumnChange(col) { renderer.setPlayheadColumn(col); },
+  });
+  document.getElementById('playBtn').textContent = '⏸ Pause';
+  setStatus(`Playing — ${bpm} BPM, ${scale}`);
+}
+
+function stopMusicPlayback() {
+  if (synth) synth.stop();
+  renderer.setPlayheadColumn(-1);
+  document.getElementById('playBtn').textContent = '▶ Play';
+  setStatus('Stopped');
+}
+
+function togglePlaybackMode() {
+  // Stop whatever is currently playing
+  if (playbackMode === 'frames') {
+    renderer.stop();
+    document.getElementById('playBtn').textContent = '▶ Play';
+  } else {
+    stopMusicPlayback();
+  }
+  // Flip mode
+  playbackMode = playbackMode === 'frames' ? 'music' : 'frames';
+  const btn = document.getElementById('modeToggleBtn');
+  btn.textContent = playbackMode === 'music' ? 'Music' : 'Frames';
+  btn.className = playbackMode === 'music' ? 'small active' : 'small';
+  setStatus(`Mode: ${playbackMode}`);
+}
+
 function nextFrameAction() { renderer.next(); updateUI(); }
 function prevFrameAction() { renderer.prev(); updateUI(); }
 function updateFps(v) { renderer.setFps(Math.max(1, Math.min(60, v))); }
