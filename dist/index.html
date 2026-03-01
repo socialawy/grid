@@ -2193,6 +2193,9 @@ function createNewProject() {
   if (synth) { synth.stop(); synth = null; }
   if (audioCtx) { audioCtx.close(); audioCtx = null; }
   if (renderer) renderer.setPlayheadColumn(-1);
+  playbackMode = 'frames';
+  const _modeBtn = document.getElementById('modeToggleBtn');
+  if (_modeBtn) { _modeBtn.textContent = 'Frames'; _modeBtn.className = 'small'; }
   const name = document.getElementById('npName').value || 'Untitled';
   const w = Math.max(1, Math.min(1000, +document.getElementById('npWidth').value || 40));
   const h = Math.max(1, Math.min(1000, +document.getElementById('npHeight').value || 20));
@@ -2310,6 +2313,9 @@ function loadGridIntoApp(g) {
   if (synth) { synth.stop(); synth = null; }
   if (audioCtx) { audioCtx.close(); audioCtx = null; }
   if (renderer) renderer.setPlayheadColumn(-1);
+  playbackMode = 'frames';
+  const _modeBtn = document.getElementById('modeToggleBtn');
+  if (_modeBtn) { _modeBtn.textContent = 'Frames'; _modeBtn.className = 'small'; }
   grid = g;
   selectedChar = grid.canvas.charset[0] || '@';
   selectedColor = grid.canvas.defaultColor || '#00ff88';
