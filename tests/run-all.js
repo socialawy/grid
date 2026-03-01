@@ -144,6 +144,11 @@ async function runAllTests() {
       name: 'OPFS Store (save, load, delete, list, exists)',
       file: 'test-opfs-store.js',
       environment: 'node'
+    },
+    {
+      name: 'FS Access API (save, open, cascade, download fallback)',
+      file: 'test-fs-access.js',
+      environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {
