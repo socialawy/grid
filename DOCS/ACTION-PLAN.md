@@ -452,8 +452,6 @@ It's set to 75 BPM on the Chromatic scale. I used the Yellow "Arp" channel, whic
 > The 3D button's tooltip will now dynamically show which frame is being rendered if the project has multiple frames, and defaults to just "3D View" if there's only one. 
 
 
-### 
-
 ## Deferred:
 4.3 VSP bridge → Phase 8. 4.4 glTF export → Phase 6 (export pipeline is the natural home — `getScene()` is already the hook).
 
@@ -506,3 +504,543 @@ test-heightmap.js: 68 passed, 0 failed
 - Heightmap Engine: Cells are mapped to 3D voxels based on density and semantic types.
 - Camera Controls: Orbit around the scene or use the new presets (Orbit, Flyover, Top).
 - Verification: 661 tests (including new heightmap tests) are passing, and manual verification in the browser confirmed full functionality.
+
+----
+
+# GRID — Build Script + Phase 6 Export Pipeline
+**Plan Document** · 2026-03-02
+
+---
+
+## PART 1 — THE BUILD SCRIPT
+
+### Why Now
+
+`dist/index.html` is 3155 lines with 13 inlined modules. Every new module
+(Phase 6 adds at least 4) means another manual inline pass, another `clamp`
+scope bug waiting to happen. The build script turns that into a 20-line Node
+script that runs before every commit.
+
+### What the Current File Looks Like
+
+```
+dist/index.html (3155 lines)
+├── <head>            lines   1–  21  (meta, THREE.js CDN loader)
+├── <style>           lines  22– 590  (all CSS, ~570 lines)
+├── <body HTML>       lines 591– 873  (toolbar, sidebar, canvas, modals)
+└── <script>          lines 874–3155  (2281 lines of JS)
+    ├── GRID-CORE.JS              876
+    ├── CANVAS RENDERER           929
+    ├── KEY BINDINGS             1017
+    ├── INPUT SYSTEM             1050
+    ├── MUSIC MAPPER             1142
+    ├── SYNTH ENGINE             1234
+    ├── IMAGE IMPORTER           1716
+    ├── SERIALIZER               1780
+    ├── OPFS STORE               1838
+    ├── HEIGHTMAP ENGINE         1894
+    ├── SCENE BUILDER            1933
+    ├── FS ACCESS                2010
+    ├── APP STATE + INIT         2079
+    ├── INPUT SYSTEM SETUP       2295
+    └── GENERATORS               2535
+```
+
+Note: WebGL2 renderer is NOT inlined — the app is running Canvas2D only
+in dist/index.html. WebGL2 lives in src/renderers/ but hasn't been wired
+into the HTML yet. This is fine — the build script will make that easy
+to add when ready.
+
+### The Template Split
+
+Split `dist/index.html` into three source files:
+
+```
+src/
+├── shell/
+│   ├── head.html       ← <head> block (meta, CDN loader)
+│   ├── body.html       ← HTML structure (toolbar, sidebar, modals)
+│   ├── style.css       ← all CSS extracted from <style>
+│   └── app.js          ← app state, init, event wiring, UI logic
+│                         (everything AFTER the module inlines)
+```
+
+Everything else is already in `src/` modules — the build script just
+reads them in the right order.
+
+### Module Load Order (dependency graph → concat order)
+
+```
+1. grid-core.js               (no deps)
+2. canvas-renderer.js         (needs grid-core)
+3. rendering/font-atlas.js    (no deps — for future WebGL2)
+4. rendering/instance-buffer.js (needs font-atlas)
+5. rendering/shaders.js       (no deps)
+6. input/key-bindings.js      (no deps)
+7. input/input-system.js      (needs key-bindings)
+8. generators/generators.js   (needs grid-core)
+9. importers/image-importer.js (needs grid-core)
+10. persistence/serializer.js  (needs grid-core)
+11. persistence/opfs-store.js  (needs serializer)
+12. persistence/fs-access.js   (needs serializer)
+13. consumers/music/music-mapper.js  (needs grid-core)
+14. consumers/music/synth-engine.js  (standalone)
+15. consumers/music/midi-output.js   (standalone)
+16. consumers/spatial/heightmap.js   (needs grid-core)
+17. consumers/spatial/scene-builder.js (needs heightmap, THREE CDN)
+18. src/shell/app.js           (needs everything above)
+```
+
+Phase 6 adds to this list — exporters slot in at positions 18–21,
+before app.js.
+
+### The Build Script: `build.js`
+
+```javascript
+// build.js — GRID concatenation build
+// Usage: node build.js
+// Output: dist/index.html
+
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { join } from 'path';
+
+const ROOT = new URL('.', import.meta.url).pathname;
+
+// ── Module list in dependency order ──────────────────────────────────
+const MODULES = [
+  'src/core/grid-core.js',
+  'src/renderers/canvas-renderer.js',
+  'src/input/key-bindings.js',
+  'src/input/input-system.js',
+  'src/generators/generators.js',
+  'src/importers/image-importer.js',
+  'src/persistence/serializer.js',
+  'src/persistence/opfs-store.js',
+  'src/persistence/fs-access.js',
+  'src/consumers/music/music-mapper.js',
+  'src/consumers/music/synth-engine.js',
+  'src/consumers/music/midi-output.js',
+  'src/consumers/spatial/heightmap.js',
+  'src/consumers/spatial/scene-builder.js',
+  // Phase 6 slots in here:
+  // 'src/exporters/svg-exporter.js',
+  // 'src/exporters/midi-exporter.js',
+  // 'src/exporters/gltf-exporter.js',
+  // 'src/exporters/video-exporter.js',
+];
+
+const APP_JS    = 'src/shell/app.js';
+const HEAD_HTML = 'src/shell/head.html';
+const BODY_HTML = 'src/shell/body.html';
+const STYLE_CSS = 'src/shell/style.css';
+const OUT       = 'dist/index.html';
+
+// ── Strip ESM import/export for browser inlining ─────────────────────
+function stripEsm(src) {
+  return src
+    .replace(/^import\s+.*?from\s+['"][^'"]+['"]\s*;?\s*$/gm, '')
+    .replace(/^export\s+(default\s+)?/gm, '')
+    .replace(/^export\s*\{[^}]*\}\s*;?\s*$/gm, '')
+    .trim();
+}
+
+// ── Read a file, strip ESM, wrap in section comment ───────────────────
+function inlineModule(path) {
+  const full = join(ROOT, path);
+  if (!existsSync(full)) {
+    console.warn(`  ⚠️  Missing: ${path} — skipped`);
+    return '';
+  }
+  const src  = readFileSync(full, 'utf8');
+  const name = path.replace('src/', '').replace('.js', '');
+  return `\n    // ═══ ${name} ═══\n${stripEsm(src)}\n`;
+}
+
+// ── Build ─────────────────────────────────────────────────────────────
+const head  = readFileSync(join(ROOT, HEAD_HTML), 'utf8');
+const style = readFileSync(join(ROOT, STYLE_CSS), 'utf8');
+const body  = readFileSync(join(ROOT, BODY_HTML), 'utf8');
+const app   = readFileSync(join(ROOT, APP_JS),    'utf8');
+
+const modules = MODULES.map(inlineModule).join('\n');
+
+const html = `<!DOCTYPE html>
+<html lang="en">
+${head}
+<style>
+${style}
+</style>
+${body}
+<script>
+${modules}
+    // ═══ app ═══
+${stripEsm(app)}
+</script>
+</body>
+</html>`;
+
+writeFileSync(join(ROOT, OUT), html, 'utf8');
+const lines = html.split('\n').length;
+console.log(`✅ Built dist/index.html — ${lines} lines`);
+```
+
+### Migration Task (one-time, before Phase 6 starts)
+
+```
+TASK B.1 — Extract src/shell/ from current dist/index.html
+  B.1.1  Copy lines   1– 21 → src/shell/head.html
+  B.1.2  Copy lines  22–590 → src/shell/style.css
+  B.1.3  Copy lines 591–873 → src/shell/body.html
+  B.1.4  Copy lines 2079–end (app state, init, generators UI, image
+          import UI, modals, auto-save, settings) → src/shell/app.js
+  B.1.5  Delete the 13 inlined module blocks from app.js
+          (they will be re-injected by build.js)
+  B.1.6  node build.js → verify dist/index.html renders identically
+  B.1.7  node tests/run-all.js → still 661/0/1
+
+TASK B.2 — Wire build into package.json
+  "build": "node build.js",
+  "dev":   "node build.js && npx serve dist"
+
+EXIT: node build.js produces a working dist/index.html from sources.
+      Manual inline patching is retired.
+```
+
+---
+
+## PART 2 — PHASE 6: THE EXPORT PIPELINE
+
+### Scope Decision
+
+Full Phase 6 from the charter has 6 tasks. Prioritized by value/effort:
+
+| Task | Deliverable | Effort | Value | Decision |
+|------|-------------|--------|-------|----------|
+| 6.2a SVG export | Vector grid render, print quality | Low | High | **PHASE 6** |
+| 6.3b MIDI file | .mid download from music consumer | Low | High | **PHASE 6** |
+| 6.4  glTF export | 3D scene → Blender-ready | Medium | High | **PHASE 6** |
+| 6.1  Video (WebCodecs) | MP4 animation | High | High | **PHASE 6** |
+| 6.2b PNG export | Rasterized grid | Low | Medium | **PHASE 6** |
+| 6.2c GIF export | Animated sequence | High | Medium | **DEFER → Phase 8** |
+| 6.3a WAV render | Audio from synth | High | Medium | **DEFER → Phase 8** |
+| 6.5  Combined mux | Video + audio | High | Low now | **DEFER → Phase 8** |
+| 6.6  VideoFormation bridge | External project | Medium | Conditional | **DEFER** |
+
+GIF and WAV deferred — GIF requires frame-by-frame canvas capture + encoder
+(complex), WAV requires offline AudioContext render (fiddly). Neither is
+blocking for the Doxascope MIST visual pipeline.
+
+### Architecture: `src/exporters/`
+
+Every exporter is a pure function module — no DOM dependency except where
+the spec requires it (WebCodecs, canvas). Each is independently testable.
+
+```
+src/exporters/
+├── svg-exporter.js     ← grid frame → SVG string (pure, no DOM)
+├── midi-exporter.js    ← NoteEvent[] → .mid binary (pure, no DOM)
+├── gltf-exporter.js    ← THREE.Scene → glTF JSON/binary (browser)
+└── video-exporter.js   ← grid frames → MP4 via WebCodecs (browser)
+```
+
+Export button in UI: single **Export** modal with tabs.
+Already exists in toolbar — currently only exports JSON. Phase 6 replaces
+that modal with the full export panel.
+
+---
+
+### Task 6.2a — SVG Exporter
+
+**File**: `src/exporters/svg-exporter.js`
+**Deps**: zero. Pure string generation.
+**Tests**: Node-compatible, ~40 tests.
+
+```
+gridToSvg(grid, frameIndex, opts) → string (SVG markup)
+
+opts:
+  fontSize:    number   — px per cell (default 14)
+  fontFamily:  string   — (default 'Courier New, monospace')
+  colorMode:   'cell' | 'mono' | 'none'
+  background:  string   — fill color or 'transparent'
+  includeGrid: boolean  — draw cell border lines
+
+Output: complete <svg>…</svg> string, ready for:
+  - download as .svg
+  - embed in HTML
+  - open in Illustrator/Inkscape at any resolution
+  - use as Doxascope visual asset
+```
+
+Each cell → `<text>` element with `x`, `y`, `fill`, `font-size`.
+Grid lines (optional) → `<line>` elements.
+Viewbox sized to canvas dimensions × fontSize.
+
+---
+
+### Task 6.3b — MIDI File Exporter
+
+**File**: `src/exporters/midi-exporter.js`
+**Deps**: zero. Pure binary buffer generation. No Web MIDI API.
+**Tests**: Node-compatible, ~35 tests.
+
+```
+noteEventsToMidi(noteEvents, opts) → Uint8Array (Standard MIDI File)
+
+opts:
+  bpm:        number  — tempo (default 120)
+  ticksPerBeat: number — resolution (default 480)
+  trackName:  string
+
+Output: SMF Type 0 (single track), downloadable as .mid
+        Opens in any DAW (Ableton, Logic, FL Studio, GarageBand)
+```
+
+SMF format is well-specified and pure binary — no external library needed.
+Header chunk + track chunk, delta-time encoded note on/off events.
+The music-mapper already produces `NoteEvent[]` — this is the missing
+"save to disk" step for that consumer.
+
+---
+
+### Task 6.4 — glTF Exporter
+
+**File**: `src/exporters/gltf-exporter.js`
+**Deps**: THREE.js (browser, CDN). Uses THREE.GLTFExporter from CDN.
+**Tests**: mock-based, ~20 tests for the wrapper logic.
+
+```
+sceneToGltf(threeScene, opts) → Promise<{ json?, binary? }>
+
+opts:
+  binary:  boolean  — .glb (binary) vs .gltf (JSON) (default false)
+  onlyVisible: boolean
+
+Output: .glb or .gltf file, opens in Blender, Unity, Unreal
+```
+
+THREE.GLTFExporter is the standard exporter — it's part of the Three.js
+examples, loadable from CDN. The `getScene()` hook in scene-builder.js
+already exposes the THREE.Scene. This task is largely wiring.
+
+CDN URL for GLTFExporter (r128):
+`https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js`
+
+---
+
+### Task 6.1 — Video Exporter (WebCodecs)
+
+**File**: `src/exporters/video-exporter.js`
+**Deps**: WebCodecs API (Chrome 94+, no CDN needed), mp4box.js (CDN).
+**Tests**: feature-detect + mock, ~25 tests.
+**Tier**: 1+ only (Chrome/Edge). Safari: pending. Firefox: no.
+
+```
+gridToMp4(grid, opts, onProgress) → Promise<Blob>
+
+opts:
+  fps:        number   — frames per second (default 10)
+  width:      number   — output px width (default canvas cells × fontSize)
+  height:     number   — output px height
+  codec:      'avc'    — H.264 (universal) — AV1 optional upgrade
+  bitrate:    number   — bits/sec (default 2_000_000)
+
+Pipeline:
+  1. For each frame: render grid to OffscreenCanvas
+  2. OffscreenCanvas → VideoFrame
+  3. VideoFrame → VideoEncoder (H.264)
+  4. Encoded chunks → mp4box.js (MP4 container)
+  5. Return Blob
+
+onProgress: (framesEncoded, totalFrames) → void
+```
+
+CDN: `https://cdn.jsdelivr.net/npm/mp4box/dist/mp4box.all.min.js`
+
+Feature detect:
+```js
+function isVideoExportAvailable() {
+  return typeof VideoEncoder !== 'undefined' &&
+         typeof VideoFrame  !== 'undefined';
+}
+```
+
+---
+
+### Task 6.2b — PNG Exporter
+
+**File**: inline in app.js (10 lines, no separate module needed)
+
+```js
+function exportPng(canvasEl, filename) {
+  canvasEl.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement('a'),
+      { href: url, download: filename });
+    a.click();
+    URL.revokeObjectURL(url);
+  }, 'image/png');
+}
+```
+
+Canvas already renders the grid. This is just download-the-canvas.
+No separate module, no tests needed. Goes straight into app.js.
+
+---
+
+### Export UI — Updated Export Modal
+
+Replace the current JSON-only export modal with a tabbed panel:
+
+```
+┌─────────────────────────────────────────┐
+│  EXPORT                              [X] │
+├──────┬──────┬──────┬──────┬────────┬────┤
+│ SVG  │ PNG  │ MIDI │ glTF │ Video  │JSON│
+├──────┴──────┴──────┴──────┴────────┴────┤
+│                                          │
+│  [SVG tab]                               │
+│  Font size:  [14px    ]                  │
+│  Background: [#0a0a1a ] [ Transparent ]  │
+│  Grid lines: [ ] Show                    │
+│                                          │
+│  Preview: [small SVG thumbnail]          │
+│                                          │
+│            [ ⬇ Download SVG ]            │
+└─────────────────────────────────────────┘
+```
+
+Each tab: minimal options + single download button.
+Video tab shows progress bar during encode.
+MIDI tab only enabled when music consumer has run (noteEvents exist).
+glTF tab only enabled when 3D mode has been entered (sceneBuilder exists).
+
+---
+
+### File Tree After Phase 6
+
+```
+src/
+├── core/
+│   └── grid-core.js
+├── renderers/
+│   ├── canvas-renderer.js
+│   └── webgl2-renderer.js
+├── rendering/
+│   ├── font-atlas.js
+│   ├── instance-buffer.js
+│   └── shaders.js
+├── generators/
+│   └── generators.js
+├── input/
+│   ├── key-bindings.js
+│   └── input-system.js
+├── importers/
+│   └── image-importer.js
+├── persistence/
+│   ├── serializer.js
+│   ├── opfs-store.js
+│   └── fs-access.js
+├── consumers/
+│   ├── music/
+│   │   ├── music-mapper.js
+│   │   ├── synth-engine.js
+│   │   └── midi-output.js
+│   └── spatial/
+│       ├── heightmap.js
+│       └── scene-builder.js
+├── exporters/              ← NEW
+│   ├── svg-exporter.js
+│   ├── midi-exporter.js
+│   ├── gltf-exporter.js
+│   └── video-exporter.js
+└── shell/                  ← NEW (extracted from dist/index.html)
+    ├── head.html
+    ├── body.html
+    ├── style.css
+    └── app.js
+
+build.js                    ← NEW (root level)
+
+dist/
+├── index.html              ← GENERATED by build.js (not hand-edited)
+├── manifest.json
+├── sw.js
+├── icon-192.png
+└── icon-512.png
+
+tests/
+├── test-svg-exporter.js    ← NEW ~40 tests
+├── test-midi-exporter.js   ← NEW ~35 tests
+├── test-gltf-exporter.js   ← NEW ~20 tests
+├── test-video-exporter.js  ← NEW ~25 tests
+└── ... (existing 12 suites)
+```
+
+---
+
+### Task Sequence
+
+```
+B.1  Extract src/shell/ from dist/index.html  (one-time migration)
+B.2  Write build.js                           (20-line concat script)
+B.3  Wire into package.json                   (build + dev scripts)
+B.4  Verify: node build.js → working app      (visual + test check)
+     ── BUILD GATE: manual inlining retired ──
+
+6.2a  svg-exporter.js    + test-svg-exporter.js
+6.3b  midi-exporter.js   + test-midi-exporter.js
+6.4   gltf-exporter.js   + test-gltf-exporter.js
+6.1   video-exporter.js  + test-video-exporter.js
+6.2b  exportPng() inline in app.js
+6.UI  Export modal tabs wired to all exporters
+      node build.js → dist/index.html updated automatically
+      ── PHASE 6 EXIT GATE ──
+```
+
+---
+
+### Phase 6 Exit Criteria
+
+```
+✓ node build.js produces dist/index.html from src/ sources
+✓ Single HTML file still works offline (Tier 0 unaffected)
+✓ SVG export opens in Illustrator at poster resolution
+✓ MIDI export opens in Ableton / any DAW
+✓ glTF export opens in Blender
+✓ Video export: Chrome → MP4 with correct frame sequence
+✓ PNG export: single button, downloads current frame
+✓ All exporters have Node-passing test suites
+✓ node tests/run-all.js → 0 failures
+✓ Export modal: tabs, progress bar for video, conditional enable for MIDI/glTF
+```
+
+---
+
+### Deferred to Phase 8
+
+```
+6.2c  GIF export         (frame capture + encoder, complex)
+6.3a  WAV render         (offline AudioContext, fiddly)
+6.5   Video + audio mux  (needs WAV first)
+6.6   VideoFormation bridge (external project dependency)
+```
+
+---
+
+## APPENDIX — Doxascope / MIST Connection
+
+Phase 6 is what makes GRID → MIST viable as a media pipeline:
+
+| Export | MIST use |
+|--------|----------|
+| SVG    | Faction cards, poster assets, wiki illustrations |
+| PNG    | Social assets, Experience platform images |
+| MIDI   | Doxascope ambient score generation |
+| glTF   | 3D assets for Experience platform or future game levels |
+| MP4    | Intro sequences, Experience reveal animations |
+
+The named presets (Mist, Coherence, Fracture, The Doors) can be
+added to generators.js at any point — they're just generator configs.
+Export pipeline is what turns them from interactive toys into
+usable production assets.
