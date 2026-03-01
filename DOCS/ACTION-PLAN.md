@@ -312,90 +312,6 @@ node tests/run-all.js           → 593 passed, 0 failed, 1 skipped
 
 ---
 
-## Phase 3 COMPLETE
-
-| Task | Status | Tests |
-|------|--------|-------|
-| 3.1 music-mapper.js | COMPLETE | 41/41 |
-| 3.2 synth-engine.js | COMPLETE | 41/41 |
-| 3.6 UI integration  | COMPLETE | — |
-| 3.4 midi-output.js  | COMPLETE | 39/39 |
-| 3.3 Glicol WASM | deferred → Phase 8 | — |
-| 3.5 Orca mode   | deferred → Phase 7 | — |
-
-**Next: Phase 4 — The 3D Consumer.**
-
----
-
-## Task 3.4 — Web MIDI Output (Optional, Chrome/Edge)
-
-**File**: `src/consumers/music/midi-output.js`
-**Depends on**: music-mapper.js
-**Browser**: Chrome/Edge only (Web MIDI API). Feature-detect, hide if unavailable.
-
-### API
-
-```js
-export function createMIDIOutput() {
-  return {
-    async init(),              // Request MIDI access, list outputs
-    getOutputs(),              // → [{ id, name }]
-    selectOutput(id),          // Choose a MIDI port
-    sendNoteOn(channel, note, velocity),
-    sendNoteOff(channel, note),
-    scheduleEvents(noteEvents, bpm),  // Schedule from mapper output
-    isAvailable(),             // Feature detection
-    destroy(),
-  };
-}
-```
-
-### Scheduling
-
-MIDI timing is trickier than Web Audio — Web MIDI `send()` accepts a DOMHighResTimestamp but there's no built-in scheduler. Use a lookahead pattern:
-
-```js
-// Schedule 50ms ahead, check every 25ms
-const LOOKAHEAD = 0.05;    // seconds
-const CHECK_INTERVAL = 25;  // ms
-
-function startMIDIPlayback(events, bpm) {
-  let nextEventIdx = 0;
-  const intervalId = setInterval(() => {
-    const now = performance.now() / 1000;
-    while (nextEventIdx < events.length && 
-           events[nextEventIdx].time < now + LOOKAHEAD) {
-      const e = events[nextEventIdx];
-      const timestamp = performance.now() + (e.time - now) * 1000;
-      midiOutput.send([0x90 | e.channel, e.note, e.velocity], timestamp);
-      midiOutput.send([0x80 | e.channel, e.note, 0], timestamp + e.duration * 1000);
-      nextEventIdx++;
-    }
-  }, CHECK_INTERVAL);
-}
-```
-
-### Test Plan: ~20 tests
-
-```
-Feature detection:
-  - isAvailable() returns boolean
-  - init() with no MIDI → graceful error message
-
-Message format:
-  - noteOn: [0x90 | ch, note, velocity]
-  - noteOff: [0x80 | ch, note, 0]
-  - channel clamped 0-15
-  - note clamped 0-127, velocity clamped 0-127
-
-Scheduling:
-  - Events sent in order
-  - Timestamps offset correctly from performance.now()
-  - Note-off follows note-on by duration
-```
-
----
-
 ## Tasks DEFERRED
 
 ### Task 3.3 — Glicol WASM Integration → DEFER to Phase 8
@@ -452,21 +368,6 @@ dist/
 └── index.html                    ← transport bar, playhead, mode switch
 ```
 
----
-
-## Build Order & Time Estimates
-
-| Order | Task | Est. | Exit Test |
-|-------|------|------|-----------|
-| 1 | 3.1 Music Mapper | 1 session | `node tests/test-music-mapper.js` — 60 tests green |
-| 2 | 3.2 Synth Engine | 1-2 sessions | Open dist/index.html → hear the grid play |
-| 3 | 3.6 UI Integration | 1 session | Transport bar, playhead cursor, loop, BPM control |
-| 4 | 3.4 MIDI Output | 0.5 session | Chrome → MIDI monitor shows notes from grid |
-
-**Total**: ~4 sessions (Phase 3 is narrower than it looks — the data layer already exists)
-
----
-
 ## Phase 3 Exit Criteria (from charter, refined)
 
 ```
@@ -483,16 +384,31 @@ dist/
 
 ---
 
-## Open Design Questions (decide before or during build)
+## Design decisions
 
-1. **Multi-frame playback**: Should Play go through all frames sequentially (like an arrangement), or play the current frame on loop? → **Recommendation**: Current frame with loop, add frame-chain later.
+1. **Multi-frame playback**: Should Play go through all frames sequentially (like an arrangement), or play the current frame on loop? → **Decision**: Current frame with loop, add frame-chain later.
 
-2. **Polyphony limit**: Multiple cells in the same column = chord. Cap at 16 simultaneous voices? → **Recommendation**: Yes, 16 voices max, drop lowest-velocity notes.
+2. **Polyphony limit**: Multiple cells in the same column = chord. Cap at 16 simultaneous voices? → **Decision**: Yes, 16 voices max, drop lowest-velocity notes.
 
-3. **Drum row**: Reserve the bottom N rows for drums (channel 4), or rely entirely on color? → **Recommendation**: Color-based. Let users paint drums anywhere. Drum behavior triggers from channel assignment, not row position.
+3. **Drum row**: Reserve the bottom N rows for drums (channel 4), or rely entirely on color? → **Decision**: Color-based. Let users paint drums anywhere. Drum behavior triggers from channel assignment, not row position.
 
-4. **Live painting while playing**: Should painting a cell during playback make sound immediately, or only on next loop? → **Recommendation**: Immediate — paint a cell, hear it on the next column pass. This is the magic moment.
+4. **Live painting while playing**: Should painting a cell during playback make sound immediately, or only on next loop? → **Decision**: Immediate — paint a cell, hear it on the next column pass. This is the magic moment.
 
-5. **Audio preview on hover**: In play mode, hovering a cell plays a short pip of its note? → **Recommendation**: Yes, but gated behind play mode (not paint mode). Short 50ms blip.
+5. **Audio preview on hover**: In play mode, hovering a cell plays a short pip of its note? → **Decision**: Yes, but gated behind play mode (not paint mode). Short 50ms blip.
 
 ---
+
+## Phase 3 COMPLETE
+
+| Task | Status | Tests |
+|------|--------|-------|
+| 3.1 music-mapper.js | COMPLETE | 41/41 |
+| 3.2 synth-engine.js | COMPLETE | 41/41 |
+| 3.6 UI integration  | COMPLETE | — |
+| 3.4 midi-output.js  | COMPLETE | 39/39 |
+| 3.3 Glicol WASM | deferred → Phase 8 | — |
+| 3.5 Orca mode   | deferred → Phase 7 | — |
+
+----
+
+**Next: Phase 4 — The 3D Consumer.**
