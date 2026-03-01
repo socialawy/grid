@@ -23,9 +23,11 @@ const DEFAULT_BINDINGS = {
   'KeyE':         'eraserToggle',
   'Delete':       'clearFrame',
   'Escape':       'closeModal',
-  'ctrl+KeyS':    'export',
+  'ctrl+KeyS':    'saveFile',
+  'shift+ctrl+KeyS': 'export',
   'ctrl+KeyO':    'import',
   'ctrl+KeyN':    'newProject',
+  'ctrl+Comma':   'projectSettings',
   // Digit keys select char by 1-based palette index
   'Digit1':       'selectChar:1',
   'Digit2':       'selectChar:2',

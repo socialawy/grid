@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00ff88">
+<title>GRID — ASCII Creative Studio v0.1.0</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a1a;--surface:#141428;--border:#2a2a4a;--text:#c0c0d0;
+  --accent:#00ff88;--accent2:#00aaff;--warn:#ff4466;--dim:#555577;
+  --cell-hover:rgba(0,255,136,0.15);
+}
+body{font-family:'Courier New',monospace;background:var(--bg);color:var(--text);overflow:hidden;height:100vh;display:flex;flex-direction:column}
+button{font-family:inherit;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);padding:6px 10px;border-radius:4px;font-size:12px;transition:all .15s}
+button:hover{border-color:var(--accent);color:var(--accent)}
+button.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+button.small{padding:3px 6px;font-size:11px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+select,input[type=text],input[type=number]{font-family:inherit;background:var(--surface);color:var(--text);border:1px solid var(--border);padding:4px 6px;border-radius:4px;font-size:12px}
+select:focus,input:focus{outline:none;border-color:var(--accent)}
+label{font-size:11px;color:var(--dim);display:block;margin-bottom:2px}
+
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+.header h1{font-size:14px;color:var(--accent);letter-spacing:2px}
+.header .meta{font-size:11px;color:var(--dim)}
+
+/* MAIN LAYOUT */
+.main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.sidebar section{padding:10px;border-bottom:1px solid var(--border)}
+.sidebar section h3{font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+
+/* CANVAS AREA */
+.canvas-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.canvas-wrap{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center;padding:10px;position:relative}
+#gridCanvas{cursor:crosshair;image-rendering:pixelated}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:4px;padding:6px 10px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
+.toolbar .sep{width:1px;height:20px;background:var(--border);margin:0 4px}
+
+/* CHAR PALETTE */
+.char-palette{display:flex;flex-wrap:wrap;gap:2px}
+.char-btn{width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:14px;padding:0;border-radius:3px}
+.char-btn.selected{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+
+/* COLOR PALETTE */
+.color-palette{display:flex;flex-wrap:wrap;gap:3px}
+.color-swatch{width:22px;height:22px;border-radius:3px;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.color-swatch.selected{border-color:#fff;transform:scale(1.15)}
+
+/* FRAME STRIP */
+.frame-strip{display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;overflow-x:auto}
+.frame-thumb{min-width:60px;height:40px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:9px;padding:2px 4px;overflow:hidden;white-space:pre;color:var(--dim);transition:all .15s;flex-shrink:0}
+.frame-thumb.active{border-color:var(--accent);color:var(--accent);box-shadow:0 0 8px rgba(0,255,136,0.2)}
+.frame-thumb:hover{border-color:var(--accent2)}
+
+/* GENERATORS */
+.gen-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+
+/* STATUS BAR */
+.status{display:flex;justify-content:space-between;padding:4px 12px;font-size:10px;color:var(--dim);background:var(--surface);border-top:1px solid var(--border);flex-shrink:0}
+
+/* PLAYBACK */
+.playback{display:flex;align-items:center;gap:4px}
+
+/* SEMANTIC INDICATOR */
+.sem-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.sem-solid{background:#888}
+.sem-void{background:#222}
+.sem-fluid{background:#4488ff}
+.sem-emissive{background:#ffcc00}
+.sem-entity{background:#00ffcc}
+.sem-control{background:#ff44aa}
+.sem-boundary{background:#ff6600}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:100}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto}
+.modal h2{font-size:14px;color:var(--accent);margin-bottom:12px}
+.modal textarea{width:100%;height:200px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:8px;font-family:inherit;font-size:11px;resize:vertical}
+
+/* PROJECT BROWSER */
+.project-list{list-style:none;margin:0;padding:0;max-height:40vh;overflow-y:auto}
+.project-list li{display:flex;align-items:center;justify-content:space-between;padding:8px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.project-list li:hover{background:rgba(0,255,136,0.05)}
+.project-list li.active{border-left:3px solid var(--accent)}
+.project-list .pname{font-size:12px;color:var(--text);flex:1}
+.project-list .pmeta{font-size:10px;color:var(--dim);margin-left:8px;white-space:nowrap}
+.project-list .pactions{display:flex;gap:4px;margin-left:8px}
+.project-empty{text-align:center;padding:20px;color:var(--dim);font-size:12px}
+
+/* PROJECT SETTINGS */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.settings-grid.full{grid-template-columns:1fr}
+
+/* MOBILE */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .main{flex-direction:column}
+  .sidebar.mobile-show{display:flex;position:fixed;inset:0;z-index:50;width:100%}
+  .toolbar{overflow-x:auto;flex-wrap:nowrap}
+  .frame-strip{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>▦ GRID</h1>
+  <span class="meta" id="projectMeta">Untitled — 40×20</span>
+  <div style="display:flex;gap:4px">
+    <button onclick="toggleMobileSidebar()" class="small" id="menuBtn" style="display:none">☰</button>
+    <button onclick="showProjectBrowser()" class="small">Projects</button>
+    <button onclick="showNewProjectModal()" class="small">New</button>
+    <button onclick="importGrid()" class="small">Import</button>
+    <button onclick="importImage()" class="small">📷 Image</button>
+    <button onclick="exportGrid()" class="small">Export</button>
+    <button onclick="showProjectSettings()" class="small" title="Ctrl+,">Settings</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar" id="sidebar">
+
+    <section>
+      <h3>Character</h3>
+      <div class="char-palette" id="charPalette"></div>
+    </section>
+
+    <section>
+      <h3>Color</h3>
+      <div class="color-palette" id="colorPalette"></div>
+      <div style="margin-top:6px">
+        <label>Custom</label>
+        <input type="text" id="customColor" value="#00ff88" style="width:100%" 
+               oninput="selectColor(this.value)">
+      </div>
+    </section>
+
+    <section>
+      <h3>Brush</h3>
+      <label>Semantic</label>
+      <select id="semSelect">
+        <option value="">Auto-infer</option>
+        <option value="solid">⬤ Solid</option>
+        <option value="void">○ Void</option>
+        <option value="fluid">◎ Fluid</option>
+        <option value="emissive">✦ Emissive</option>
+        <option value="entity">◆ Entity</option>
+        <option value="control">◇ Control</option>
+        <option value="boundary">▮ Boundary</option>
+      </select>
+      <label style="margin-top:6px">Density Override</label>
+      <div style="display:flex;align-items:center;gap:6px">
+        <input type="checkbox" id="densityOverride">
+        <input type="range" id="densitySlider" min="0" max="100" value="50" style="flex:1">
+        <span id="densityVal" style="font-size:11px;width:30px">0.50</span>
+      </div>
+      <label style="margin-top:6px">Eraser</label>
+      <button id="eraserBtn" onclick="toggleEraser()" class="small">🧹 Eraser Off</button>
+    </section>
+
+    <section>
+      <h3>Generators</h3>
+      <div style="margin-bottom:6px">
+        <label>Color Mode</label>
+        <select id="genColorMode" style="width:100%">
+          <option value="fixed">Fixed (selected color)</option>
+          <option value="mono">Mono (hue-matched)</option>
+          <option value="derived">Derived (geometry hue)</option>
+        </select>
+      </div>
+      <div class="gen-grid">
+        <button onclick="generate('spiral')">🌀 Spiral</button>
+        <button onclick="generate('wave')">🌊 Wave</button>
+        <button onclick="generate('mandala')">❋ Mandala</button>
+        <button onclick="generate('noise')">▓ Noise</button>
+        <button onclick="generate('geometric')">◆ Geometric</button>
+        <button onclick="generate('rain')">🌧 Rain</button>
+        <button onclick="generate('gradient')">▤ Gradient</button>
+        <button onclick="generate('pulse')">◎ Pulse</button>
+        <button onclick="generate('matrix')">⌨ Matrix</button>
+        <button onclick="generate('terrain')">⛰ Terrain</button>
+        <button onclick="clearFrame()">✕ Clear</button>
+      </div>
+    </section>
+
+    <section>
+      <h3>Image Import</h3>
+      <button onclick="importImage()" style="width:100%">📷 Image → Grid</button>
+      <div style="font-size:10px;color:var(--dim);margin-top:4px">Converts a photo to ASCII art using pixel sampling</div>
+    </section>
+
+    <section>
+      <h3>Display</h3>
+      <label>Font Size: <span id="fontSizeVal">14</span>px</label>
+      <input type="range" id="fontSizeSlider" min="6" max="32" value="14" 
+             oninput="updateFontSize(+this.value)">
+      <label style="margin-top:6px">
+        <input type="checkbox" id="showGridCheck" onchange="toggleGridLines()"> Grid Lines
+      </label>
+    </section>
+
+    <section>
+      <h3>Info</h3>
+      <div id="cellInfo" style="font-size:11px;color:var(--dim)">Hover a cell</div>
+    </section>
+  </div>
+
+  <div class="canvas-area">
+    <div class="toolbar">
+      <div class="playback">
+        <button onclick="prevFrameAction()" class="small">◀</button>
+        <button onclick="togglePlayback()" class="small" id="playBtn">▶ Play</button>
+        <button onclick="nextFrameAction()" class="small">▶</button>
+        <button onclick="stopPlayback()" class="small">⏹</button>
+      </div>
+      <div class="sep"></div>
+      <label style="margin:0;display:flex;align-items:center;gap:4px">
+        FPS <input type="number" id="fpsInput" value="10" min="1" max="60" style="width:45px"
+                   onchange="updateFps(+this.value)">
+      </label>
+      <div class="sep"></div>
+      <button onclick="addNewFrame()" class="small">+ Frame</button>
+      <button onclick="duplicateFrame()" class="small">⧉ Dupe</button>
+      <button onclick="deleteCurrentFrame()" class="small">✕ Del</button>
+      <div class="sep"></div>
+      <span id="frameLabel" style="font-size:11px;color:var(--dim)">Frame 1/1</span>
+    </div>
+
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="gridCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="frame-strip" id="frameStrip"></div>
+
+<div class="status">
+  <span id="statusLeft">Ready</span>
+  <span id="statusCenter"></span>
+  <span id="statusRight">.grid v0.1.0</span>
+</div>
+
+<!-- New Project Modal -->
+<div class="modal-overlay" id="newProjectModal">
+  <div class="modal">
+    <h2>New Project</h2>
+    <label>Name</label>
+    <input type="text" id="npName" value="Untitled" style="width:100%;margin-bottom:8px">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <div style="flex:1"><label>Width</label><input type="number" id="npWidth" value="40" min="1" max="1000" style="width:100%"></div>
+      <div style="flex:1"><label>Height</label><input type="number" id="npHeight" value="20" min="1" max="1000" style="width:100%"></div>
+    </div>
+    <label>Charset</label>
+    <input type="text" id="npCharset" value="@#$%&*+=-.~:;|/\^░▒▓█ " style="width:100%;margin-bottom:8px">
+    <label>Default Character</label>
+    <input type="text" id="npDefaultChar" value=" " maxlength="1" style="width:60px;margin-bottom:12px">
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button onclick="closeModal('newProjectModal')">Cancel</button>
+      <button onclick="createNewProject()" style="border-color:var(--accent);color:var(--accent)">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- Import/Export Modal -->
+<div class="modal-overlay" id="jsonModal">
+  <div class="modal">
+    <h2 id="jsonModalTitle">Export</h2>
+    <textarea id="jsonArea"></textarea>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+      <button onclick="closeModal('jsonModal')">Close</button>
+      <button id="jsonCopyBtn" onclick="copyJson()">📋 Copy</button>
+      <button id="jsonLoadBtn" onclick="loadJson()" style="display:none">📥 Load</button>
+      <button id="jsonDownloadBtn" onclick="downloadJson()">💾 Download</button>
+    </div>
+  </div>
+</div>
+
+<!-- Project Browser Modal -->
+<div class="modal-overlay" id="projectBrowserModal">
+  <div class="modal" style="max-width:550px">
+    <h2>Projects</h2>
+    <div id="projectListContainer">
+      <div class="project-empty">Loading...</div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button onclick="closeModal('projectBrowserModal')">Close</button>
+      <button onclick="showNewProjectModal();closeModal('projectBrowserModal')" style="border-color:var(--accent);color:var(--accent)">+ New Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- Project Settings Modal -->
+<div class="modal-overlay" id="projectSettingsModal">
+  <div class="modal">
+    <h2>Project Settings</h2>
+    <div class="settings-grid full">
+      <div>
+        <label>Project Name</label>
+        <input type="text" id="psName" style="width:100%">
+      </div>
+    </div>
+    <div class="settings-grid">
+      <div>
+        <label>BPM</label>
+        <input type="number" id="psBpm" min="1" max="999" style="width:100%">
+      </div>
+      <div>
+        <label>Key</label>
+        <select id="psKey" style="width:100%">
+          <option value="C">C</option><option value="C#">C#</option>
+          <option value="D">D</option><option value="D#">D#</option>
+          <option value="E">E</option><option value="F">F</option>
+          <option value="F#">F#</option><option value="G">G</option>
+          <option value="G#">G#</option><option value="A">A</option>
+          <option value="A#">A#</option><option value="B">B</option>
+        </select>
+      </div>
+    </div>
+    <div class="settings-grid">
+      <div>
+        <label>Scale</label>
+        <select id="psScale" style="width:100%">
+          <option value="chromatic">Chromatic</option>
+          <option value="major">Major</option>
+          <option value="minor">Minor</option>
+          <option value="pentatonic">Pentatonic</option>
+        </select>
+      </div>
+      <div>
+        <label>Charset</label>
+        <input type="text" id="psCharset" style="width:100%">
+      </div>
+    </div>
+    <div class="settings-grid full" style="margin-top:4px">
+      <div>
+        <label>Palette Colors (comma-separated hex)</label>
+        <input type="text" id="psPalette" placeholder="#ff0000,#00ff00,#0000ff" style="width:100%">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button onclick="closeModal('projectSettingsModal')">Cancel</button>
+      <button onclick="applyProjectSettings()" style="border-color:var(--accent);color:var(--accent)">Apply</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept=".grid,.json" style="display:none">
+<input type="file" id="imageFileInput" accept="image/*" style="display:none">
+
+<!-- Image Import Modal -->
+<div class="modal-overlay" id="imageImportModal">
+  <div class="modal">
+    <h2>📷 Image → .grid</h2>
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <div style="flex:1"><label>Cell Size (px)</label>
+        <input type="number" id="imgCellSize" value="10" min="2" max="64" style="width:100%"
+               oninput="renderImagePreview()"></div>
+      <div style="flex:1"><label>Contrast (-100–200)</label>
+        <input type="number" id="imgContrast" value="0" min="-100" max="200" style="width:100%"
+               oninput="renderImagePreview()"></div>
+    </div>
+    <label>Char Ramp (dark → light)</label>
+    <input type="text" id="imgCharRamp" value="@%#*+=-:. " style="width:100%;margin-bottom:8px"
+           oninput="renderImagePreview()">
+    <label>Preview</label>
+    <div id="imgPreview" style="font-size:8px;line-height:1.1;white-space:pre;overflow:hidden;max-height:120px;background:#000;color:#0f0;padding:6px;border:1px solid var(--border);border-radius:3px;margin-bottom:8px;font-family:'Courier New',monospace">Select an image to preview...</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button onclick="closeModal('imageImportModal')">Cancel</button>
+      <button id="imgApplyBtn" onclick="applyImageImport()" style="border-color:var(--accent);color:var(--accent);display:none">✓ Apply to Current Frame</button>
+      <button id="imgNewBtn" onclick="applyImageImport(true)" style="border-color:var(--accent2);color:var(--accent2);display:none">+ Apply as New Project</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ================================================================
+// GRID-CORE.JS (INLINED)
+// ================================================================
+const VERSION='0.1.0',FORMAT_ID='grid';
+const DENSITY_MAP={' ':0,'.':0.05,'`':0.05,'-':0.2,':':0.2,"'":0.2,';':0.3,',':0.3,'~':0.35,'+':0.5,'=':0.5,'*':0.55,'^':0.45,'|':0.4,'/':0.4,'\\':0.4,'?':0.5,'!':0.5,x:0.55,o:0.55,'#':0.8,$:0.8,'%':0.75,'&':0.75,'@':0.9,'░':0.3,'▒':0.55,'▓':0.8,'█':1};
+const VALID_SEMANTICS=['solid','void','fluid','emissive','entity','control','boundary'];
+
+function generateId(){if(typeof crypto!=='undefined'&&crypto.randomUUID)return crypto.randomUUID();const h='0123456789abcdef',s=[8,4,4,4,12];let u='';for(let i=0;i<s.length;i++){if(i>0)u+='-';for(let j=0;j<s[i];j++){if(i===2&&j===0)u+='4';else if(i===3&&j===0)u+=h[8+Math.floor(Math.random()*4)];else u+=h[Math.floor(Math.random()*16)]}}return u}
+
+function calcDensity(c){if(!c||c.length===0)return 0;if(DENSITY_MAP[c]!==undefined)return DENSITY_MAP[c];const code=c.charCodeAt(0);return code<128?0.5:0.6}
+
+function inferSemantic(c){if(!c||c===' ')return'void';if('~≈'.includes(c))return'fluid';if('*✦✧☆★♥♦⚡'.includes(c))return'emissive';if(/[a-zA-Z@]/.test(c))return'entity';if('|─│┌┐└┘├┤┬┴┼'.includes(c))return'boundary';return'solid'}
+
+function createGrid(w,h,charset,defaultColor,opts={}){
+  const now=new Date().toISOString();
+  const g={grid:FORMAT_ID,version:VERSION,meta:{id:generateId(),name:opts.name||'Untitled',created:now,modified:now,author:'',tags:[],notes:''},canvas:{width:w,height:h,charset:charset||'@#$%&*+=-.~ ',defaultChar:opts.defaultChar||' ',defaultColor:defaultColor||'#00ff88',background:opts.background||'#0a0a1a',fontFamily:'monospace'},frames:[],sequences:[],project:{bpm:120,scale:'chromatic',key:'C',palette:{},tier:0}};
+  g.frames.push(createFrame(g));return g;
+}
+
+function createFrame(grid,label){
+  const idx=grid.frames?grid.frames.length:0;
+  return{id:'frame_'+String(idx+1).padStart(3,'0'),index:idx,label:label||'',duration:null,cells:[],layers:['visual']};
+}
+
+function setCell(frame,x,y,data){
+  const cell={x,y,char:data.char};
+  if(data.color)cell.color=data.color;
+  cell.density=data.density!==undefined?data.density:calcDensity(data.char);
+  cell.semantic=data.semantic||inferSemantic(data.char);
+  if(data.channel)cell.channel=data.channel;
+  const cells=frame.cells.filter(c=>!(c.x===x&&c.y===y));
+  cells.push(cell);
+  return{...frame,cells};
+}
+
+function getCell(frame,x,y){return frame.cells.find(c=>c.x===x&&c.y===y)||null}
+
+function removeCell(frame,x,y){return{...frame,cells:frame.cells.filter(c=>!(c.x===x&&c.y===y))}}
+
+function serializeGrid(grid){return JSON.stringify(grid,null,2)}
+
+function deserializeGrid(s){const o=JSON.parse(s);if(o.grid!==FORMAT_ID)throw new Error('Not a .grid file');return o}
+
+function validateGrid(grid){
+  const e=[];
+  if(!grid||typeof grid!=='object')return{valid:false,errors:['Not an object']};
+  if(grid.grid!==FORMAT_ID)e.push('Missing format id');
+  if(!grid.meta)e.push('Missing meta');
+  if(!grid.canvas)e.push('Missing canvas');
+  if(!Array.isArray(grid.frames)||grid.frames.length===0)e.push('Missing/empty frames');
+  return{valid:e.length===0,errors:e};
+}
+
+// ================================================================
+// CANVAS RENDERER (INLINED)
+// ================================================================
+function createRenderer(canvasEl,grid,options={}){
+  const ctx=canvasEl.getContext('2d');
+  let currentFrame=0,isPlaying=false,timer=null,fps=options.fps||10;
+  let cellW=0,cellH=0,fontSize=options.fontSize||14;
+  let showGridLines=false,onFrameChange=options.onFrameChange||null;
+
+  function measure(){ctx.font=fontSize+'px monospace';const m=ctx.measureText('@');cellW=Math.ceil(m.width);cellH=Math.ceil(fontSize*1.2)}
+  function fit(){measure();canvasEl.width=grid.canvas.width*cellW;canvasEl.height=grid.canvas.height*cellH}
+
+  function colorDensity(hex,d){
+    const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+    const s=0.15+(1-0.15)*d;
+    return`rgb(${Math.round(r*s)},${Math.round(g*s)},${Math.round(b*s)})`;
+  }
+
+  function render(fi){
+    if(fi!==undefined)currentFrame=fi;
+    const frame=grid.frames[currentFrame];if(!frame)return;
+    const{width:W,height:H,defaultChar:dc,defaultColor:dCol,background:bg}=grid.canvas;
+    ctx.fillStyle=bg||'#000';ctx.fillRect(0,0,canvasEl.width,canvasEl.height);
+
+    if(showGridLines){
+      ctx.strokeStyle='#ffffff10';ctx.lineWidth=0.5;
+      for(let x=0;x<=W;x++){ctx.beginPath();ctx.moveTo(x*cellW,0);ctx.lineTo(x*cellW,canvasEl.height);ctx.stroke()}
+      for(let y=0;y<=H;y++){ctx.beginPath();ctx.moveTo(0,y*cellH);ctx.lineTo(canvasEl.width,y*cellH);ctx.stroke()}
+    }
+
+    const map=new Map();
+    for(const c of frame.cells)map.set(c.x+','+c.y,c);
+    ctx.font=fontSize+'px monospace';ctx.textBaseline='top';
+    const dd=calcDensity(dc);
+
+    for(let y=0;y<H;y++){
+      for(let x=0;x<W;x++){
+        const c=map.get(x+','+y);
+        const ch=c?c.char:dc;
+        const col=c?(c.color||dCol):dCol;
+        const den=c?(c.density!==undefined?c.density:dd):dd;
+        if(ch===' '&&den<0.01)continue;
+        ctx.fillStyle=colorDensity(col,den);
+        ctx.fillText(ch,x*cellW,y*cellH);
+      }
+    }
+    if(onFrameChange)onFrameChange(currentFrame,frame);
+  }
+
+  function next(loop=true){currentFrame++;if(currentFrame>=grid.frames.length)currentFrame=loop?0:grid.frames.length-1;render();return currentFrame}
+  function prev(loop=true){currentFrame--;if(currentFrame<0)currentFrame=loop?grid.frames.length-1:0;render();return currentFrame}
+  function goTo(i){currentFrame=Math.max(0,Math.min(i,grid.frames.length-1));render();return currentFrame}
+  function play(f){if(f)fps=f;if(isPlaying)return;isPlaying=true;timer=setInterval(()=>next(true),1000/fps)}
+  function pause(){isPlaying=false;if(timer){clearInterval(timer);timer=null}}
+  function stop(){pause();goTo(0)}
+  function toggle(){if(isPlaying)pause();else play();return isPlaying}
+
+  function eventToGrid(e){
+    const rect=canvasEl.getBoundingClientRect();
+    const sx=canvasEl.width/rect.width,sy=canvasEl.height/rect.height;
+    const cx=e.touches?e.touches[0].clientX:e.clientX;
+    const cy=e.touches?e.touches[0].clientY:e.clientY;
+    return{gridX:Math.floor((cx-rect.left)*sx/cellW),gridY:Math.floor((cy-rect.top)*sy/cellH)};
+  }
+
+  function setGridRef(g){grid=g;fit();render()}
+  function setFontSize(s){fontSize=s;fit();render()}
+  function setShowGrid(v){showGridLines=v;render()}
+  function setFps(f){fps=f;if(isPlaying){pause();play()}}
+
+  fit();render();
+
+  return{render,next,prev,goTo,play,pause,stop,toggle,eventToGrid,setGridRef,setFontSize,setShowGrid,setFps,
+    get current(){return currentFrame},get count(){return grid.frames.length},get playing(){return isPlaying},get cellSize(){return{w:cellW,h:cellH}}};
+}
+
+// ================================================================
+// KEY BINDINGS (inlined from src/input/key-bindings.js)
+// ================================================================
+const _KEY_MAP = {
+  'Space':'playToggle','ArrowRight':'nextFrame','ArrowLeft':'prevFrame',
+  'KeyE':'eraserToggle','Delete':'clearFrame','Escape':'closeModal',
+  'ctrl+KeyS':'saveFile','shift+ctrl+KeyS':'export',
+  'ctrl+KeyO':'import','ctrl+KeyN':'newProject',
+  'ctrl+Comma':'projectSettings',
+  'Digit1':'selectChar:1','Digit2':'selectChar:2','Digit3':'selectChar:3',
+  'Digit4':'selectChar:4','Digit5':'selectChar:5','Digit6':'selectChar:6',
+  'Digit7':'selectChar:7','Digit8':'selectChar:8','Digit9':'selectChar:9',
+};
+
+function _normalizeKey(e) {
+  const p = [];
+  if (e.ctrlKey || e.metaKey) p.push('ctrl');
+  if (e.shiftKey) p.push('shift');
+  if (e.altKey) p.push('alt');
+  p.push(e.code);
+  return p.join('+');
+}
+
+function createKeyBindings(custom = {}) {
+  const b = { ..._KEY_MAP, ...custom };
+  return {
+    resolve(e) { return b[_normalizeKey(e)] ?? null; },
+    bind(k, a) { b[k] = a; },
+    unbind(k) { delete b[k]; },
+    getAll() { return { ...b }; }
+  };
+}
+
+// ================================================================
+// INPUT SYSTEM (inlined from src/input/input-system.js)
+// ================================================================
+function createInputSystem(canvasEl, rend, opts = {}) {
+  const kb = createKeyBindings(opts.keyBindings ?? {});
+  const listeners = new Map();
+  let isDown = false, lastCell = { x: -1, y: -1 };
+
+  function emit(name, payload) {
+    for (const h of (listeners.get(name) ?? [])) {
+      try { h(payload); } catch(err) { console.error('[InputSystem]', name, err); }
+    }
+  }
+  function toGrid(e) { return rend.eventToGrid(e); }
+
+  function onMouseDown(e) {
+    const { gridX: x, gridY: y } = toGrid(e);
+    isDown = true; lastCell = { x, y };
+    emit('cellDown', { x, y, button: e.button ?? 0 });
+  }
+  function onMouseMove(e) {
+    const { gridX: x, gridY: y } = toGrid(e);
+    if (isDown) {
+      if (x !== lastCell.x || y !== lastCell.y) { lastCell = { x, y }; emit('cellMove', { x, y }); }
+    } else {
+      emit('cellHover', { x, y });
+    }
+  }
+  function onMouseUp(e) {
+    if (!isDown) return;
+    isDown = false;
+    const { gridX: x, gridY: y } = toGrid(e);
+    emit('cellUp', { x, y });
+  }
+  function synth(te) {
+    const t = te.touches[0] ?? te.changedTouches[0];
+    return t ? { clientX: t.clientX, clientY: t.clientY } : null;
+  }
+  function onTouchStart(e) {
+    e.preventDefault();
+    const s = synth(e); if (!s) return;
+    const { gridX: x, gridY: y } = toGrid(s);
+    isDown = true; lastCell = { x, y }; emit('cellDown', { x, y, button: 0 });
+  }
+  function onTouchMove(e) {
+    e.preventDefault(); if (!isDown) return;
+    const s = synth(e); if (!s) return;
+    const { gridX: x, gridY: y } = toGrid(s);
+    if (x !== lastCell.x || y !== lastCell.y) { lastCell = { x, y }; emit('cellMove', { x, y }); }
+  }
+  function onTouchEnd(e) {
+    if (!isDown) return; isDown = false;
+    const s = synth(e); if (!s) return;
+    const { gridX: x, gridY: y } = toGrid(s); emit('cellUp', { x, y });
+  }
+  function onKeyDown(e) {
+    const tag = e.target?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    const action = kb.resolve(e);
+    if (!action) return;
+    e.preventDefault();
+    const ci = action.indexOf(':');
+    const name = ci >= 0 ? action.slice(0, ci) : action;
+    const payload = ci >= 0 ? action.slice(ci + 1) : null;
+    emit('action', { name, payload });
+  }
+
+  canvasEl.addEventListener('mousedown', onMouseDown);
+  canvasEl.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('mouseup', onMouseUp);
+  canvasEl.addEventListener('touchstart', onTouchStart, { passive: false });
+  canvasEl.addEventListener('touchmove', onTouchMove, { passive: false });
+  canvasEl.addEventListener('touchend', onTouchEnd);
+  document.addEventListener('keydown', onKeyDown);
+
+  return {
+    on(ev, h) { if (!listeners.has(ev)) listeners.set(ev, new Set()); listeners.get(ev).add(h); },
+    off(ev, h) { listeners.get(ev)?.delete(h); },
+    destroy() {
+      canvasEl.removeEventListener('mousedown', onMouseDown);
+      canvasEl.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+      canvasEl.removeEventListener('touchstart', onTouchStart);
+      canvasEl.removeEventListener('touchmove', onTouchMove);
+      canvasEl.removeEventListener('touchend', onTouchEnd);
+      document.removeEventListener('keydown', onKeyDown);
+      listeners.clear(); isDown = false;
+    },
+    keyBindings: kb
+  };
+}
+
+// ================================================================
+// IMAGE IMPORTER (inlined from src/importers/image-importer.js)
+// ================================================================
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map(v =>
+    Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')
+  ).join('');
+}
+
+function imageToGrid(imgEl, opts = {}) {
+  const {
+    charRamp = '@%#*+=-:. ', cellSize = 10, contrast = 0,
+    defaultColor = '#00ff00', projectName = 'Imported Image',
+    gridWidth: forceW, gridHeight: forceH
+  } = opts;
+  const ramp = [...charRamp], rampLen = ramp.length;
+  const imgW = imgEl.naturalWidth ?? imgEl.width;
+  const imgH = imgEl.naturalHeight ?? imgEl.height;
+  if (!imgW || !imgH) throw new Error('imageToGrid: zero-dimension image');
+
+  const sc = document.createElement('canvas');
+  sc.width = imgW; sc.height = imgH;
+  const ctx = sc.getContext('2d');
+  ctx.drawImage(imgEl, 0, 0);
+
+  let gW = forceW ?? Math.max(1, Math.floor(imgW / cellSize));
+  let gH = forceH ?? Math.max(1, Math.floor(imgH / cellSize));
+  gW = Math.min(1000, Math.max(1, gW));
+  gH = Math.min(1000, Math.max(1, gH));
+
+  const bW = imgW / gW, bH = imgH / gH;
+  const charset = [...new Set(ramp)].join('') || ' ';
+  const cFac = (100 + contrast) / 100;
+
+  let g = createGrid(gW, gH, charset, defaultColor, { name: projectName });
+  let frame = g.frames[0];
+
+  for (let cy = 0; cy < gH; cy++) {
+    for (let cx = 0; cx < gW; cx++) {
+      const sx = Math.floor(cx * bW), sy = Math.floor(cy * bH);
+      const sw = Math.max(1, Math.round(bW)), sh = Math.max(1, Math.round(bH));
+      let idata;
+      try { idata = ctx.getImageData(sx, sy, sw, sh); } catch { continue; }
+      const d = idata.data;
+      let rS = 0, gS = 0, bS = 0, cnt = 0;
+      for (let i = 0; i < d.length; i += 4) { rS += d[i]; gS += d[i+1]; bS += d[i+2]; cnt++; }
+      if (!cnt) continue;
+      const aR = rS/cnt, aG = gS/cnt, aB = bS/cnt;
+      let adj = (((aR+aG+aB)/3 - 127.5) * cFac) + 127.5;
+      adj = Math.max(0, Math.min(255, adj));
+      const ci = rampLen > 0 ? Math.min(rampLen - 1, Math.floor(adj/255*rampLen)) : 0;
+      const char = ramp[ci] ?? ' ';
+      if (char === ' ') continue;
+      frame = setCell(frame, cx, cy, {
+        char, color: rgbToHex(aR, aG, aB),
+        density: Math.max(0, Math.min(1, 1 - adj/255)),
+        semantic: inferSemantic(char)
+      });
+    }
+  }
+  g.frames[0] = frame;
+  return g;
+}
+
+// ================================================================
+// SERIALIZER (inlined from src/persistence/serializer.js)
+// ================================================================
+function compactGrid(g) {
+  const out = JSON.parse(JSON.stringify(g));
+  for (const frame of out.frames) {
+    for (const cell of frame.cells) {
+      if (cell.density !== undefined && cell.density === calcDensity(cell.char)) delete cell.density;
+      if (cell.semantic !== undefined && cell.semantic === inferSemantic(cell.char)) delete cell.semantic;
+      if (cell.channel) {
+        for (const k of Object.keys(cell.channel)) {
+          if (cell.channel[k] && typeof cell.channel[k] === 'object' && Object.keys(cell.channel[k]).length === 0) delete cell.channel[k];
+        }
+        if (Object.keys(cell.channel).length === 0) delete cell.channel;
+      }
+    }
+  }
+  return out;
+}
+
+function serializeProject(g, opts = {}) {
+  const compact = opts.compact === true;
+  const pretty = opts.pretty !== false;
+  let target = JSON.parse(JSON.stringify(g));
+  target.meta.modified = new Date().toISOString();
+  if (compact) target = compactGrid(target);
+  return JSON.stringify(target, null, pretty ? 2 : 0);
+}
+
+function deserializeProject(jsonString) {
+  if (typeof jsonString !== 'string') throw new TypeError('deserializeProject expects a JSON string');
+  let g;
+  try { g = JSON.parse(jsonString); } catch (e) { throw new SyntaxError('Invalid JSON: ' + e.message); }
+  if (!g || typeof g !== 'object' || g.grid !== FORMAT_ID)
+    throw new Error('Not a .grid file: missing format identifier');
+  // Version migration
+  if (!g.version || g.version < '0.1.0') {
+    if (!g.project) g.project = { bpm: 120, scale: 'chromatic', key: 'C', palette: {}, tier: 0 };
+    if (!g.sequences) g.sequences = [];
+    if (g.meta) { if (!g.meta.author && g.meta.author !== '') g.meta.author = ''; if (!g.meta.tags) g.meta.tags = []; if (!g.meta.notes && g.meta.notes !== '') g.meta.notes = ''; }
+    if (g.canvas) { if (!g.canvas.background) g.canvas.background = '#000000'; if (!g.canvas.fontFamily) g.canvas.fontFamily = 'monospace'; }
+    if (Array.isArray(g.frames)) { for (const f of g.frames) { if (!f.layers) f.layers = ['visual']; if (f.duration === undefined) f.duration = null; if (f.label === undefined) f.label = ''; } }
+    g.version = VERSION;
+  }
+  // Re-inflate compacted cells
+  if (Array.isArray(g.frames)) {
+    for (const frame of g.frames) {
+      if (Array.isArray(frame.cells)) {
+        for (const cell of frame.cells) {
+          if (cell.density === undefined) cell.density = calcDensity(cell.char);
+          if (cell.semantic === undefined) cell.semantic = inferSemantic(cell.char);
+        }
+      }
+    }
+  }
+  return g;
+}
+
+// ================================================================
+// OPFS STORE (inlined from src/persistence/opfs-store.js)
+// ================================================================
+const _OPFS_DIR = 'grid-projects';
+
+function _isOpfsAvailable() {
+  return typeof navigator !== 'undefined' && navigator.storage != null && typeof navigator.storage.getDirectory === 'function';
+}
+
+async function _getProjectsDir(create = true) {
+  const root = await navigator.storage.getDirectory();
+  return root.getDirectoryHandle(_OPFS_DIR, { create });
+}
+
+function _extractMeta(text) {
+  const getId = /"id"\s*:\s*"([^"]+)"/.exec(text);
+  const getName = /"name"\s*:\s*"([^"]*)"/.exec(text);
+  const getCreated = /"created"\s*:\s*"([^"]*)"/.exec(text);
+  const getModified = /"modified"\s*:\s*"([^"]*)"/.exec(text);
+  if (getId) return { id: getId[1], name: getName ? getName[1] : 'Untitled', created: getCreated ? getCreated[1] : null, modified: getModified ? getModified[1] : null };
+  try { const obj = JSON.parse(text); if (obj && obj.meta) return { id: obj.meta.id, name: obj.meta.name || 'Untitled', created: obj.meta.created || null, modified: obj.meta.modified || null }; } catch(_) {}
+  return null;
+}
+
+async function opfsListProjects() {
+  let dir; try { dir = await _getProjectsDir(false); } catch(_) { return []; }
+  const results = [];
+  for await (const [name, handle] of dir.entries()) {
+    if (!name.endsWith('.grid') || handle.kind !== 'file') continue;
+    try {
+      const file = await handle.getFile();
+      const text = await file.slice(0, 1024).text();
+      const meta = _extractMeta(text);
+      if (meta) results.push({ ...meta, size: file.size });
+    } catch(_) {}
+  }
+  results.sort((a, b) => { if (!a.modified && !b.modified) return 0; if (!a.modified) return 1; if (!b.modified) return -1; return b.modified.localeCompare(a.modified); });
+  return results;
+}
+
+async function opfsSaveProject(g, opts = {}) {
+  if (!g || !g.meta || !g.meta.id) throw new Error('grid.meta.id is required');
+  const compact = opts.compact !== undefined ? opts.compact : true;
+  const json = serializeProject(g, { compact, pretty: false });
+  const dir = await _getProjectsDir(true);
+  const fh = await dir.getFileHandle(g.meta.id + '.grid', { create: true });
+  const w = await fh.createWritable(); await w.write(json); await w.close();
+}
+
+async function opfsLoadProject(projectId) {
+  let dir; try { dir = await _getProjectsDir(false); } catch(_) { throw new Error('Project not found: ' + projectId); }
+  let fh; try { fh = await dir.getFileHandle(projectId + '.grid', { create: false }); } catch(_) { throw new Error('Project not found: ' + projectId); }
+  const file = await fh.getFile();
+  return deserializeProject(await file.text());
+}
+
+async function opfsDeleteProject(projectId) {
+  let dir; try { dir = await _getProjectsDir(false); } catch(_) { throw new Error('Project not found: ' + projectId); }
+  try { await dir.getFileHandle(projectId + '.grid', { create: false }); } catch(_) { throw new Error('Project not found: ' + projectId); }
+  await dir.removeEntry(projectId + '.grid');
+}
+
+// ================================================================
+// FS ACCESS (inlined from src/persistence/fs-access.js)
+// ================================================================
+let _currentFileHandle = null;
+
+function _isFsAccessAvailable() { return typeof window !== 'undefined' && 'showSaveFilePicker' in window; }
+
+const _GRID_FILE_TYPES = [{ description: 'GRID files', accept: { 'application/json': ['.grid'] } }];
+
+async function fsSaveAs(g, opts = {}) {
+  let handle;
+  try { handle = await window.showSaveFilePicker({ suggestedName: (g.meta.name || 'untitled') + '.grid', types: _GRID_FILE_TYPES }); }
+  catch (err) { if (err.name === 'AbortError') return null; throw err; }
+  const json = serializeProject(g, { compact: opts.compact, pretty: opts.pretty !== false });
+  const w = await handle.createWritable(); await w.write(json); await w.close();
+  _currentFileHandle = handle;
+  return handle;
+}
+
+async function fsSaveToHandle(g, handle, opts = {}) {
+  const json = serializeProject(g, { compact: opts.compact, pretty: opts.pretty !== false });
+  const w = await handle.createWritable(); await w.write(json); await w.close();
+}
+
+async function fsOpenFile() {
+  let handles;
+  try { handles = await window.showOpenFilePicker({ types: _GRID_FILE_TYPES, multiple: false }); }
+  catch (err) { if (err.name === 'AbortError') return null; throw err; }
+  const file = await handles[0].getFile();
+  const g = deserializeProject(await file.text());
+  _currentFileHandle = handles[0];
+  return g;
+}
+
+function fsDownloadFallback(g, opts = {}) {
+  const json = serializeProject(g, { compact: opts.compact, pretty: opts.pretty !== false });
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url;
+  a.download = (g.meta.name || 'untitled').replace(/[^a-zA-Z0-9_-]/g, '_') + '.grid';
+  a.click();
+  setTimeout(() => { try { URL.revokeObjectURL(url); } catch(_){} }, 100);
+}
+
+async function saveCascade(g, opts = {}) {
+  if (_currentFileHandle) { await fsSaveToHandle(g, _currentFileHandle, opts); return 'handle'; }
+  if (_isFsAccessAvailable()) { const h = await fsSaveAs(g, opts); return h ? 'saveAs' : 'cancelled'; }
+  fsDownloadFallback(g, opts); return 'download';
+}
+
+// ================================================================
+// APPLICATION STATE
+// ================================================================
+let grid = createGrid(40, 20, '@#$%&*+=-.~:;|/\\^░▒▓█ ', '#00ff88', { name: 'Untitled', defaultChar: ' ' });
+let renderer = null;
+let inputSystem = null;
+let selectedChar = '@';
+let selectedColor = '#00ff88';
+let eraserMode = false;
+
+const COLORS = ['#00ff88','#00aaff','#ff4466','#ffcc00','#ff44ff','#44ffff','#ffffff','#ff8800','#88ff00','#8844ff','#ff0000','#00ff00','#4488ff','#888888','#cccccc','#444444'];
+
+// ================================================================
+// INITIALIZATION
+// ================================================================
+window.addEventListener('DOMContentLoaded', async () => {
+  // Try auto-load from OPFS first
+  if (_isOpfsAvailable()) {
+    try {
+      const projects = await opfsListProjects();
+      if (projects.length > 0) {
+        grid = await opfsLoadProject(projects[0].id);
+        selectedChar = grid.canvas.charset[0] || '@';
+        selectedColor = grid.canvas.defaultColor || '#00ff88';
+      }
+    } catch(_) { /* start fresh */ }
+  }
+  initRenderer();
+  buildCharPalette();
+  buildColorPalette();
+  updateUI();
+  setupInputSystem();
+  setupMobileDetect();
+  setupDensitySlider();
+  setupAutoSave();
+  // Register PWA file handler
+  if (window.launchQueue) {
+    window.launchQueue.setConsumer(async (params) => {
+      if (!params.files || !params.files.length) return;
+      const handle = params.files[0];
+      const file = await handle.getFile();
+      const g = deserializeProject(await file.text());
+      _currentFileHandle = handle;
+      loadGridIntoApp(g);
+    });
+  }
+  // Register service worker
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+});
+
+function initRenderer() {
+  const canvas = document.getElementById('gridCanvas');
+  renderer = createRenderer(canvas, grid, {
+    fps: 10,
+    fontSize: 14,
+    onFrameChange: (idx, frame) => {
+      if (!renderer) return;  // ← guard against init-time callback
+      document.getElementById('frameLabel').textContent = `Frame ${idx + 1}/${grid.frames.length}`;
+      updateFrameStrip();
+    }
+  });
+  // Force initial UI sync AFTER renderer is assigned
+  updateUI();
+}
+
+// ================================================================
+// CHARACTER PALETTE
+// ================================================================
+function buildCharPalette() {
+  const el = document.getElementById('charPalette');
+  el.innerHTML = '';
+  const chars = [...new Set(grid.canvas.charset.split(''))];
+  for (const ch of chars) {
+    const btn = document.createElement('button');
+    btn.className = 'char-btn' + (ch === selectedChar ? ' selected' : '');
+    btn.textContent = ch === ' ' ? '␣' : ch;
+    btn.title = ch === ' ' ? 'Space' : ch;
+    btn.onclick = () => { selectedChar = ch; eraserMode = false; updateEraserBtn(); buildCharPalette(); };
+    el.appendChild(btn);
+  }
+}
+
+// ================================================================
+// COLOR PALETTE
+// ================================================================
+function buildColorPalette() {
+  const el = document.getElementById('colorPalette');
+  el.innerHTML = '';
+  for (const c of COLORS) {
+    const sw = document.createElement('div');
+    sw.className = 'color-swatch' + (c === selectedColor ? ' selected' : '');
+    sw.style.background = c;
+    sw.onclick = () => selectColor(c);
+    el.appendChild(sw);
+  }
+}
+
+function selectColor(c) {
+  if (!/^#[0-9a-fA-F]{6}$/.test(c)) return;
+  selectedColor = c;
+  document.getElementById('customColor').value = c;
+  buildColorPalette();
+}
+
+// ================================================================
+// ERASER
+// ================================================================
+function toggleEraser() {
+  eraserMode = !eraserMode;
+  updateEraserBtn();
+}
+function updateEraserBtn() {
+  const btn = document.getElementById('eraserBtn');
+  btn.textContent = eraserMode ? '🧹 Eraser ON' : '🧹 Eraser Off';
+  btn.className = eraserMode ? 'small active' : 'small';
+}
+
+// ================================================================
+// DENSITY SLIDER
+// ================================================================
+function setupDensitySlider() {
+  const slider = document.getElementById('densitySlider');
+  const val = document.getElementById('densityVal');
+  slider.oninput = () => { val.textContent = (slider.value / 100).toFixed(2); };
+}
+
+function getBrushDensity(char) {
+  if (document.getElementById('densityOverride').checked) {
+    return document.getElementById('densitySlider').value / 100;
+  }
+  return calcDensity(char);
+}
+
+function getBrushSemantic(char) {
+  const sel = document.getElementById('semSelect').value;
+  return sel || inferSemantic(char);
+}
+
+// ================================================================
+// INPUT SYSTEM SETUP
+// ================================================================
+function setupInputSystem() {
+  const canvas = document.getElementById('gridCanvas');
+  if (inputSystem) inputSystem.destroy();
+  inputSystem = createInputSystem(canvas, renderer);
+
+  function paintAt(x, y) {
+    if (x < 0 || y < 0 || x >= grid.canvas.width || y >= grid.canvas.height) return;
+    const fi = renderer.current;
+    if (eraserMode) {
+      grid.frames[fi] = removeCell(grid.frames[fi], x, y);
+    } else {
+      grid.frames[fi] = setCell(grid.frames[fi], x, y, {
+        char: selectedChar,
+        color: selectedColor,
+        density: getBrushDensity(selectedChar),
+        semantic: getBrushSemantic(selectedChar)
+      });
+    }
+    grid.meta.modified = new Date().toISOString();
+    renderer.render();
+    scheduleAutoSave();
+  }
+
+  inputSystem.on('cellDown',  ({ x, y }) => { paintAt(x, y); updateCellInfo(x, y); });
+  inputSystem.on('cellMove',  ({ x, y }) => { paintAt(x, y); updateCellInfo(x, y); });
+  inputSystem.on('cellHover', ({ x, y }) => { updateCellInfo(x, y); });
+
+  inputSystem.on('action', ({ name, payload }) => {
+    switch (name) {
+      case 'playToggle':   togglePlayback(); break;
+      case 'nextFrame':    nextFrameAction(); break;
+      case 'prevFrame':    prevFrameAction(); break;
+      case 'eraserToggle': toggleEraser(); break;
+      case 'clearFrame':   clearFrame(); break;
+      case 'closeModal':
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('show'));
+        break;
+      case 'saveFile':   handleSaveFile(); break;
+      case 'export':     exportGrid(); break;
+      case 'import':     importGrid(); break;
+      case 'newProject': showNewProjectModal(); break;
+      case 'projectSettings': showProjectSettings(); break;
+      case 'selectChar': {
+        const idx = parseInt(payload) - 1;
+        const chars = [...new Set(grid.canvas.charset.split(''))];
+        if (idx >= 0 && idx < chars.length) {
+          selectedChar = chars[idx];
+          eraserMode = false;
+          updateEraserBtn();
+          buildCharPalette();
+        }
+        break;
+      }
+    }
+  });
+}
+
+function updateCellInfo(x, y) {
+  const el = document.getElementById('cellInfo');
+  if (x < 0 || y < 0 || x >= grid.canvas.width || y >= grid.canvas.height) {
+    el.textContent = 'Out of bounds';
+    return;
+  }
+  const frame = grid.frames[renderer.current];
+  const cell = getCell(frame, x, y);
+  if (cell) {
+    el.innerHTML = `<b>(${x},${y})</b> char:"${cell.char}" den:${(cell.density||0).toFixed(2)}<br>` +
+      `<span class="sem-dot sem-${cell.semantic||'solid'}"></span>${cell.semantic||'solid'} col:${cell.color||grid.canvas.defaultColor}`;
+  } else {
+    el.innerHTML = `<b>(${x},${y})</b> <i>default</i>`;
+  }
+}
+
+// ================================================================
+// FRAME MANAGEMENT
+// ================================================================
+function addNewFrame() {
+  const frame = createFrame(grid, '');
+  grid.frames.push(frame);
+  grid.meta.modified = new Date().toISOString();
+  renderer.setGridRef(grid);
+  renderer.goTo(grid.frames.length - 1);
+  updateUI();
+  scheduleAutoSave();
+  setStatus(`Frame ${grid.frames.length} added`);
+}
+
+function duplicateFrame() {
+  const src = grid.frames[renderer.current];
+  const dup = {
+    ...JSON.parse(JSON.stringify(src)),
+    id: 'frame_' + String(grid.frames.length + 1).padStart(3, '0'),
+    index: grid.frames.length,
+    label: (src.label || '') + ' (copy)'
+  };
+  grid.frames.push(dup);
+  grid.meta.modified = new Date().toISOString();
+  renderer.setGridRef(grid);
+  renderer.goTo(grid.frames.length - 1);
+  updateUI();
+  scheduleAutoSave();
+  setStatus('Frame duplicated');
+}
+
+function deleteCurrentFrame() {
+  if (grid.frames.length <= 1) { setStatus('Cannot delete last frame', true); return; }
+  const idx = renderer.current;
+  grid.frames.splice(idx, 1);
+  grid.frames.forEach((f, i) => { f.index = i; });
+  grid.meta.modified = new Date().toISOString();
+  renderer.setGridRef(grid);
+  renderer.goTo(Math.min(idx, grid.frames.length - 1));
+  updateUI();
+  scheduleAutoSave();
+  setStatus('Frame deleted');
+}
+
+function clearFrame() {
+  grid.frames[renderer.current].cells = [];
+  grid.meta.modified = new Date().toISOString();
+  renderer.render();
+  scheduleAutoSave();
+  setStatus('Frame cleared');
+}
+
+// ================================================================
+// PLAYBACK
+// ================================================================
+function togglePlayback() {
+  const playing = renderer.toggle();
+  document.getElementById('playBtn').textContent = playing ? '⏸ Pause' : '▶ Play';
+}
+function stopPlayback() { renderer.stop(); document.getElementById('playBtn').textContent = '▶ Play'; updateUI(); }
+function nextFrameAction() { renderer.next(); updateUI(); }
+function prevFrameAction() { renderer.prev(); updateUI(); }
+function updateFps(v) { renderer.setFps(Math.max(1, Math.min(60, v))); }
+
+// ================================================================
+// FRAME STRIP
+// ================================================================
+function updateFrameStrip() {
+  const strip = document.getElementById('frameStrip');
+  strip.innerHTML = '';
+  const currentIdx = renderer ? renderer.current : 0;  // ← null guard
+  grid.frames.forEach((frame, i) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'frame-thumb' + (i === currentIdx ? ' active' : '');
+    const { width: W } = grid.canvas;
+    let preview = '';
+    const charMap = {};
+    for (const c of frame.cells) charMap[c.x + ',' + c.y] = c.char;
+    for (let y = 0; y < Math.min(5, grid.canvas.height); y++) {
+      for (let x = 0; x < Math.min(10, W); x++) {
+        preview += charMap[x + ',' + y] || grid.canvas.defaultChar;
+      }
+      preview += '\n';
+    }
+    thumb.textContent = preview;
+    thumb.title = `Frame ${i + 1}: ${frame.id}${frame.label ? ' — ' + frame.label : ''} (${frame.cells.length} cells)`;
+    thumb.onclick = () => { if (renderer) { renderer.goTo(i); updateUI(); } };
+    strip.appendChild(thumb);
+  });
+}
+
+// ================================================================
+// GENERATORS — helpers + registry (inlined from src/generators/generators.js)
+// ================================================================
+
+function _clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+function _mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function _hslToHex(h, s, l) {
+  s = _clamp01(s); l = _clamp01(l);
+  const a = s * Math.min(l, 1 - l);
+  const f = (n) => {
+    const k = (n + h / 30) % 12;
+    const c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+    return Math.round(255 * _clamp01(c)).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function _monoFromHex(hex, density) {
+  const r = parseInt(hex.slice(1,3),16)/255, g = parseInt(hex.slice(3,5),16)/255, b = parseInt(hex.slice(5,7),16)/255;
+  const max = Math.max(r,g,b), min = Math.min(r,g,b), lBase = (max+min)/2;
+  let h = 0, s = 0;
+  if (max !== min) {
+    const d = max - min;
+    s = lBase > 0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;case b:h=((r-g)/d+4)/6;break;}
+  }
+  return _hslToHex(h*360, s, Math.max(0.15, 0.85 - density*0.70));
+}
+
+function _resolveColor(color, colorMode, derivedHue, density) {
+  if (colorMode === 'mono')    return _monoFromHex(color || '#00ff88', density);
+  if (colorMode === 'derived') return _hslToHex(derivedHue % 360, 0.8, 0.5);
+  return color || '#00ff88';
+}
+
+function _pickChar(charset, t) {
+  if (!charset || !charset.length) return ' ';
+  const idx = Math.min(charset.length - 1, Math.floor(_clamp01(t) * charset.length));
+  return charset[idx];
+}
+
+function _buildGenCell(x, y, char, color, density, semantic, H) {
+  const d = _clamp01(density);
+  const sem = semantic || inferSemantic(char);
+  return {
+    x, y, char, color, density: d, semantic: sem,
+    channel: {
+      audio:   { note: Math.round((1 - y / Math.max(1, H-1)) * 127), velocity: Math.round(d * 127), duration: 1 },
+      spatial: { height: d, material: sem },
+    },
+  };
+}
+
+const GENERATORS = {
+  spiral(W, H, opts) {
+    const cs=opts.charset, col=opts.color, cm=opts.colorMode, cx=W/2, cy=H/2, cells=[];
+    for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
+      const angle=Math.atan2(y-cy,x-cx), dist=Math.sqrt((x-cx)**2+(y-cy)**2);
+      const t=((angle+dist*0.3)%(Math.PI*2))/(Math.PI*2);
+      const char=_pickChar(cs,t); if(char===' ')continue;
+      cells.push(_buildGenCell(x,y,char,_resolveColor(col,cm,((angle/(Math.PI*2)+1)*180)%360,1-t),1-t,null,H));
+    }
+    return cells;
+  },
+  wave(W, H, opts) {
+    const cs=opts.charset, col=opts.color, cm=opts.colorMode, phase=(opts.seed??0)*0.1, cells=[];
+    for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
+      const t=(Math.sin(x*0.2+phase)*Math.cos(y*0.15)+1)*0.5;
+      const char=_pickChar(cs,t); if(char===' ')continue;
+      cells.push(_buildGenCell(x,y,char,_resolveColor(col,cm,(x/Math.max(1,W-1))*240,t),t,null,H));
+    }
+    return cells;
+  },
+  mandala(W, H, opts) {
+    const cs=opts.charset, col=opts.color, cm=opts.colorMode, cx=W/2, cy=H/2, sym=opts.symmetry??8, cells=[];
+    for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
+      const dx=x-cx, dy=y-cy, dist=Math.sqrt(dx*dx+dy*dy);
+      if (dist>=Math.min(cx,cy)) continue;
+      const angle=Math.atan2(dy,dx), t=(Math.sin(angle*sym)*Math.cos(dist*0.5)+1)*0.5;
+      const char=_pickChar(cs,t); if(char===' ')continue;
+      cells.push(_buildGenCell(x,y,char,_resolveColor(col,cm,((angle/(Math.PI*2)+1)*360)%360,t),t,null,H));
+    }
+    return cells;
+  },
+  noise(W, H, opts) {
+    const rng=_mulberry32(opts.seed??12345), cs=opts.charset, col=opts.color, cm=opts.colorMode, fill=opts.fill??0.7, cells=[];
+    for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
+      if (rng()>fill) continue;
+      const t=rng(), char=_pickChar(cs,t); if(char===' ')continue;
+      cells.push(_buildGenCell(x,y,char,_resolveColor(col,cm,rng()*360,t),t,null,H));
+    }
+    return cells;
+  },
+  geometric(W, H, opts) {
+    const rng=_mulberry32(opts.seed??42), cs=opts.charset, col=opts.color, cm=opts.colorMode;
+    const cx=W/2, cy=H/2, shapes=['diamond','cross','frame'], shape=shapes[Math.floor(rng()*3)], cells=[];
+    for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
+      let draw=false;
+      switch(shape){case'diamond':draw=Math.abs(x-cx)+Math.abs(y-cy)<Math.min(cx,cy)*0.8;break;case'cross':draw=Math.abs(x-cx)<3||Math.abs(y-cy)<2;break;case'frame':draw=x<3||x>=W-3||y<2||y>=H-2;break;}
+      if (!draw) continue;
+      const dist=Math.sqrt((x-cx)**2+(y-cy)**2), maxD=Math.sqrt(cx*cx+cy*cy);
+      const t=Math.max(0.1,1-dist/maxD), char=_pickChar(cs,t); if(char===' ')continue;
+      cells.push(_buildGenCell(x,y,char,_resolveColor(col,cm,(dist/maxD)*240,t),t,null,H));
+    }
+    return cells;
+  },
+  rain(W, H, opts) {
+    const rng=_mulberry32(opts.seed??99), cs=opts.charset, col=opts.color, cm=opts.colorMode, cells=[];
+    for (let x=0;x<W;x++) {
+      if (rng()>0.6) continue;
+      const len=Math.floor(rng()*(H*0.7))+2, startY=Math.floor(rng()*H);
+      for (let i=0;i<len&&startY+i<H;i++) {
+        const t=1-i/len, char=_pickChar(cs,t); if(char===' ')continue;
+        cells.push(_buildGenCell(x,startY+i,char,_resolveColor(col,cm,120+rng()*40,t),t,null,H));
+      }
+    }
+    return cells;
+  },
+  gradient(W, H, opts) {
+    const cs=opts.charset, col=opts.color, cm=opts.colorMode, cells=[];
+    for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
+      const t=x/Math.max(1,W-1), char=_pickChar(cs,t); if(char===' ')continue;
+      cells.push(_buildGenCell(x,y,char,_resolveColor(col,cm,t*270,t),t,null,H));
+    }
+    return cells;
+  },
+  pulse(W, H, opts) {
+    const cs=opts.charset, col=opts.color, cm=opts.colorMode, cx=W/2, cy=H/2;
+    const rings=opts.rings??5, phase=(opts.seed??0)*0.1, maxD=Math.sqrt(cx*cx+cy*cy), cells=[];
+    for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
+      const dist=Math.sqrt((x-cx)**2+(y-cy)**2);
+      const t=(Math.sin(dist*(rings/Math.max(1,maxD))*Math.PI*2+phase)+1)*0.5;
+      const char=_pickChar(cs,t); if(char===' ')continue;
+      cells.push(_buildGenCell(x,y,char,_resolveColor(col,cm,(dist/Math.max(1,maxD))*360,t),t,null,H));
+    }
+    return cells;
+  },
+  matrix(W, H, opts) {
+    const rng=_mulberry32(opts.seed??7), cs=opts.charset, col=opts.color, cm=opts.colorMode, cells=[];
+    for (let x=0;x<W;x++) {
+      const colSeed=rng(), headY=Math.floor(colSeed*H), tailLen=Math.floor(3+rng()*(H*0.5));
+      for (let i=0;i<tailLen;i++) {
+        const y=(headY+i)%H, t=1-i/tailLen;
+        const charT=i===0?0.05:_clamp01(1-t*0.6), char=_pickChar(cs,charT); if(char===' ')continue;
+        cells.push(_buildGenCell(x,y,char,_resolveColor(col,cm,120,t),t,null,H));
+      }
+    }
+    return cells;
+  },
+  terrain(W, H, opts) {
+    const rng=_mulberry32(opts.seed??314), cs=opts.charset, col=opts.color, cm=opts.colorMode, wl=opts.waterLevel??0.35;
+    const oct=[[rng()*100,rng()*100,rng()*0.05+0.02,rng()*0.05+0.02,1.00],[rng()*100,rng()*100,rng()*0.10+0.05,rng()*0.10+0.05,0.50],[rng()*100,rng()*100,rng()*0.20+0.10,rng()*0.20+0.10,0.25]];
+    const totalAmp=oct.reduce((s,o)=>s+o[4],0);
+    function ht(x,y){let h=0;for(const[ox,oy,fx,fy,amp]of oct)h+=Math.sin((x+ox)*fx)*Math.cos((y+oy)*fy)*amp;return(h/totalAmp+1)*0.5;}
+    const cells=[];
+    for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
+      const h=ht(x,y); let sem,charT,hue;
+      if (h<wl) { if(h>wl*0.7){sem='void';charT=0.15;hue=220;}else continue; }
+      else if (h<wl+0.08) { sem='fluid';charT=0.30;hue=180; }
+      else if (h>0.82)    { sem='emissive';charT=0.02;hue=30; }
+      else                { sem='solid';charT=0.12+(h-wl)*0.65;hue=100-(h-wl)*60; }
+      const char=_pickChar(cs,charT); if(char===' ')continue;
+      cells.push(_buildGenCell(x,y,char,_resolveColor(col,cm,hue,h),h,sem,H));
+    }
+    return cells;
+  },
+};
+
+function generate(type) {
+  if (!GENERATORS[type]) return;
+  const W = grid.canvas.width, H = grid.canvas.height;
+  const fi = renderer.current;
+  const colorMode = document.getElementById('genColorMode')?.value || 'fixed';
+  const opts = {
+    charset:   grid.canvas.charset,
+    color:     selectedColor,
+    colorMode,
+    seed:      Math.floor(Math.random() * 0xFFFFFF),
+  };
+  const cells = GENERATORS[type](W, H, opts);
+  grid.frames[fi] = { ...grid.frames[fi], cells };
+  grid.meta.modified = new Date().toISOString();
+  renderer.render();
+  updateUI();
+  scheduleAutoSave();
+  setStatus(`Generated: ${type} (${cells.length} cells)`);
+}
+
+// ================================================================
+// IMPORT / EXPORT
+// ================================================================
+function exportGrid() {
+  document.getElementById('jsonModalTitle').textContent = 'Export .grid';
+  document.getElementById('jsonArea').value = serializeGrid(grid);
+  document.getElementById('jsonLoadBtn').style.display = 'none';
+  document.getElementById('jsonDownloadBtn').style.display = '';
+  document.getElementById('jsonCopyBtn').style.display = '';
+  openModal('jsonModal');
+}
+
+function importGrid() {
+  document.getElementById('jsonModalTitle').textContent = 'Import .grid';
+  document.getElementById('jsonArea').value = '';
+  document.getElementById('jsonLoadBtn').style.display = '';
+  document.getElementById('jsonDownloadBtn').style.display = 'none';
+  document.getElementById('jsonCopyBtn').style.display = 'none';
+  openModal('jsonModal');
+
+  // Also allow file input
+  const fi = document.getElementById('fileInput');
+  fi.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      document.getElementById('jsonArea').value = ev.target.result;
+      loadJson();
+    };
+    reader.readAsText(file);
+    fi.value = '';
+  };
+  fi.click();
+}
+
+function loadJson() {
+  try {
+    const imported = deserializeGrid(document.getElementById('jsonArea').value);
+    const v = validateGrid(imported);
+    if (!v.valid) { setStatus('Invalid: ' + v.errors.join(', '), true); return; }
+    grid = imported;
+    _currentFileHandle = null;
+    renderer.setGridRef(grid);
+    buildCharPalette();
+    updateUI();
+    closeModal('jsonModal');
+    scheduleAutoSave();
+    setStatus('Project imported: ' + grid.meta.name);
+  } catch (e) {
+    setStatus('Import error: ' + e.message, true);
+  }
+}
+
+function copyJson() {
+  navigator.clipboard.writeText(document.getElementById('jsonArea').value)
+    .then(() => setStatus('Copied to clipboard'));
+}
+
+function downloadJson() {
+  const blob = new Blob([serializeGrid(grid)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = (grid.meta.name || 'project').replace(/[^a-zA-Z0-9_-]/g, '_') + '.grid';
+  a.click();
+  URL.revokeObjectURL(url);
+  setStatus('Downloaded: ' + a.download);
+}
+
+// ================================================================
+// IMAGE IMPORT
+// ================================================================
+let _importedImageEl = null;
+
+function importImage() {
+  _importedImageEl = null;
+  document.getElementById('imgPreview').textContent = 'Select an image to preview...';
+  document.getElementById('imgApplyBtn').style.display = 'none';
+  document.getElementById('imgNewBtn').style.display = 'none';
+  openModal('imageImportModal');
+
+  const fi = document.getElementById('imageFileInput');
+  fi.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    fi.value = '';
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      _importedImageEl = img;
+      URL.revokeObjectURL(url);
+      renderImagePreview();
+      document.getElementById('imgApplyBtn').style.display = '';
+      document.getElementById('imgNewBtn').style.display = '';
+    };
+    img.onerror = () => { setStatus('Failed to load image', true); URL.revokeObjectURL(url); };
+    img.src = url;
+  };
+  fi.click();
+}
+
+function renderImagePreview() {
+  if (!_importedImageEl) return;
+  const ramp     = document.getElementById('imgCharRamp').value || '@%#*+=-:. ';
+  const cellSize = Math.max(2, +document.getElementById('imgCellSize').value || 10);
+  const contrast = +document.getElementById('imgContrast').value || 0;
+  // Cap preview to a small grid that fits the preview div
+  const maxW = 60, maxH = 15;
+  const previewGrid = imageToGrid(_importedImageEl, {
+    charRamp: ramp, cellSize, contrast,
+    gridWidth:  Math.min(maxW, Math.max(1, Math.floor(_importedImageEl.naturalWidth  / cellSize))),
+    gridHeight: Math.min(maxH, Math.max(1, Math.floor(_importedImageEl.naturalHeight / cellSize)))
+  });
+  const frame = previewGrid.frames[0];
+  const W = previewGrid.canvas.width, H = previewGrid.canvas.height;
+  const charMap = {};
+  for (const c of frame.cells) charMap[c.x + ',' + c.y] = c.char;
+  let text = '';
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) text += charMap[x + ',' + y] || ' ';
+    text += '\n';
+  }
+  document.getElementById('imgPreview').textContent = text;
+}
+
+function applyImageImport(asNewProject = false) {
+  if (!_importedImageEl) { setStatus('No image loaded', true); return; }
+  const ramp     = document.getElementById('imgCharRamp').value || '@%#*+=-:. ';
+  const cellSize = Math.max(2, +document.getElementById('imgCellSize').value || 10);
+  const contrast = +document.getElementById('imgContrast').value || 0;
+  try {
+    const imported = imageToGrid(_importedImageEl, {
+      charRamp: ramp, cellSize, contrast, projectName: 'Imported Image'
+    });
+    if (asNewProject) {
+      grid = imported;
+    } else {
+      // Replace frame 0 of current project, preserving project metadata
+      grid.frames[0] = imported.frames[0];
+      grid.meta.modified = new Date().toISOString();
+    }
+    renderer.setGridRef(grid);
+    setupInputSystem();
+    buildCharPalette();
+    updateUI();
+    closeModal('imageImportModal');
+    scheduleAutoSave();
+    setStatus(`Image imported: ${grid.canvas.width}×${grid.canvas.height} cells`);
+  } catch (e) {
+    setStatus('Image import error: ' + e.message, true);
+  }
+}
+
+// ================================================================
+// NEW PROJECT
+// ================================================================
+function showNewProjectModal() { openModal('newProjectModal'); }
+
+function createNewProject() {
+  const name = document.getElementById('npName').value || 'Untitled';
+  const w = Math.max(1, Math.min(1000, +document.getElementById('npWidth').value || 40));
+  const h = Math.max(1, Math.min(1000, +document.getElementById('npHeight').value || 20));
+  const charset = document.getElementById('npCharset').value || '@#$%&*+=-.~ ';
+  const dc = document.getElementById('npDefaultChar').value || ' ';
+  grid = createGrid(w, h, charset, selectedColor, { name, defaultChar: dc });
+  _currentFileHandle = null;
+  renderer.setGridRef(grid);
+  buildCharPalette();
+  updateUI();
+  closeModal('newProjectModal');
+  scheduleAutoSave();
+  setStatus(`New project: ${name} (${w}×${h})`);
+}
+
+// ================================================================
+// DISPLAY OPTIONS
+// ================================================================
+function updateFontSize(v) {
+  document.getElementById('fontSizeVal').textContent = v;
+  renderer.setFontSize(v);
+}
+
+function toggleGridLines() {
+  renderer.setShowGrid(document.getElementById('showGridCheck').checked);
+}
+
+// ================================================================
+// MODALS
+// ================================================================
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// Close modals on backdrop click
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.classList.remove('show');
+  }
+});
+
+// setupKeyboard() — replaced by setupInputSystem() action handler above.
+
+// ================================================================
+// MOBILE
+// ================================================================
+function setupMobileDetect() {
+  const check = () => {
+    document.getElementById('menuBtn').style.display = window.innerWidth <= 768 ? '' : 'none';
+  };
+  check();
+  window.addEventListener('resize', check);
+}
+
+function toggleMobileSidebar() {
+  document.getElementById('sidebar').classList.toggle('mobile-show');
+}
+
+// ================================================================
+// UI UPDATE
+// ================================================================
+function updateUI() {
+  document.getElementById('projectMeta').textContent =
+    `${grid.meta.name} — ${grid.canvas.width}×${grid.canvas.height}`;
+  document.getElementById('frameLabel').textContent =
+    `Frame ${renderer.current + 1}/${grid.frames.length}`;
+  updateFrameStrip();
+  const frame = grid.frames[renderer.current];
+  document.getElementById('statusCenter').textContent =
+    `${frame.cells.length} cells | ${frame.id}`;
+}
+
+function setStatus(msg, isError = false) {
+  const el = document.getElementById('statusLeft');
+  el.textContent = msg;
+  el.style.color = isError ? 'var(--warn)' : 'var(--accent)';
+  setTimeout(() => { el.style.color = ''; el.textContent = 'Ready'; }, 3000);
+}
+
+// ================================================================
+// AUTO-SAVE (2s debounce, OPFS)
+// ================================================================
+let _autoSaveTimer = null;
+
+function setupAutoSave() {
+  // Nothing extra needed — scheduleAutoSave is called on each mutation
+}
+
+function scheduleAutoSave() {
+  if (_autoSaveTimer) clearTimeout(_autoSaveTimer);
+  _autoSaveTimer = setTimeout(async () => {
+    if (!_isOpfsAvailable()) return;
+    try { await opfsSaveProject(grid); }
+    catch (e) { setStatus('Auto-save failed: ' + e.message, true); }
+  }, 2000);
+}
+
+// ================================================================
+// SAVE FILE (Ctrl+S cascade)
+// ================================================================
+async function handleSaveFile() {
+  try {
+    const method = await saveCascade(grid);
+    if (method === 'handle') setStatus('Saved');
+    else if (method === 'saveAs') setStatus('Saved to file');
+    else if (method === 'download') setStatus('Downloaded');
+  } catch (e) {
+    setStatus('Save error: ' + e.message, true);
+  }
+}
+
+// ================================================================
+// LOAD GRID INTO APP (shared helper)
+// ================================================================
+function loadGridIntoApp(g) {
+  grid = g;
+  selectedChar = grid.canvas.charset[0] || '@';
+  selectedColor = grid.canvas.defaultColor || '#00ff88';
+  renderer.setGridRef(grid);
+  setupInputSystem();
+  buildCharPalette();
+  buildColorPalette();
+  updateUI();
+}
+
+// ================================================================
+// PROJECT BROWSER
+// ================================================================
+async function showProjectBrowser() {
+  openModal('projectBrowserModal');
+  const container = document.getElementById('projectListContainer');
+  container.innerHTML = '<div class="project-empty">Loading...</div>';
+
+  if (!_isOpfsAvailable()) {
+    container.innerHTML = '<div class="project-empty">OPFS not available in this browser</div>';
+    return;
+  }
+
+  try {
+    const projects = await opfsListProjects();
+    if (projects.length === 0) {
+      container.innerHTML = '<div class="project-empty">No saved projects yet</div>';
+      return;
+    }
+    const ul = document.createElement('ul');
+    ul.className = 'project-list';
+    for (const p of projects) {
+      const li = document.createElement('li');
+      if (grid.meta.id === p.id) li.className = 'active';
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'pname';
+      nameSpan.textContent = p.name || 'Untitled';
+      const metaSpan = document.createElement('span');
+      metaSpan.className = 'pmeta';
+      const date = p.modified ? new Date(p.modified).toLocaleDateString() : '';
+      const sizeKb = p.size ? (p.size / 1024).toFixed(1) + ' KB' : '';
+      metaSpan.textContent = [date, sizeKb].filter(Boolean).join(' | ');
+      const actions = document.createElement('span');
+      actions.className = 'pactions';
+      const loadBtn = document.createElement('button');
+      loadBtn.className = 'small';
+      loadBtn.textContent = 'Load';
+      loadBtn.onclick = async (e) => {
+        e.stopPropagation();
+        try {
+          const g = await opfsLoadProject(p.id);
+          _currentFileHandle = null;
+          loadGridIntoApp(g);
+          closeModal('projectBrowserModal');
+          setStatus('Loaded: ' + (g.meta.name || 'Untitled'));
+        } catch (err) { setStatus('Load error: ' + err.message, true); }
+      };
+      const delBtn = document.createElement('button');
+      delBtn.className = 'small';
+      delBtn.style.color = 'var(--warn)';
+      delBtn.textContent = 'Del';
+      delBtn.onclick = async (e) => {
+        e.stopPropagation();
+        if (!confirm('Delete "' + (p.name || 'Untitled') + '"?')) return;
+        try {
+          await opfsDeleteProject(p.id);
+          showProjectBrowser(); // refresh
+          setStatus('Deleted: ' + (p.name || 'Untitled'));
+        } catch (err) { setStatus('Delete error: ' + err.message, true); }
+      };
+      actions.appendChild(loadBtn);
+      actions.appendChild(delBtn);
+      li.appendChild(nameSpan);
+      li.appendChild(metaSpan);
+      li.appendChild(actions);
+      ul.appendChild(li);
+    }
+    container.innerHTML = '';
+    container.appendChild(ul);
+  } catch (e) {
+    container.innerHTML = '<div class="project-empty">Error: ' + e.message + '</div>';
+  }
+}
+
+// ================================================================
+// PROJECT SETTINGS
+// ================================================================
+function showProjectSettings() {
+  document.getElementById('psName').value = grid.meta.name || '';
+  document.getElementById('psBpm').value = grid.project.bpm || 120;
+  document.getElementById('psKey').value = grid.project.key || 'C';
+  document.getElementById('psScale').value = grid.project.scale || 'chromatic';
+  document.getElementById('psCharset').value = grid.canvas.charset || '';
+  const paletteObj = grid.project.palette || {};
+  document.getElementById('psPalette').value = Object.values(paletteObj).join(',');
+  openModal('projectSettingsModal');
+}
+
+function applyProjectSettings() {
+  const name = document.getElementById('psName').value.trim() || 'Untitled';
+  const bpm = Math.max(1, Math.min(999, +document.getElementById('psBpm').value || 120));
+  const key = document.getElementById('psKey').value || 'C';
+  const scale = document.getElementById('psScale').value || 'chromatic';
+  const charset = document.getElementById('psCharset').value || grid.canvas.charset;
+  const paletteStr = document.getElementById('psPalette').value.trim();
+
+  grid.meta.name = name;
+  grid.project.bpm = bpm;
+  grid.project.key = key;
+  grid.project.scale = scale;
+  grid.canvas.charset = charset;
+
+  // Parse palette
+  if (paletteStr) {
+    const colors = paletteStr.split(',').map(c => c.trim()).filter(c => /^#[0-9a-fA-F]{6}$/.test(c));
+    const palette = {};
+    colors.forEach((c, i) => { palette[i] = c; });
+    grid.project.palette = palette;
+  } else {
+    grid.project.palette = {};
+  }
+
+  grid.meta.modified = new Date().toISOString();
+  buildCharPalette();
+  updateUI();
+  closeModal('projectSettingsModal');
+  scheduleAutoSave();
+  setStatus('Settings updated');
+}
+</script>
+</body>
+</html>

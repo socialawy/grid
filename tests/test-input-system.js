@@ -139,7 +139,7 @@ assertEqual(kb.resolve(mockKey('ArrowLeft')),                       'prevFrame',
 assertEqual(kb.resolve(mockKey('KeyE')),                            'eraserToggle',  'KeyE → eraserToggle');
 assertEqual(kb.resolve(mockKey('Delete')),                          'clearFrame',    'Delete → clearFrame');
 assertEqual(kb.resolve(mockKey('Escape')),                          'closeModal',    'Escape → closeModal');
-assertEqual(kb.resolve(mockKey('KeyS', { ctrlKey: true })),        'export',        'ctrl+KeyS → export');
+assertEqual(kb.resolve(mockKey('KeyS', { ctrlKey: true })),        'saveFile',      'ctrl+KeyS → saveFile');
 assertEqual(kb.resolve(mockKey('KeyO', { ctrlKey: true })),        'import',        'ctrl+KeyO → import');
 assertEqual(kb.resolve(mockKey('KeyN', { ctrlKey: true })),        'newProject',    'ctrl+KeyN → newProject');
 assertEqual(kb.resolve(mockKey('Digit1')),                          'selectChar:1',  'Digit1 → selectChar:1');
@@ -301,7 +301,7 @@ section('createInputSystem — keyboard actions');
     target: { tagName: 'BODY' },
     preventDefault() {},
   });
-  assertEqual(actions[2], { name: 'export', payload: null }, 'ctrl+KeyS → export');
+  assertEqual(actions[2], { name: 'saveFile', payload: null }, 'ctrl+KeyS → saveFile');
 
   // Unmapped key → no action
   const before = actions.length;
