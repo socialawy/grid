@@ -129,6 +129,11 @@ async function runAllTests() {
       name: 'Image Importer (imageToGrid + rgbToHex)',
       file: 'test-image-importer.js',
       environment: 'node'
+    },
+    {
+      name: 'Generators v2 (10 generators, all 5 channels)',
+      file: 'test-generators.js',
+      environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {

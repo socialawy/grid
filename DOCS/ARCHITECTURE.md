@@ -161,6 +161,8 @@ GRID/
 │   │   ├── font-atlas.js
 │   │   ├── instance-buffer.js
 │   │   └── shaders.js
+│   ├── generators/
+│   │   └── generators.js         ← Task 1.5: 10 generators, all 5 channels
 │   ├── input/
 │   │   ├── key-bindings.js       ← Task 1.4: configurable shortcut map
 │   │   └── input-system.js       ← Task 1.4: unified mouse+touch+keyboard
@@ -169,6 +171,7 @@ GRID/
 ├── tests/
 │   ├── test-grid-core.js
 │   ├── test-webgl2-modules.js
+│   ├── test-generators.js        ← Task 1.5: 276 tests (Node, pure)
 │   ├── test-input-system.js      ← Task 1.4: 44 tests (Node, mock DOM)
 │   ├── test-image-importer.js    ← Task 1.6: 36 tests (Node, mock canvas)
 │   ├── test-runner.html
@@ -228,9 +231,13 @@ GRID/
        - src/input/input-system.js — mouse+touch+keyboard → grid events
        - Events: cellDown, cellMove, cellUp, cellHover, action
        - dist/index.html wired: setupInputSystem() replaces raw DOM listeners
-  1.5  Procedural generators (port from HTML proof-of-concept `dist\index.html`)
-       - Spiral, wave, mandala, noise, geometric
-       - New: density-aware generators (respect semantic channel)
+  1.5  Procedural generators v2 (x)
+       - src/generators/generators.js — 10 generators, all 5 channels, seeded RNG
+       - Generators: spiral, wave, mandala, noise, geometric, rain, gradient, pulse, matrix, terrain
+       - channel.audio { note, velocity, duration } + channel.spatial { height, material }
+       - Color modes: fixed | mono (hue-matched density) | derived (geometry hue)
+       - mulberry32 seeded PRNG — deterministic output per seed
+       - UI: colorMode select + 3 new buttons (Pulse, Matrix, Terrain) in sidebar
   1.6  Image → .grid importer (x)   ← non-AI subset of Phase 5.4
        - src/importers/image-importer.js — imageToGrid(img, opts) → Grid
        - Pixel sampling: brightness → char ramp, RGB → color, density, semantic

@@ -1045,3 +1045,261 @@ const grid = imageToGrid(imageElement, {
 │                                             │
 │  Photo → ASCII art → .grid. No AI needed.   │
 └─────────────────────────────────────────────┘
+
+----
+
+# Task 1.5 — Procedural Generators v2
+
+## Problem Statement
+
+The 7 generators in dist/index.html were built for Phase 0 proof-of-concept. They:
+- All use a single flat `selectedColor` — no per-cell color variation
+- Populate `channel` not at all — music, 3D, narrative consumers see empty channel objects
+- Are not modular — one 80-line switch statement inlined in HTML, not importable
+- Use `inferSemantic(char)` passively rather than assigning semantic intentionally
+
+Task 1.5 extracts, upgrades, and extends them into a proper source module.
+
+---
+
+## DO
+
+### New File: `src/generators/generators.js`
+
+Pure module. Zero DOM. Zero side effects. Node and browser compatible.
+
+#### Generator signature (uniform across all 10)
+
+```js
+generatorName(width, height, options = {}) → Cell[]
+```
+
+Returns a plain array of cell objects. The caller applies them to a frame. Pure and frame-agnostic.
+
+#### Shared options
+
+```js
+{
+  charset:   string,          // chars to draw from, e.g. '@#$%&*+=-.~'
+  color:     '#rrggbb',       // base color (used by fixed and mono modes)
+  colorMode: 'mono'           // DEFAULT — same hue as color, brightness from density
+           | 'fixed'          // all cells get exactly color
+           | 'derived',       // per-cell hue from generator math (angle, phase, elevation)
+  seed:      number,          // RNG seed for deterministic generators (default: Date.now())
+  channel:   true,            // populate channel.audio + channel.spatial (default: true)
+}
+```
+
+#### channel schema (all generators, when channel: true)
+
+```js
+cell.channel = {
+  audio: {
+    note:     0-127,    // MIDI. Y position maps to pitch (top row = highest note)
+    velocity: 0-127,    // Math.round(density * 127)
+    duration: 1,        // beats
+  },
+  spatial: {
+    height:   0.0-1.0,  // equals density — direct input for 3D heightmap consumer
+    material: string,   // mirrors cell.semantic ('solid', 'void', 'fluid', 'emissive', ...)
+  }
+}
+```
+
+#### Generators — ported from Phase 0 (upgraded: channel + intentional color + semantic)
+
+| Name      | derived color source        | intentional semantic        |
+|-----------|-----------------------------|-----------------------------|
+| spiral    | hue from polar angle        | emissive at center, solid outward |
+| wave      | hue from wave phase         | fluid where density < 0.35  |
+| mandala   | hue from angle              | boundary at radial symmetry lines |
+| noise     | random hue, sat from density| solid if density > 0.5, void if < 0.15 |
+| geometric | fixed per shape             | boundary at perimeter, void interior |
+| rain      | mono green default          | fluid throughout            |
+| gradient  | hue sweeps 0-240 (red-blue) | density controls semantic tier |
+
+#### New generators in v2
+
+```
+pulse   — Concentric density rings from center. freq controls ring count.
+          Useful as a music visualization base. density = cos(dist * freq * PI).
+          options: { freq?: number (default 4) }
+
+matrix  — Vertical char streams, dense head, fading trail. Distinct from rain
+          (rain is sparse random columns; matrix is a dense synchronized curtain).
+          options: { streamDensity?: 0-1 (default 0.6), trailLength?: number }
+
+terrain — 2D noise heightmap using layered sine approximation (no deps).
+          Elevation zones:  < waterLevel  -> void + fluid
+                            < 0.5         -> solid (land)
+                            < 0.75        -> solid (highland)
+                            >= 0.75       -> emissive (peak/snow)
+          derived color: deep blue -> green -> brown -> white by elevation
+          options: { scale?: number (default 0.15), waterLevel?: 0-1 (default 0.3) }
+```
+
+#### Seeded RNG: mulberry32 (zero deps, deterministic)
+
+```js
+function mulberry32(seed) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+```
+
+#### Color helpers (zero deps)
+
+```js
+function hslToHex(h, s, l)        // h:0-360, s/l:0-100 -> '#rrggbb'
+function monoFromHex(hex, density) // same hue as hex, brightness scaled by density
+```
+
+#### Registry export
+
+```js
+export const GENERATORS = {
+  spiral, wave, mandala, noise, geometric, rain, gradient,
+  pulse, matrix, terrain,
+};
+```
+
+---
+
+### dist/index.html updates
+
+1. Inline `src/generators/generators.js` logic into the script block
+2. Replace the `generate(type)` switch statement with `GENERATORS[type](W, H, opts)` dispatch
+3. Add 3 new buttons in sidebar: Pulse, Matrix, Terrain
+4. Add `colorMode` select to the sidebar (Fixed / Mono / Derived)
+
+The new `generate(type)` dispatch:
+
+```js
+function generate(type) {
+  const W = grid.canvas.width, H = grid.canvas.height;
+  const generatorFn = GENERATORS[type];
+  if (!generatorFn) { setStatus('Unknown generator: ' + type, true); return; }
+  const cells = generatorFn(W, H, {
+    charset:   grid.canvas.charset.replace(/ /g, ''),
+    color:     selectedColor,
+    colorMode: document.getElementById('colorModeSelect').value || 'mono',
+    channel:   true,
+  });
+  const fi = renderer.current;
+  grid.frames[fi] = { ...grid.frames[fi], cells };
+  grid.meta.modified = new Date().toISOString();
+  renderer.render();
+  updateUI();
+  setStatus('Generated: ' + type + ' (' + cells.length + ' cells)');
+}
+```
+
+---
+
+## TEST
+
+File: `tests/test-generators.js` — runs in Node.js (generators are pure math, zero DOM)
+
+```
+Coverage:
+  - Every generator returns non-empty Cell[] for a 40x20 grid
+  - Every cell has: char (string), color (#rrggbb), density (0-1), semantic (valid)
+  - Every cell has channel.audio.note (0-127), channel.audio.velocity, channel.spatial.height
+  - channel.audio.velocity === Math.round(cell.density * 127) for all generators
+  - channel.spatial.height === cell.density for all generators
+  - channel.spatial.material === cell.semantic for all generators
+  - colorMode 'fixed'   -> all cells have exactly options.color
+  - colorMode 'derived' -> varied colors (>= 2 distinct values in spiral, wave, gradient)
+  - Seeded noise: seed 42 -> same output twice; seed 43 -> different output
+  - terrain: cells classified into void/fluid/solid/emissive zones
+  - GENERATORS registry has exactly 10 keys
+  - pulse: density follows cosine pattern (center cell has max density)
+  - matrix: cells only in columns, no horizontal spread beyond stream width
+```
+
+Add `test-generators.js` to `tests/run-all.js` suite.
+
+---
+
+## DOCUMENT
+
+- ACTION-PLAN.md: add this spec now; add handover block post-implementation
+- ARCHITECTURE.md: mark 1.5 complete; add `src/generators/generators.js` to project tree
+- tests/run-all.js: add test-generators.js
+
+---
+
+## HANDOVER TARGET
+
+"Open dist/index.html. Click Terrain, select Derived color mode, click generate.
+The canvas fills with a biome map: void water cells, fluid shallows, solid land, emissive peaks.
+Export the .grid. Open in a text editor. Inspect any cell: it has char, color, density,
+semantic, AND channel.audio and channel.spatial with valid values.
+Run: node tests/run-all.js — all suites green."
+
+---
+
+## Phase 1 Closure Note
+
+After Task 1.5, Phase 1 is declared DONE. Disposition of all Phase 1 tasks:
+
+| Task | Status | Note |
+|------|--------|------|
+| 1.1 WebGL2 renderer    | COMPLETE  | 17/17 browser tests. 3.2x speedup over Canvas2D. |
+| 1.2 WebGPU path        | DEFERRED  | Moved to Phase 4+. WebGL2 sufficient for Phase 1-3. |
+| 1.3 textmode.js bridge | DEFERRED  | No textmode.js projects currently in scope. Revisit at Phase 3. |
+| 1.4 Input system       | COMPLETE  | 44/44 tests. Canvas interactive. Keyboard unified. |
+| 1.5 Generators v2      | COMPLETE  | 276/276 tests. All 5 channels. 10 generators. colorMode select. |
+| 1.6 Image importer     | COMPLETE  | 36/36 tests. Modal UI. All 5 channels from pixels. |
+
+Phase 1 exit gate (after 1.5):
+"Every generator populates all 5 cell channels. The .grid carries semantic meaning.
+Consumers (music, 3D, AI) can read from channel without guessing.
+Phase 2 (OPFS persistence) can begin."
+
+---
+
+## ✅ TASK 1.5 COMPLETE — PHASE 1 CLOSED (2026-03-01)
+
+### What shipped
+- `src/generators/generators.js` — 10 generators, all 5 channels, zero DOM
+- `tests/test-generators.js` — 276 tests, 0 failures
+- `dist/index.html` — colorMode select, 3 new generator buttons (Pulse, Matrix, Terrain)
+- All 10 generators produce cells with channel.audio + channel.spatial populated
+
+### Verification
+```
+node tests/run-all.js
+→ 378 passed, 0 failed (all suites)
+```
+
+### New generators
+| Generator | Algorithm | Unique feature |
+|-----------|-----------|----------------|
+| Pulse     | Concentric rings from center | opts.rings parameter |
+| Matrix    | Vertical fade columns | Bright head, fading tail |
+| Terrain   | Layered sine octaves | Biome semantics (void/fluid/solid/emissive) |
+
+### Channel schema delivered
+Every cell from every generator carries:
+```json
+"channel": {
+  "audio":   { "note": 0-127, "velocity": 0-127, "duration": 1 },
+  "spatial": { "height": 0-1, "material": "solid|fluid|void|emissive..." }
+}
+```
+- note: Y position → MIDI pitch (top=127, bottom=0)
+- velocity: density → amplitude
+- height: density → 3D extrusion height
+- material: semantic string → 3D surface type
+
+### Color modes
+- `fixed` — user-selected color (backward compatible)
+- `mono` — same hue, brightness varies with density
+- `derived` — hue from generator geometry (angle, distance, terrain height)
+
+**Phase 1 is DONE. Next: Phase 2 (OPFS persistence).**

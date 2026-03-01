@@ -76,6 +76,4 @@ E:\co\GRID\
 - Don't rush — 25-year idea, 75% built in 2 years
 - Schema-first, validate-everything
 - I test and fact-check between sessions
-- Show me PowerShell queries when you need to see my filesystem
 - Keep responses fast unless detailed explanation is needed
-Any questions or PowerShell queries for Windows are welcome (I'll send back the results)

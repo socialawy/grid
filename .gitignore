@@ -52,3 +52,7 @@ coverage/
 # Temporary folders
 tmp/
 temp/
+
+# Local files
+*.local
+local-files/
