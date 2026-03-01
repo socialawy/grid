@@ -1750,8 +1750,13 @@ function toggleMusicPlayback() {
   }
   if (audioCtx.state === 'suspended') audioCtx.resume();
   if (synth.isPlaying) {
-    synth.pause();
-    document.getElementById('playBtn').textContent = '▶ Play';
+    if (synth.isPaused) {
+      synth.resume();
+      document.getElementById('playBtn').textContent = '⏸ Pause';
+    } else {
+      synth.pause();
+      document.getElementById('playBtn').textContent = '▶ Play';
+    }
     return;
   }
   const bpm = grid.project.bpm || 120;
@@ -1770,7 +1775,7 @@ function toggleMusicPlayback() {
 
 function stopMusicPlayback() {
   if (synth) synth.stop();
-  renderer.setPlayheadColumn(-1);
+  if (renderer) renderer.setPlayheadColumn(-1);
   document.getElementById('playBtn').textContent = '▶ Play';
   setStatus('Stopped');
 }
