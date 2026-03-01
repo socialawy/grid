@@ -1391,6 +1391,41 @@ Volume:
   - Volume changes apply to already-playing sounds
 ```
 
+## Task 3.2 Handover
+
+> What was built
+
+### [synth-engine.js](file:///e:/co/GRID/src/consumers/music/synth-engine.js)
+
+A Web Audio synthesis layer that takes `NoteEvent[]` (from [music-mapper.js](file:///e:/co/GRID/tests/test-music-mapper.js)) and produces sound. Zero external dependencies.
+
+| Feature | Detail |
+|---------|--------|
+| **6 instruments** | Lead (sawtooth), Bass (sine), Pad (triangle), Arp (square), Drums (noise), FX (sine) |
+| **ADSR envelopes** | [applyADSR()](file:///e:/co/GRID/src/consumers/music/synth-engine.js#61-86) — attack→peak→decay→sustain→release via gain automations |
+| **Drum synthesis** | [playDrum()](file:///e:/co/GRID/src/consumers/music/synth-engine.js#121-219) — hi-hat (noise+HP, note>80), snare (noise+tone, 51-80), kick (sine sweep, ≤50) |
+| **Tonal voices** | [playTonalNote()](file:///e:/co/GRID/src/consumers/music/synth-engine.js#91-120) — osc→lowpass filter→gain→destination |
+| **Polyphony cap** | [limitPolyphony()](file:///e:/co/GRID/src/consumers/music/synth-engine.js#224-253) — 16 max voices per column, drops lowest-velocity |
+| **Transport** | [play()](file:///e:/co/GRID/src/consumers/music/synth-engine.js#335-397), [stop()](file:///e:/co/GRID/tests/test-synth-engine.js#201-202), [pause()](file:///e:/co/GRID/src/consumers/music/synth-engine.js#409-420), [resume()](file:///e:/co/GRID/src/consumers/music/synth-engine.js#421-446) |
+| **Playback cursor** | rAF tick fires `onColumnChange(col)` at step boundaries; loop support |
+| **Volume** | [setMasterVolume(0-1)](file:///e:/co/GRID/src/consumers/music/synth-engine.js#447-454) with clamping |
+| **Instrument override** | [setInstrument(channel, def)](file:///e:/co/GRID/src/consumers/music/synth-engine.js#455-461) for runtime customization |
+
+### [test-synth-engine.js](file:///e:/co/GRID/tests/test-synth-engine.js)
+
+41 tests using a [MockAudioContext](file:///e:/co/GRID/tests/test-synth-engine.js#222-249) (records node creations, parameter automations, connections).
+
+### [run-all.js](file:///e:/co/GRID/tests/run-all.js)
+
+Added synth engine suite to the test runner.
+
+## Verification
+
+```
+node tests/test-synth-engine.js  → 41 passed, 0 failed
+node tests/run-all.js            → 554 passed, 0 failed, 1 skipped
+```
+
 ---
 
 ## Task 3.6 — UI Integration (dist/index.html)
@@ -1453,7 +1488,7 @@ function setupMusicTransport() {
 
 ---
 
-## Task 3.4 — Web MIDI Output (Optional, Chrome/Edge)
+## Task 3.4 — Web MIDI Output (Chrome/Edge)
 
 **File**: `src/consumers/music/midi-output.js`
 **Depends on**: music-mapper.js
@@ -1611,12 +1646,12 @@ dist/
 
 ## Open Design Questions (decide before or during build)
 
-1. **Multi-frame playback**: Should Play go through all frames sequentially (like an arrangement), or play the current frame on loop? → **Recommendation**: Current frame with loop, add frame-chain later.
+1. **Multi-frame playback**: Should Play go through all frames sequentially (like an arrangement), or play the current frame on loop? → **Decision**: Current frame with loop, add frame-chain later.
 
-2. **Polyphony limit**: Multiple cells in the same column = chord. Cap at 16 simultaneous voices? → **Recommendation**: Yes, 16 voices max, drop lowest-velocity notes.
+2. **Polyphony limit**: Multiple cells in the same column = chord. Cap at 16 simultaneous voices? → **Decision**: Yes, 16 voices max, drop lowest-velocity notes.
 
-3. **Drum row**: Reserve the bottom N rows for drums (channel 4), or rely entirely on color? → **Recommendation**: Color-based. Let users paint drums anywhere. Drum behavior triggers from channel assignment, not row position.
+3. **Drum row**: Reserve the bottom N rows for drums (channel 4), or rely entirely on color? → **Decision**: Color-based. Let users paint drums anywhere. Drum behavior triggers from channel assignment, not row position.
 
-4. **Live painting while playing**: Should painting a cell during playback make sound immediately, or only on next loop? → **Recommendation**: Immediate — paint a cell, hear it on the next column pass. This is the magic moment.
+4. **Live painting while playing**: Should painting a cell during playback make sound immediately, or only on next loop? → **Decision**: Immediate — paint a cell, hear it on the next column pass. This is the magic moment.
 
-5. **Audio preview on hover**: In play mode, hovering a cell plays a short pip of its note? → **Recommendation**: Yes, but gated behind play mode (not paint mode). Short 50ms blip.
+5. **Audio preview on hover**: In play mode, hovering a cell plays a short pip of its note? → **Decision**: Yes, but gated behind play mode (not paint mode). Short 50ms blip.

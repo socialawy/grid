@@ -106,13 +106,16 @@ node validate-examples.js
 }
 ```
 
-## Next Steps
+## Ensure tests can find ESM — check/create root package.json with type:module
 
-See `DOCS/ACTION-PLAN.md` for the complete development roadmap. Phase 1 will focus on:
+- Create package.json with ES module type at project root
 
-- HTML proof-of-concept editor
-- Test suite implementation
-- Performance optimization
+## For browser test — serve the project
+cd E:\co\GRID; npx serve . -p 3000
+
+- PWA: `http://localhost:3000/dist`
+
+- WebGL2: `http://localhost:3000/tests/webgl2-test.html`
 
 ## License
 
@@ -121,4 +124,4 @@ Copyright (c) 2026 Socialawy. All rights reserved.
 
 ---
 
-**GRID v0.1.0** - Phase 1 Complete ✅
+**GRID v0.1.0** - Phase 2 Complete ✅

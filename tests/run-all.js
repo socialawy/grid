@@ -154,6 +154,11 @@ async function runAllTests() {
       name: 'Music Mapper (Task 3.1 - grid to music events)',
       file: 'test-music-mapper.js',
       environment: 'node'
+    },
+    {
+      name: 'Synth Engine (Task 3.2 - Web Audio synthesis layer)',
+      file: 'test-synth-engine.js',
+      environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {
