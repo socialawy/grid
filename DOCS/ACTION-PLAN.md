@@ -285,7 +285,45 @@ node tests/run-all.js            → 554 passed, 0 failed, 1 skipped
 - Test suite: 554 passed, 0 failed, 1 skipped
 
 
-## Next: Task 3.4 — Web MIDI Output (src/consumers/music/midi-output.js),
+## Task 3.4 — Web MIDI Output (src/consumers/music/midi-output.js)
+### Delivered
+- `src/consumers/music/midi-output.js` — createMIDIOutput() factory
+- `tests/test-midi-output.js` — 39 tests, Node-compatible MIDI mock
+
+### Features
+| Function | Detail |
+|----------|--------|
+| `isAvailable()` | Feature-detects `navigator.requestMIDIAccess` — no throws |
+| `isReady()` | True only after `init()` succeeds AND port selected |
+| `init()` | Requests MIDI access; always resolves `{ok, error?}`, never rejects |
+| `getOutputs()` | `→ [{id, name}]` — safe before init (returns []) |
+| `selectOutput(id)` | `→ boolean` |
+| `sendNoteOn/Off()` | Immediate send, no-op when no port selected |
+| `sendAllNotesOff()` | CC 123 on all 16 channels — clean hard stop |
+| `scheduleEvents(events, bpm)` | Lookahead scheduler: 50ms window, 25ms tick |
+| `stop()` | Cancels interval, clears pending queue |
+| `destroy()` | Full teardown |
+
+### Verification
+```
+node tests/test-midi-output.js  → 39 passed, 0 failed
+node tests/run-all.js           → 593 passed, 0 failed, 1 skipped
+```
+
+---
+
+## Phase 3 COMPLETE
+
+| Task | Status | Tests |
+|------|--------|-------|
+| 3.1 music-mapper.js | COMPLETE | 41/41 |
+| 3.2 synth-engine.js | COMPLETE | 41/41 |
+| 3.6 UI integration  | COMPLETE | — |
+| 3.4 midi-output.js  | COMPLETE | 39/39 |
+| 3.3 Glicol WASM | deferred → Phase 8 | — |
+| 3.5 Orca mode   | deferred → Phase 7 | — |
+
+**Next: Phase 4 — The 3D Consumer.**
 
 ---
 
