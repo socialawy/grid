@@ -706,6 +706,28 @@ EXIT: node build.js produces a working dist/index.html from sources.
       Manual inline patching is retired.
 ```
 
+## Run from the project root:
+
+```bash
+.\scripts\migrate-to-build.ps1
+```
+
+- What it does in order:
+
+  - Reads the real dist/index.html
+  - Extracts the 4 shell files into src/shell/ using the exact verified line numbers
+  - Writes build.js at the project root
+  - Patches package.json with build and dev scripts
+  - Runs node build.js immediately to verify
+  - Prints next steps
+
+### Two checks before trusting it:
+
+- Open the generated dist/index.html in the browser — should look identical
+- node tests/run-all.js — should still be 661/0/1
+
+> If both pass, dist/index.html is now generated and never touched directly again. Phase 6 exporters slot into the MODULES array in build.js as single commented lines.
+
 ---
 
 ## PART 2 — PHASE 6: THE EXPORT PIPELINE
@@ -728,7 +750,7 @@ Full Phase 6 from the charter has 6 tasks. Prioritized by value/effort:
 
 GIF and WAV deferred — GIF requires frame-by-frame canvas capture + encoder
 (complex), WAV requires offline AudioContext render (fiddly). Neither is
-blocking for the Doxascope MIST visual pipeline.
+blocking for the Doxascope MIST visual pipeline. (My personal project/transmedia art)
 
 ### Architecture: `src/exporters/`
 
@@ -893,11 +915,11 @@ No separate module, no tests needed. Goes straight into app.js.
 Replace the current JSON-only export modal with a tabbed panel:
 
 ```
-┌─────────────────────────────────────────┐
+┌──────────────────────────────────────────┐
 │  EXPORT                              [X] │
-├──────┬──────┬──────┬──────┬────────┬────┤
-│ SVG  │ PNG  │ MIDI │ glTF │ Video  │JSON│
-├──────┴──────┴──────┴──────┴────────┴────┤
+├──────┬──────┬──────┬──────┬────────┬─────┤
+│ SVG  │ PNG  │ MIDI │ glTF │ Video  │JSON │
+├──────┴──────┴──────┴──────┴────────┴─────┤
 │                                          │
 │  [SVG tab]                               │
 │  Font size:  [14px    ]                  │
@@ -907,7 +929,7 @@ Replace the current JSON-only export modal with a tabbed panel:
 │  Preview: [small SVG thumbnail]          │
 │                                          │
 │            [ ⬇ Download SVG ]            │
-└─────────────────────────────────────────┘
+└──────────────────────────────────────────┘
 ```
 
 Each tab: minimal options + single download button.
