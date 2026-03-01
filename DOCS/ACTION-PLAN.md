@@ -1218,6 +1218,18 @@ Integration:
   - Generate pulse → events form rhythmic pattern
   - Round-trip: events from frame match expected count (non-void cells)
 ```
+## HANDOVER: Task 3.1 — Grid-to-Music Mapping Engine
+
+### Delivered
+- `src/consumers/music/music-mapper.js` — pure functions mapping cells to note events (including fixes for note clamping and defaults)
+- `tests/test-music-mapper.js` — 15 test cases passing cleanly
+
+### Verification
+- Tested all 10 scales.
+- Chromatic/quantized row mapping functions seamlessly.
+- Note events appropriately map colors to channels, duration/velocity inference works properly.
+- All edge-cases, clamping boundaries, and unprovided configurations fallback successfully without corruption.
+- Fully integrated into `tests/run-all.js` making 15 added music mapper tests pass in node environment zero DOM.
 
 ---
 
@@ -1390,7 +1402,7 @@ Volume:
 ```text
 ┌──────────────────────────────────────────────────────┐
 │  [▶ Play] [⏹ Stop] [🔁 Loop]  BPM: [120▼]          │
-│  Scale: [Major▼]  Root: [C4▼]  Subdiv: [1/16▼]     │
+│  Scale: [Major▼]  Root: [C4▼]  Subdiv: [1/16▼]       │
 │  Vol: ────●──── [🔇]  Ch: Lead/Bass/Pad/Arp/Drum/FX │
 └──────────────────────────────────────────────────────┘
 ```

@@ -36,7 +36,7 @@ function logSummary() {
   console.log(`❌ Failed: ${totalFailed}`);
   console.log(`⏭️  Skipped: ${totalSkipped}`);
   console.log(`⏱️  Duration: ${duration}ms`);
-  
+
   if (totalFailed === 0) {
     console.log('\n🎉 ALL TESTS PASSED!');
     process.exit(0);
@@ -52,7 +52,7 @@ function logSummary() {
 
 async function runSuite(name, testFile, environment = 'node', cwd = null) {
   logSuite(name);
-  
+
   try {
     if (environment === 'node') {
       // Dynamic import for ESM modules
@@ -61,7 +61,7 @@ async function runSuite(name, testFile, environment = 'node', cwd = null) {
         totalPassed += module.results.passed || 0;
         totalFailed += module.results.failed || 0;
         totalSkipped += module.results.skipped || 0;
-        
+
         if (module.results.summary) {
           console.log(module.results.summary);
         }
@@ -74,15 +74,15 @@ async function runSuite(name, testFile, environment = 'node', cwd = null) {
         // Use absolute paths to avoid path issues
         const targetDir = path.resolve(cwd || '.');
         const scriptPath = path.resolve(testFile);
-        
-        const output = execSync(`node "${scriptPath}"`, { 
+
+        const output = execSync(`node "${scriptPath}"`, {
           encoding: 'utf8',
           cwd: targetDir,
           stdio: 'pipe'
         });
-        
+
         console.log(output);
-        
+
         // Parse results from output (simple heuristic)
         const lines = output.split('\n');
         for (const line of lines) {
@@ -107,7 +107,7 @@ async function runSuite(name, testFile, environment = 'node', cwd = null) {
 
 async function runAllTests() {
   console.log('🚀 GRID Test Runner — Starting all test suites...\n');
-  
+
   // Test suites to run
   const suites = [
     {
@@ -149,6 +149,11 @@ async function runAllTests() {
       name: 'FS Access API (save, open, cascade, download fallback)',
       file: 'test-fs-access.js',
       environment: 'node'
+    },
+    {
+      name: 'Music Mapper (Task 3.1 - grid to music events)',
+      file: 'test-music-mapper.js',
+      environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {
@@ -158,12 +163,12 @@ async function runAllTests() {
     //   cwd: '../schemas'
     // }
   ];
-  
+
   // Run each suite
   for (const suite of suites) {
     await runSuite(suite.name, suite.file, suite.environment, suite.cwd);
   }
-  
+
   // Final summary
   logSummary();
 }
