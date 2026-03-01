@@ -426,4 +426,83 @@ It's set to 75 BPM on the Chromatic scale. I used the Yellow "Arp" channel, whic
 
 ----
 
-**Next: Phase 4 — The 3D Consumer.**
+# Phase 4 — The 3D Consumer
+
+## What I'm building:
+
+- This phase introduces a 3D consumer for the GRID project, allowing users to view their 2D grids as 3D scenes using Three.js. This includes a pure heightmap engine for data transformation, a browser-based scene builder, and integration into the existing web UI.
+
+- `src/consumers/spatial/heightmap.js` — grid → heightmap data (pure, zero DOM)
+- `src/consumers/spatial/scene-builder.js` — Three.js scene from heightmap (browser)
+- `tests/test-heightmap.js` — Node-compatible tests
+- `dist/index.html` — 🧊 3D mode tab added
+
+- 68/68.
+
+## `PHASE4-INTEGRATION-PATCH`
+
+10 labeled surgical patches to apply to `dist/index.html`: CDN script tag, CSS, HTML, module inlining, app state, the 4 functions (`enter3DMode`, `exit3DMode`, `_rebuild3DScene`, `toggle3DMode`), event wiring, and cleanup.
+
+### Resolved a bug 
+- (ReferenceError: clamp is not defined) in the rendering loop, allowing the 3D scene to successfully visualize the procedural cell grid.
+
+- Updated _rebuild3DScene in dist/index.html to pull the active frame from the renderer (renderer ? renderer.current : 0). Now, jumping into 3D mode will properly render the frame you're actually viewing in the 2D grid instead of always resetting to frame 0.
+
+-  UX hint has been added to `enter3DMode()` in `dist/index.html`.
+> The 3D button's tooltip will now dynamically show which frame is being rendered if the project has multiple frames, and defaults to just "3D View" if there's only one. 
+
+
+### 
+
+## Deferred:
+4.3 VSP bridge → Phase 8. 4.4 glTF export → Phase 6 (export pipeline is the natural home — `getScene()` is already the hook).
+
+## Test end:
+```
+--- saveCascade ---
+  PASS: cascade silent-saves to existing handle
+  PASS: cascade shows saveAs dialog when no handle
+  PASS: cascade falls back to download when no FSAPI
+
+FS Access: 35 passed, 0 failed
+FS Access: 35 passed, 0 failed
+
+🧪 Music Mapper (Task 3.1 - grid to music events)
+==================================================
+
+🧪 Synth Engine (Task 3.2 - Web Audio synthesis layer)
+==================================================
+
+🧪 MIDI Output (Task 3.4 - Web MIDI scheduling)
+==================================================
+
+midi-output: 39 passed, 0 failed
+midi-output: 39 passed, 0 failed
+
+🧪 Heightmap Engine (Task 4.1 - grid to heightmap conversion)
+==================================================
+
+test-heightmap.js: 68 passed, 0 failed
+
+test-heightmap.js: 68 passed, 0 failed
+
+==================================================
+📊 FINAL RESULTS
+==================================================
+✅ Passed: 661
+❌ Failed: 0
+⏭️  Skipped: 1
+⏱️  Duration: 182ms
+
+🎉 ALL TESTS PASSED!
+```
+![alt text](image-2.png) 
+
+## Phase 4 (The 3D Consumer) is now complete. 
+
+### Key updates:
+
+- 3D Mode: Click the new "🧊 3D" button in the toolbar to enter a spatial view of your grid.
+- Heightmap Engine: Cells are mapped to 3D voxels based on density and semantic types.
+- Camera Controls: Orbit around the scene or use the new presets (Orbit, Flyover, Top).
+- Verification: 661 tests (including new heightmap tests) are passing, and manual verification in the browser confirmed full functionality.

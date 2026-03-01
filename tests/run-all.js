@@ -164,6 +164,11 @@ async function runAllTests() {
       name: 'MIDI Output (Task 3.4 - Web MIDI scheduling)',
       file: 'test-midi-output.js',
       environment: 'node'
+    },
+    {
+      name: 'Heightmap Engine (Task 4.1 - grid to heightmap conversion)',
+      file: 'test-heightmap.js',
+      environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {
