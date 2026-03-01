@@ -1,155 +1,3 @@
-# ACTION PLAN: PHASE 0 — THE SEED
-
-## Task 0.1: .grid Schema Definition
-  
-  DO:
-  - Write JSON Schema (draft-07) for .grid format v0.1.0
-  - Define: meta, canvas, frames, cells, sequences, project
-  - Document every field with type, required/optional, and purpose
-  - Include 3 example .grid files (minimal, medium, complex)
-  
-  TEST:
-  - Validate all 3 examples against schema using ajv
-  - Intentionally break each field → confirm validation catches it
-  - Round-trip: write JSON → parse → write → compare (identical)
-  
-  DOCUMENT:
-  - grid-spec-v0.1.0.md (the format bible)
-  - CHANGELOG.md (start it now)
-  
-  HANDOVER:
-  "Anyone can read grid-spec-v0.1.0.md and write a valid .grid file
-   by hand in a text editor without seeing any code."
-
----
-
-## Task 0.2: grid-core.js — Pure Logic Library
-
-  DO:
-  - Implement in vanilla JS (ESM module, zero dependencies)
-  - Functions:
-    createGrid(width, height, charset, defaultColor) → Grid
-    createFrame(grid) → Frame
-    setCell(frame, x, y, {char, color, density, semantic, channel}) → Frame
-    getCell(frame, x, y) → Cell
-    getCellsByChannel(frame, channelName) → Cell[]
-    getDensityMap(frame) → number[][] (2D array, 0-1)
-    getSemanticMap(frame) → string[][] 
-    getColorMap(frame) → string[][]
-    addFrame(grid, frame) → Grid
-    removeFrame(grid, frameId) → Grid
-    serializeGrid(grid) → string (JSON)
-    deserializeGrid(jsonString) → Grid
-    validateGrid(grid) → { valid: boolean, errors: string[] }
-  - All functions are PURE — no mutation, no side effects, no DOM
-  
-  TEST:
-  - Unit tests for every function (at least 3 cases each)
-  - Edge cases: empty grid, single cell, max size (1000x1000)
-  - Serialize → deserialize → deep equal check
-  - Performance: create 200x100 grid in < 50ms
-  
-  DOCUMENT:
-  - JSDoc on every function
-  - grid-core-api.md with usage examples
-  
-  HANDOVER:
-  "grid-core.js can be imported into ANY project (Node, browser, 
-   Deno) and used to create, manipulate, and validate .grid files
-   without any rendering or UI dependency."
-
----
-
-## Task 0.3: Canvas2D Minimal Renderer
-
-  DO:
-  - canvas-renderer.js (ESM module)
-  - Takes: Grid + target <canvas> element
-  - Renders current frame:
-    - Each cell → character drawn at grid position
-    - Color from cell.color
-    - Brightness modulated by cell.density
-    - Configurable font size and family
-  - Frame navigation: next(), prev(), goTo(frameIndex)
-  - Animation: play(fps), pause(), stop()
-  
-  TEST:
-  - Render a 40x20 grid at 60fps → no frame drops
-  - Render same grid at font size 8 and 24 → correct scaling
-  - Animation plays through all frames and loops
-  - Renders correctly on Chrome, Firefox, Safari
-  
-  DOCUMENT:
-  - canvas-renderer-api.md
-  
-  HANDOVER:
-  "canvas-renderer.js takes any valid Grid object and draws it.
-   It knows nothing about music, 3D, AI, or narratives."
-
----
-
-## Task 0.4: Single HTML Proof-of-Life
-
-  DO:
-  - index.html — SINGLE FILE, inline everything
-  - Includes: grid-core.js + canvas-renderer.js (inlined)
-  - UI:
-    - Grid canvas (click to place characters)
-    - Character palette (charset selector)
-    - Color picker (8 colors minimum)
-    - Frame management (add, delete, navigate)
-    - Play/pause animation
-    - Speed control
-    - Procedural generators (port spiral, wave, mandala, noise, geometric)
-    - Export .grid JSON (download)
-    - Import .grid JSON (file picker)
-  - Generators populate ALL cell channels (not just char+color)
-    - density calculated from character weight
-    - semantic inferred from character class
-  - Mobile responsive
-  - Offline capable (no external resources)
-  
-  TEST:
-  - Open on phone (Android Chrome) → create, edit, save, reload
-  - Open on desktop → same file, same features
-  - Export .grid → open in text editor → human readable
-  - Import .grid → renders correctly
-  - Kill network → everything still works
-  - File size < 200KB
-  
-  DOCUMENT:
-  - README.md for the HTML file
-  - Inline comments explaining architecture
-  
-  HANDOVER:
-  "Email this HTML file to anyone. They double-click it. It works.
-   No install, no server, no build step, no internet."
-
----
-
-## Task 0.5: Test Suite & Validation
-
-  DO:
-  - test-grid-core.js — runs in browser console OR Node
-  - Schema validation using lightweight ajv subset (inline)
-  - Test runner: simple pass/fail with console output
-  - Coverage: every grid-core function, every schema rule
-  
-  TEST:
-  - Run in Node: `node test-grid-core.js` → all green
-  - Run in browser console: paste → all green
-  - Break schema intentionally → errors caught with clear messages
-  
-  DOCUMENT:
-  - test-results.md (snapshot of passing tests)
-  - testing-strategy.md (how tests are structured for future phases)
-  
-  HANDOVER:
-  "Run the tests. If green, Phase 0 is complete. 
-   Phase 1 can begin with confidence that the format holds."
-
-----
-
 # PHASE 0 TASK  
 
   0.1 Schema ───────┐
@@ -186,6 +34,8 @@
 
 ### Example 3 — Complex (all consumers active)
 `schemas/examples/mist-demo.grid`
+
+----
 
 ## HANDOVER: Task 0.1 — .grid Schema Definition
 
@@ -266,11 +116,11 @@ PS E:\co\GRID\schemas>  *
 
 ----
 
-# Task 0.2: grid-core.js & Task 0.3: Canvas2D Renderer
+## Task 0.2: grid-core.js & Task 0.3: Canvas2D Renderer
 `grid-core.js`
 `canvas-renderer.js`
 
-## HANDOVER: Tasks 0.2 & 0.3
+### HANDOVER: Tasks 0.2 & 0.3
 
 ### Delivered
 - `grid-core.js` — 33 exported functions, pure logic, zero DOM
@@ -278,12 +128,12 @@ PS E:\co\GRID\schemas>  *
 
 ----
 
-# HANDOVER: Task 0.4 — Single HTML Proof-of-Life
+### HANDOVER: Task 0.4 — Single HTML Proof-of-Life
 
-## Delivered
+#### Delivered
 - dist/index.html — Single file, everything inlined, zero external deps
 
-## Features
+#### Features
 - Click-to-paint with character + color + semantic + density
 - Eraser mode
 - Character palette (built from charset)
@@ -305,7 +155,7 @@ PS E:\co\GRID\schemas>  *
 - Mobile responsive (hamburger menu, touch paint)
 - Status bar with feedback
 
-## Verification Checklist
+#### Verification Checklist
 - [x] Open on phone browser → create, edit, save, reimport
 - [x] Open on desktop → same file, same features
 - [x] Export .grid → open in text editor → human readable
@@ -314,7 +164,7 @@ PS E:\co\GRID\schemas>  *
 - [x] Measure file size (target < 200KB)
 - [x] Generators produce cells with density + semantic (not just visual)
 
-## Known Limitations (acceptable for Phase 0)
+### Known Limitations (acceptable for Phase 0)
 - No OPFS persistence yet (Phase 2)
 - No undo/redo (consider for Phase 1 or 2)
 - Canvas2D only — no WebGL2 yet (Phase 1)
@@ -409,238 +259,7 @@ All Phase 0 deliverables are now complete and verified:
 
 ----
 
-
-## Next: Phase 1 — THE RENDERER
-Task 1.1: Custom WebGL2 instanced grid renderer (x)
-Task 1.2: WebGPU upgrade path (auto-fallback)
-Task 1.3: textmode.js interop bridge
-Task 1.4: Unified input system (keyboard, mouse, touch) (x)
-Task 1.5: Procedural generators v2 (density-aware, all channels)
-Task 1.6: Image → .grid importer (x)
-
---
-
-# Task 1.1: WebGL2 Instanced Grid Renderer — Architecture
-
-## Core Idea
-One instanced draw call renders the entire grid. Each cell = one instance of a unit quad. A font atlas texture maps char indices to glyphs. Position is derived from gl_InstanceID — no per-instance position data needed.
-
-## File Structure
-```
-src/renderers/
-  canvas-renderer.js        ← existing
-  webgl2-renderer.js        ← Task 1.1 (main)
-src/rendering/
-  font-atlas.js             ← charset → atlas texture + UV lookup
-  instance-buffer.js        ← frame + canvas → Float32Array (pure math, no GL)
-  shaders.js                ← GLSL source strings (inline, no file loading)
-  ```
-## Public API Contract (mirrors canvas-renderer exactly)
-```js
-function createWebGL2Renderer(canvasEl, grid, options = {}) {
-  // options: { fontSize?, showGrid?, fps?, onFrameChange? }
-  
-  return {
-    renderFrame(),           // render current frame
-    nextFrame(),             // advance + render
-    prevFrame(),             // rewind + render  
-    goTo(index),             // jump + render
-    play(),                  // start animation loop
-    pause(),                 // stop animation loop
-    stop(),                  // pause + goTo(0)
-    togglePlay(),            // returns new isPlaying
-    setGrid(newGrid),        // swap grid, rebuild atlas if charset changed
-    setOptions(newOptions),  // fontSize/showGrid/fps/onFrameChange
-    eventToGrid(event),      // → { gridX, gridY, pixelX, pixelY }
-    destroy(),               // release GL resources
-    get currentFrame,        // index
-    get frameCount,          // grid.frames.length
-    get playing,             // bool
-    get cellSize,            // { width, height }
-  };
-}
-```
-- Drop-in swap: anywhere createRenderer works, createWebGL2Renderer works.
-
-## Font Atlas Design (font-atlas.js)
-```
-Input:  charset string, fontSize, fontFamily
-Output: { texture: ImageData, uvMap: Map<char, {u, v, w, h}>, cols, rows, cellW, cellH }
-```
-- Render each unique char in charset to an OffscreenCanvas (fallback: document.createElement('canvas'))
-- White text on transparent black — shader multiplies by fg color
-- Pack into a grid layout (e.g., 16 chars per row)
-- Atlas texture is power-of-2 padded
-- Space char gets an explicit entry (index 0)
-- defaultChar always present, used for cells not in charset
-- Rebuild only when charset or fontSize changes
-
-## Instance Buffer Layout (instance-buffer.js)
-Per-instance: 5 floats, 20 bytes
-
-Attribute	| Type	| Divisor	| Description
---------- |-------|---------|------------
-a_charIndex	| float	| 1	| Index into atlas UV map
-a_fgR	| float	| 1	| Foreground red (0–1)
-a_fgG	| float	| 1	| Foreground green (0–1)
-a_fgB	| float	| 1	| Foreground blue (0–1)
-a_density	| float	| 1	| Density (0–1), for future effects
-
-- Total buffer: width × height × 5 × 4 bytes
-
-200×100 = 400KB ✓
-500×500 = 5MB ✓
-1000×1000 = 20MB (viable, note for future viewport culling)
-
-### Position is NOT in the buffer. Computed in vertex shader:
-```glsl
-int cellX = gl_InstanceID % int(u_gridSize.x);
-int cellY = gl_InstanceID / int(u_gridSize.x);
-```
-- Build function is pure — no GL dependency:
-```js
-Build function is pure — no GL dependency:
-```
-## Shaders (shaders.js)
-- Vertex:
-```glsl
-#version 300 es
-in vec2 a_quad;          // unit quad corners (0,0)→(1,1), 4 verts
-in float a_charIndex;    // per-instance
-in float a_fgR, a_fgG, a_fgB;  // per-instance
-in float a_density;      // per-instance
-
-uniform vec2 u_gridSize;     // (width, height) in cells
-uniform vec2 u_cellSize;     // pixel size per cell
-uniform vec2 u_resolution;   // canvas pixel size
-uniform vec2 u_atlasGrid;    // atlas layout (cols, rows)
-
-out vec2 v_uv;
-out vec3 v_fg;
-out vec2 v_cellLocal;    // for grid lines
-out float v_density;
-
-void main() {
-  float cellX = float(gl_InstanceID % int(u_gridSize.x));
-  float cellY = float(gl_InstanceID / int(u_gridSize.x));
-
-  vec2 pos = (vec2(cellX, cellY) + a_quad) * u_cellSize;
-  gl_Position = vec4((pos / u_resolution) * 2.0 - 1.0, 0.0, 1.0);
-  gl_Position.y *= -1.0;
-
-  // Atlas UV
-  int idx = int(a_charIndex);
-  float au = float(idx % int(u_atlasGrid.x)) / u_atlasGrid.x;
-  float av = float(idx / int(u_atlasGrid.x)) / u_atlasGrid.y;
-  v_uv = vec2(au, av) + a_quad / u_atlasGrid;
-
-  v_fg = vec3(a_fgR, a_fgG, a_fgB);
-  v_cellLocal = a_quad;
-  v_density = a_density;
-}
-```
-### Fragment
-```glsl
-#version 300 es
-precision mediump float;
-
-in vec2 v_uv;
-in vec3 v_fg;
-in vec2 v_cellLocal;
-in float v_density;
-
-uniform sampler2D u_atlas;
-uniform vec3 u_bg;
-uniform float u_showGrid;
-uniform vec3 u_gridColor;
-
-out vec4 outColor;
-
-void main() {
-  // Grid lines
-  if (u_showGrid > 0.5) {
-    float edge = 0.03;
-    if (v_cellLocal.x < edge || v_cellLocal.y < edge) {
-      outColor = vec4(u_gridColor, 1.0);
-      return;
-    }
-  }
-
-  float alpha = texture(u_atlas, v_uv).a;
-  outColor = vec4(mix(u_bg, v_fg, alpha), 1.0);
-}
-```
-## Initialization Flow
-```text
-createWebGL2Renderer(canvas, grid, opts)
-  │
-  ├─ getWebGL2Context(canvas)
-  │    └─ fails? → return null (caller falls back to Canvas2D)
-  │
-  ├─ buildFontAtlas(charset, fontSize, fontFamily)
-  │    └─ → atlas texture + charIndexMap
-  │
-  ├─ compileShaders(vertSrc, fragSrc)
-  ├─ setupQuadVAO()          // unit quad + index buffer
-  ├─ uploadAtlasTexture()
-  ├─ buildInstanceBuffer()   // from frame 0
-  ├─ setupInstanceAttributes()
-  │
-  └─ renderFrame()           // first paint
-```
-## Render Flow (per frame)
-```text
-renderFrame()
-  ├─ buildInstanceBuffer(currentFrame, canvas, charIndexMap)
-  ├─ gl.bufferData(ARRAY_BUFFER, instanceData, DYNAMIC_DRAW)
-  ├─ gl.clear()
-  └─ gl.drawArraysInstanced(TRIANGLE_STRIP, 0, 4, width * height)
-```
-- One draw call. Always.
-
-## Fallback Strategy
-- The factory (built in Task 1.2, but the pattern is set now):
-```js
-function createBestRenderer(canvasEl, grid, options) {
-  // Try WebGPU first (Task 1.2)
-  // Try WebGL2
-  const gl = canvasEl.getContext('webgl2');
-  if (gl) return createWebGL2Renderer(canvasEl, grid, options);
-  // Fall back to Canvas2D
-  return createRenderer(canvasEl, grid, options);
-}
-```
-- For Task 1.1, createWebGL2Renderer itself returns null if context fails — the caller handles fallback.
-
-## Performance Targets
-Metric | Target | Rationale
-:--- | :---: | :---
-80×24 render | < 1ms | Terminal-size grid, must be instant
-200×100 render | < 2ms | Standard GRID canvas
-500×500 render | < 8ms | Large canvas, still 120fps
-1000×1000 render | < 16ms | Max spec size, 60fps floor
-Atlas build | < 50ms | One-time init cost
-Buffer rebuild | < 5ms (200×100) | Per-frame during animation
-
-## Test Plan
-tests/test-webgl2-renderer.js
-  ├─ Atlas: charset → correct UV count, all chars mapped
-  ├─ Buffer: known frame → expected Float32Array values
-  ├─ Hex parse: "#ff0000" → [1, 0, 0]
-  ├─ API parity: every canvas-renderer method exists on webgl2
-  ├─ Fallback: null context → returns null
-  ├─ Grid lines: toggle reflects in uniform
-  ├─ Frame navigation: goTo/next/prev update currentFrame
-  ├─ Performance: 200×100 buffer build < 5ms
-  └─ Integration: create → render → setGrid → destroy (no GL errors)
-
-## What I Won't Do Yet
-- Viewport culling (defer until 1000×1000 perf profiled)
-- Per-cell background colors (uniform bg for now, per-cell in v2)
-- Density-based shader effects (attribute is there, shader ignores it for now)
-- Selection/hover highlight (Task 1.4 — input system)
-
---
+# HANDOVER: Task 1.1 — WebGL2 Instanced Grid Renderer
 
 -tests\webgl2-test.html
 ```
@@ -680,8 +299,6 @@ tests/test-webgl2-renderer.js
 ```
 
 ----
-
-# HANDOVER: Task 1.1 — WebGL2 Instanced Grid Renderer
 
 ## Delivered
 - `src/renderers/webgl2-renderer.js` — Complete WebGL2 renderer with instanced rendering
@@ -1302,4 +919,692 @@ Every cell from every generator carries:
 - `mono` — same hue, brightness varies with density
 - `derived` — hue from generator geometry (angle, distance, terrain height)
 
-**Phase 1 is DONE. Next: Phase 2 (OPFS persistence).**
+**Phase 1 is DONE.**
+
+----
+
+# Phase 2: Persistence & Project — COMPLETE                                    
+
+## What was built                                                            
+  
+  ┌─────────────────────┬─────────────────────────────────────┬─────────┐
+  │        Task         │                Files                │  Tests  │   
+  ├─────────────────────┼─────────────────────────────────────┼─────────┤   
+  │ 2.4 Serializer      │ src/persistence/serializer.js       │ 68      │   
+  │                     │                                     │ tests   │   
+  ├─────────────────────┼─────────────────────────────────────┼─────────┤   
+  │ 2.1 OPFS Storage    │ src/persistence/opfs-store.js       │ 73      │   
+  │                     │                                     │ tests   │   
+  ├─────────────────────┼─────────────────────────────────────┼─────────┤   
+  │ 2.2 File System     │ src/persistence/fs-access.js        │ 35      │   
+  │ Access              │                                     │ tests   │   
+  ├─────────────────────┼─────────────────────────────────────┼─────────┤   
+  │ 2.3 Project         │ UI in dist/index.html               │ —       │   
+  │ Settings            │                                     │         │   
+  ├─────────────────────┼─────────────────────────────────────┼─────────┤   
+  │ 2.5 PWA             │ dist/manifest.json, dist/sw.js,     │ —       │   
+  │                     │ icons                               │         │   
+  └─────────────────────┴─────────────────────────────────────┴─────────┘   
+
+## Key features
+
+  - Auto-save: 2-second debounce to OPFS on every mutation — silent on      
+  success
+  - Auto-load: Most recent project restored from OPFS on startup
+  - Project browser: "Projects" button → modal with load/delete actions     
+  - Ctrl+S cascade: existing file handle → native Save As → blob download   
+  - Ctrl+Shift+S: old export behavior preserved
+  - Ctrl+,: project settings (name, BPM, key, scale, charset, palette)      
+  - PWA: installable with service worker, file handler for .grid files      
+
+## Test results
+
+  554 passed, 0 failed, 1 skipped (4 commits on main)
+
+## Phase 2 Closure Note
+
+After Task 2.5, Phase 2 is declared DONE. Disposition of all Phase 2 tasks:
+
+| Task | Status | Note |
+|------|--------|------|
+| 2.1 OPFS Storage | COMPLETE | 73/73 tests. 2-second auto-save. |
+| 2.2 File System Access | COMPLETE | 35/35 tests. Save As + download fallback. |
+| 2.3 Project Settings | COMPLETE | UI in dist/index.html. |
+| 2.4 Serializer | COMPLETE | 68/68 tests. Compact mode, version migration. |
+| 2.5 PWA | COMPLETE | Service worker, file handler, install prompt. |
+
+Phase 2 exit gate (after 2.5):
+"Projects persist across sessions. Ctrl+S saves to disk. Ctrl+, opens settings.
+Users can install as PWA. Phase 3 (audio engine) can begin."
+
+----
+
+# PHASE 3 ACTION PLAN: THE MUSIC CONSUMER
+
+**"The grid plays"**
+
+---
+
+## What Already Exists (Foundation from Phases 0–2)
+
+Before designing anything, here's what we're building on:
+
+| Asset | Detail |
+|-------|--------|
+| `channel.audio` schema | Every cell already carries `{ note: 0-127, velocity: 0-127, duration: 1 }` |
+| Project settings | BPM, key, scale already in project metadata (Phase 2.3) |
+| 10 generators | All populate `channel.audio` — note from Y position, velocity from density |
+| grid-core.js | `getCellsBySemantic()`, `getCellsByChannel()` — query cells by channel data |
+| Input system | `cellDown/Move/Up/Hover/action` events — ready for music-mode interactions |
+| OPFS persistence | Auto-save means musical grids survive sessions |
+
+**Key insight**: The data is already there. Phase 3 is about *reading* `channel.audio` and turning it into sound. No schema changes needed.
+
+---
+
+## Task Dependency Graph
+
+```text
+3.1 Music Mapper ───────┐
+   (grid → note events) │
+                        ├──→ 3.2 Web Audio Synth ──→ 3.6 UI Integration
+3.1.1 Scale Engine ─────┘    (note events → sound)     (transport, viz)
+   (note → frequency)            │
+                                 ├──→ 3.4 Web MIDI Output (optional)
+                                 │
+                                 └──→ 3.3 Glicol WASM (Tier 1 upgrade, DEFER)
+
+3.5 Orca Mode ← DEFER (independent, low priority, revisit Phase 7)
+```
+
+**Build order**: 3.1 → 3.2 → 3.6 (UI) → 3.4 → 3.3 (defer) → 3.5 (defer)
+
+---
+
+## Task 3.1 — Grid-to-Music Mapping Engine
+
+**File**: `src/consumers/music/music-mapper.js`
+**Depends on**: grid-core.js (pure import)
+**DOM**: Zero. Pure functions. Node-testable.
+
+### The Mapping Model
+
+The grid becomes a piano roll / step sequencer:
+
+```text
+Y=0  ┌─────────────────────────────────┐  ← Highest pitch
+     │  @   .       #   @              │
+     │      @   *       .   @          │
+     │  .       @   @       .   *      │
+     │      .       .   @       @      │
+Y=H  └─────────────────────────────────┘  ← Lowest pitch
+     X=0                            X=W
+     Beat 1   Beat 2   Beat 3   Beat 4
+     ←──────── Time (columns) ────────→
+```
+
+#### Column-to-time mapping
+
+```js
+function columnToTime(col, bpm, subdivision) {
+  // subdivision: 1 = quarter notes, 2 = eighth, 4 = sixteenth
+  const beatDuration = 60 / bpm;               // seconds per beat
+  const stepDuration = beatDuration / subdivision;
+  return col * stepDuration;
+}
+```
+
+- Each column = one step
+- Step resolution = BPM ÷ subdivision (default: 1 column = 1 sixteenth note at 120 BPM)
+- Total duration = (grid.width × stepDuration) seconds
+
+#### Row-to-pitch mapping
+
+```js
+function rowToNote(row, height, scale, rootNote) {
+  // row 0 = top = highest note
+  // row height-1 = bottom = lowest note
+  const invertedRow = (height - 1) - row;
+  
+  // Option A: Chromatic — every row = 1 semitone
+  // return rootNote + invertedRow;
+  
+  // Option B: Scale-quantized — rows map to scale degrees
+  const scaleIntervals = SCALES[scale]; // e.g. major = [0,2,4,5,7,9,11]
+  const octave = Math.floor(invertedRow / scaleIntervals.length);
+  const degree = invertedRow % scaleIntervals.length;
+  return rootNote + (octave * 12) + scaleIntervals[degree];
+}
+```
+
+- Root note from project settings (default: C4 = MIDI 60)
+- Scale from project settings (default: chromatic)
+- Top row = highest note, bottom = lowest (natural piano roll orientation)
+
+#### Cell-to-note event
+
+```js
+function cellToNoteEvent(cell, gridWidth, gridHeight, musicOpts) {
+  // Skip empty / rest cells
+  if (!cell || cell.semantic === 'void') return null;
+  
+  return {
+    note:     rowToNote(cell.y, gridHeight, musicOpts.scale, musicOpts.rootNote),
+    velocity: cell.channel?.audio?.velocity ?? Math.round((cell.density ?? 0.5) * 127),
+    time:     columnToTime(cell.x, musicOpts.bpm, musicOpts.subdivision),
+    duration: (cell.channel?.audio?.duration ?? 1) * (60 / musicOpts.bpm / musicOpts.subdivision),
+    channel:  colorToChannel(cell.color),  // color → instrument/track
+    char:     cell.char,                   // instrument hint for synthesis
+  };
+}
+```
+
+#### Color-to-channel mapping
+
+```js
+// Map colors to MIDI channels / instrument tracks
+// Strategy: hash the color hex to a channel 0-15
+// OR use a configurable palette map
+function colorToChannel(color) {
+  const CHANNEL_MAP = {
+    '#ff0000': 0,  // red    → lead
+    '#00ff00': 1,  // green  → bass
+    '#0000ff': 2,  // blue   → pad
+    '#ffff00': 3,  // yellow → arp
+    '#ff00ff': 4,  // magenta → drums
+    '#00ffff': 5,  // cyan   → fx
+  };
+  return CHANNEL_MAP[color?.toLowerCase()] ?? 0;
+}
+```
+
+#### Frame scanner — the core export
+
+```js
+/**
+ * Scan an entire frame and produce a sorted list of note events.
+ * This is the single function consumers call.
+ *
+ * @param {Object} grid - Full grid object
+ * @param {number} frameIndex - Which frame to scan
+ * @param {Object} opts - { bpm, subdivision, scale, rootNote, channelMap }
+ * @returns {NoteEvent[]} - Sorted by time, then pitch
+ */
+export function frameToNoteEvents(grid, frameIndex, opts) {
+  const frame = grid.frames[frameIndex];
+  if (!frame) return [];
+  
+  const events = [];
+  for (const cell of frame.cells) {
+    const event = cellToNoteEvent(cell, grid.canvas.width, grid.canvas.height, opts);
+    if (event) events.push(event);
+  }
+  
+  return events.sort((a, b) => a.time - b.time || a.note - b.note);
+}
+```
+
+### Scale Engine (built into music-mapper.js)
+
+```js
+export const SCALES = {
+  chromatic:      [0,1,2,3,4,5,6,7,8,9,10,11],
+  major:          [0,2,4,5,7,9,11],
+  minor:         [0,2,3,5,7,8,10],    // natural minor
+  pentatonic:     [0,2,4,7,9],
+  minor_penta:    [0,3,5,7,10],
+  blues:          [0,3,5,6,7,10],
+  dorian:         [0,2,3,5,7,9,10],
+  mixolydian:     [0,2,4,5,7,9,10],
+  harmonic_minor: [0,2,3,5,7,8,11],
+  whole_tone:     [0,2,4,6,8,10],
+};
+
+export const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+
+export function midiToFrequency(note) {
+  return 440 * Math.pow(2, (note - 69) / 12);
+}
+
+export function midiToName(note) {
+  const octave = Math.floor(note / 12) - 1;
+  return NOTE_NAMES[note % 12] + octave;
+}
+```
+
+### Test Plan: `tests/test-music-mapper.js`
+
+Target: ~60 tests, all Node.js, zero DOM.
+
+```
+Scale engine:
+  - SCALES has 10 entries, all arrays of ints 0-11
+  - midiToFrequency(69) === 440
+  - midiToFrequency(60) ≈ 261.63 (middle C)
+  - midiToName(60) === 'C4'
+  - midiToName(69) === 'A4'
+
+rowToNote:
+  - chromatic: row 0 in 12-row grid with root 60 → note 71
+  - chromatic: bottom row → note 60
+  - major scale: row 0 in 7-row grid → 7th degree of scale
+  - pentatonic: rows map only to pentatonic degrees
+  - octave wrapping works for grids taller than scale length
+
+columnToTime:
+  - col 0 at 120 BPM, subdivision 4 → 0.0s
+  - col 1 at 120 BPM, subdivision 4 → 0.125s (one sixteenth note)
+  - col 16 at 120 BPM, subdivision 4 → 2.0s (one bar of 4/4)
+
+colorToChannel:
+  - #ff0000 → 0, #00ff00 → 1, unknown → 0
+  - null/undefined → 0
+
+cellToNoteEvent:
+  - void semantic → null (rest)
+  - Normal cell → valid NoteEvent with all fields
+  - Uses channel.audio.velocity when present
+  - Falls back to density * 127 when channel.audio missing
+
+frameToNoteEvents:
+  - Empty frame → []
+  - Frame with 3 cells → 3 events sorted by time
+  - Events at same time sorted by pitch
+  - Void cells filtered out
+  - All events have: note (int), velocity (int), time (float), duration (float), channel (int)
+
+Integration:
+  - Generate terrain → frameToNoteEvents → events span full time range
+  - Generate pulse → events form rhythmic pattern
+  - Round-trip: events from frame match expected count (non-void cells)
+```
+
+---
+
+## Task 3.2 — Web Audio Synthesis Layer
+
+**File**: `src/consumers/music/synth-engine.js`
+**Depends on**: music-mapper.js (for NoteEvent type), Web Audio API
+**DOM**: Minimal — needs `AudioContext`. Testable with mock AudioContext in Node.
+
+### Architecture
+
+```text
+NoteEvent[] ──→ SynthEngine ──→ AudioContext ──→ Speakers
+                    │
+                    ├── Channel 0: Lead (sawtooth + filter)
+                    ├── Channel 1: Bass (sine + sub)
+                    ├── Channel 2: Pad  (triangle + detune)
+                    ├── Channel 3: Arp  (square + fast envelope)
+                    ├── Channel 4: Drums (noise + pitch envelope)
+                    └── Channel 5: FX   (sine + heavy reverb)
+```
+
+### Instrument Definitions
+
+```js
+const INSTRUMENTS = {
+  0: { name: 'lead',  wave: 'sawtooth', attack: 0.01, decay: 0.1,  sustain: 0.7, release: 0.2, filterFreq: 2000 },
+  1: { name: 'bass',  wave: 'sine',     attack: 0.01, decay: 0.2,  sustain: 0.8, release: 0.1, filterFreq: 800  },
+  2: { name: 'pad',   wave: 'triangle', attack: 0.3,  decay: 0.3,  sustain: 0.6, release: 0.5, filterFreq: 4000 },
+  3: { name: 'arp',   wave: 'square',   attack: 0.005,decay: 0.05, sustain: 0.3, release: 0.05,filterFreq: 3000 },
+  4: { name: 'drums', wave: 'noise',    attack: 0.001,decay: 0.1,  sustain: 0,   release: 0.05,filterFreq: 8000 },
+  5: { name: 'fx',    wave: 'sine',     attack: 0.1,  decay: 0.5,  sustain: 0.3, release: 1.0, filterFreq: 6000 },
+};
+```
+
+### API
+
+```js
+export function createSynthEngine(audioContext) {
+  return {
+    // Schedule all events from a frame for playback
+    scheduleFrame(noteEvents, startTime),
+    
+    // Transport controls
+    play(grid, frameIndex, opts),   // scan frame → schedule → start
+    stop(),                          // stop all sound, cancel scheduled
+    pause(),                         // freeze at current time
+    resume(),
+    
+    // State
+    isPlaying,
+    currentTime,        // playback position in seconds
+    currentColumn,      // which grid column is playing (for visual cursor)
+    
+    // Config
+    setInstrument(channel, instrumentDef),
+    setMasterVolume(0-1),
+    
+    // Cleanup
+    destroy(),
+  };
+}
+```
+
+### Playback cursor (critical for UX)
+
+The synth engine emits a `columnChange` callback so the renderer can draw a playhead:
+
+```js
+// Inside play():
+const stepDuration = 60 / opts.bpm / opts.subdivision;
+let col = 0;
+const tick = () => {
+  if (!this.isPlaying) return;
+  const elapsed = audioContext.currentTime - playStartTime;
+  const newCol = Math.floor(elapsed / stepDuration);
+  if (newCol !== col) {
+    col = newCol;
+    if (col >= grid.canvas.width) {
+      if (opts.loop) { col = 0; playStartTime = audioContext.currentTime; scheduleFrame(...); }
+      else { this.stop(); return; }
+    }
+    opts.onColumnChange?.(col);
+  }
+  requestAnimationFrame(tick);
+};
+```
+
+### Drum synthesis (channel 4, no samples needed)
+
+```js
+function playDrum(audioCtx, time, velocity, note) {
+  // Different drum sounds based on note/row position
+  // High rows → hi-hat (noise, short, high-pass)
+  // Mid rows  → snare (noise + tone, medium)
+  // Low rows  → kick (sine, pitch sweep down)
+  
+  const v = velocity / 127;
+  
+  if (note > 80) {
+    // Hi-hat: filtered noise burst
+    const noise = createNoiseNode(audioCtx);
+    const hp = audioCtx.createBiquadFilter();
+    hp.type = 'highpass'; hp.frequency.value = 8000;
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(v * 0.3, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+    noise.connect(hp).connect(gain).connect(audioCtx.destination);
+    noise.start(time); noise.stop(time + 0.05);
+  } else if (note > 50) {
+    // Snare: noise + tone
+    // ...
+  } else {
+    // Kick: sine with pitch sweep
+    const osc = audioCtx.createOscillator();
+    osc.frequency.setValueAtTime(150, time);
+    osc.frequency.exponentialRampToValueAtTime(30, time + 0.15);
+    // ...
+  }
+}
+```
+
+### Test Plan: `tests/test-synth-engine.js`
+
+Target: ~40 tests, mixed Node (mock AudioContext) + browser (real audio).
+
+```
+Scheduling:
+  - scheduleFrame([]) → no oscillators created
+  - scheduleFrame with 3 events → 3 oscillator chains
+  - Events scheduled at correct audioContext times
+  - Channel → correct waveform type
+
+ADSR:
+  - Attack ramp starts at event time
+  - Decay begins at time + attack
+  - Release begins at time + duration
+  - Gain reaches 0 after release
+
+Transport:
+  - play() sets isPlaying = true
+  - stop() sets isPlaying = false, disconnects nodes
+  - pause()/resume() preserves position
+  - Loop: column wraps to 0 at grid width
+
+Playback cursor:
+  - onColumnChange fires at step boundaries
+  - Column increments match BPM/subdivision timing
+  - Column resets to 0 on loop
+
+Drums:
+  - Channel 4 uses noise source (not oscillator)
+  - High note → short duration (hi-hat)
+  - Low note → pitch sweep (kick)
+
+Volume:
+  - setMasterVolume(0) → silence
+  - setMasterVolume(1) → full
+  - Volume changes apply to already-playing sounds
+```
+
+---
+
+## Task 3.6 — UI Integration (dist/index.html)
+
+**This is where the user hears the grid.** Not a separate task in the original charter, but critical.
+
+### Transport bar
+
+```text
+┌──────────────────────────────────────────────────────┐
+│  [▶ Play] [⏹ Stop] [🔁 Loop]  BPM: [120▼]          │
+│  Scale: [Major▼]  Root: [C4▼]  Subdiv: [1/16▼]     │
+│  Vol: ────●──── [🔇]  Ch: Lead/Bass/Pad/Arp/Drum/FX │
+└──────────────────────────────────────────────────────┘
+```
+
+### Playback cursor overlay
+
+The renderer draws a vertical highlight bar on the current column during playback. This is the "now" line — the grid scrolls through time.
+
+### Mode switch: Paint mode vs Play mode
+
+- **Paint mode** (default): click/drag paints cells, same as now
+- **Play mode**: click a cell to preview its note; click a column to solo it
+- Toggle via toolbar button or Tab key
+
+### Wiring
+
+```js
+// In setupInputSystem or equivalent:
+function setupMusicTransport() {
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const synth = createSynthEngine(audioCtx);
+  
+  playBtn.onclick = () => {
+    // AudioContext requires user gesture to start
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    const opts = {
+      bpm: projectSettings.bpm || 120,
+      scale: projectSettings.scale || 'chromatic',
+      rootNote: projectSettings.rootNote || 60,
+      subdivision: projectSettings.subdivision || 4,
+      loop: loopToggle.checked,
+      onColumnChange: (col) => {
+        renderer.setPlayheadColumn(col);  // new renderer method
+        renderer.render();
+      },
+    };
+    synth.play(grid, renderer.current, opts);
+  };
+  
+  stopBtn.onclick = () => {
+    synth.stop();
+    renderer.setPlayheadColumn(-1);
+    renderer.render();
+  };
+}
+```
+
+---
+
+## Task 3.4 — Web MIDI Output (Optional, Chrome/Edge)
+
+**File**: `src/consumers/music/midi-output.js`
+**Depends on**: music-mapper.js
+**Browser**: Chrome/Edge only (Web MIDI API). Feature-detect, hide if unavailable.
+
+### API
+
+```js
+export function createMIDIOutput() {
+  return {
+    async init(),              // Request MIDI access, list outputs
+    getOutputs(),              // → [{ id, name }]
+    selectOutput(id),          // Choose a MIDI port
+    sendNoteOn(channel, note, velocity),
+    sendNoteOff(channel, note),
+    scheduleEvents(noteEvents, bpm),  // Schedule from mapper output
+    isAvailable(),             // Feature detection
+    destroy(),
+  };
+}
+```
+
+### Scheduling
+
+MIDI timing is trickier than Web Audio — Web MIDI `send()` accepts a DOMHighResTimestamp but there's no built-in scheduler. Use a lookahead pattern:
+
+```js
+// Schedule 50ms ahead, check every 25ms
+const LOOKAHEAD = 0.05;    // seconds
+const CHECK_INTERVAL = 25;  // ms
+
+function startMIDIPlayback(events, bpm) {
+  let nextEventIdx = 0;
+  const intervalId = setInterval(() => {
+    const now = performance.now() / 1000;
+    while (nextEventIdx < events.length && 
+           events[nextEventIdx].time < now + LOOKAHEAD) {
+      const e = events[nextEventIdx];
+      const timestamp = performance.now() + (e.time - now) * 1000;
+      midiOutput.send([0x90 | e.channel, e.note, e.velocity], timestamp);
+      midiOutput.send([0x80 | e.channel, e.note, 0], timestamp + e.duration * 1000);
+      nextEventIdx++;
+    }
+  }, CHECK_INTERVAL);
+}
+```
+
+### Test Plan: ~20 tests
+
+```
+Feature detection:
+  - isAvailable() returns boolean
+  - init() with no MIDI → graceful error message
+
+Message format:
+  - noteOn: [0x90 | ch, note, velocity]
+  - noteOff: [0x80 | ch, note, 0]
+  - channel clamped 0-15
+  - note clamped 0-127, velocity clamped 0-127
+
+Scheduling:
+  - Events sent in order
+  - Timestamps offset correctly from performance.now()
+  - Note-off follows note-on by duration
+```
+
+---
+
+## Tasks DEFERRED
+
+### Task 3.3 — Glicol WASM Integration → DEFER to Phase 8
+
+**Reason**: Glicol adds graph-based DSP (filters, reverb, delay). The Web Audio synth in 3.2 already covers the core need. Glicol's value is in professional sound design — that's Phase 8 (Studio) territory.
+
+**When to revisit**: After 3.2 ships, if users want more sophisticated synthesis.
+
+### Task 3.5 — Orca-compatible Grid Mode → DEFER to Phase 7
+
+**Reason**: Orca is a spatial programming paradigm that shares .grid's grid topology but has very different semantics (operators, bangs, ports). Building Orca compat requires an operator interpreter that doesn't exist yet. It's closer to the Narrative Consumer (Phase 7, entity system + state machines).
+
+**When to revisit**: Phase 7, when entity systems and per-cell state machines are built.
+
+---
+
+## File Tree After Phase 3
+
+```text
+src/
+├── consumers/
+│   └── music/
+│       ├── music-mapper.js       ← 3.1: grid → note events (pure, zero DOM)
+│       ├── synth-engine.js       ← 3.2: note events → Web Audio sound
+│       └── midi-output.js        ← 3.4: note events → MIDI messages
+├── core/
+│   └── grid-core.js
+├── renderers/
+│   ├── canvas-renderer.js
+│   └── webgl2-renderer.js        ← add setPlayheadColumn() method
+├── rendering/
+│   ├── font-atlas.js
+│   ├── instance-buffer.js
+│   └── shaders.js
+├── generators/
+│   └── generators.js
+├── input/
+│   ├── key-bindings.js
+│   └── input-system.js
+├── importers/
+│   └── image-importer.js
+└── persistence/
+    ├── serializer.js
+    ├── opfs-store.js
+    └── fs-access.js
+
+tests/
+├── test-music-mapper.js          ← ~60 tests (Node, pure)
+├── test-synth-engine.js          ← ~40 tests (Node mock + browser)
+├── test-midi-output.js           ← ~20 tests (Node mock)
+└── ... (existing suites)
+
+dist/
+└── index.html                    ← transport bar, playhead, mode switch
+```
+
+---
+
+## Build Order & Time Estimates
+
+| Order | Task | Est. | Exit Test |
+|-------|------|------|-----------|
+| 1 | 3.1 Music Mapper | 1 session | `node tests/test-music-mapper.js` — 60 tests green |
+| 2 | 3.2 Synth Engine | 1-2 sessions | Open dist/index.html → hear the grid play |
+| 3 | 3.6 UI Integration | 1 session | Transport bar, playhead cursor, loop, BPM control |
+| 4 | 3.4 MIDI Output | 0.5 session | Chrome → MIDI monitor shows notes from grid |
+
+**Total**: ~4 sessions (Phase 3 is narrower than it looks — the data layer already exists)
+
+---
+
+## Phase 3 Exit Criteria (from charter, refined)
+
+```
+✓ Draw on grid → hear music in real-time
+✓ X = time, Y = pitch, density = velocity, color = channel
+✓ 10 scales available (chromatic, major, minor, pentatonic, blues, ...)
+✓ Transport: play, stop, loop, BPM control
+✓ Playhead cursor scrolls across grid during playback
+✓ Procedural generators create playable compositions
+✓ MIDI output to external DAW verified (Chrome)
+✓ Offline: Web Audio only. No server dependency.
+✓ All new code has tests. Total suite stays green.
+```
+
+---
+
+## Open Design Questions (decide before or during build)
+
+1. **Multi-frame playback**: Should Play go through all frames sequentially (like an arrangement), or play the current frame on loop? → **Recommendation**: Current frame with loop, add frame-chain later.
+
+2. **Polyphony limit**: Multiple cells in the same column = chord. Cap at 16 simultaneous voices? → **Recommendation**: Yes, 16 voices max, drop lowest-velocity notes.
+
+3. **Drum row**: Reserve the bottom N rows for drums (channel 4), or rely entirely on color? → **Recommendation**: Color-based. Let users paint drums anywhere. Drum behavior triggers from channel assignment, not row position.
+
+4. **Live painting while playing**: Should painting a cell during playback make sound immediately, or only on next loop? → **Recommendation**: Immediate — paint a cell, hear it on the next column pass. This is the magic moment.
+
+5. **Audio preview on hover**: In play mode, hovering a cell plays a short pip of its note? → **Recommendation**: Yes, but gated behind play mode (not paint mode). Short 50ms blip.
