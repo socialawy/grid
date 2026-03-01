@@ -651,7 +651,7 @@ function createInputSystem(canvasEl, rend, opts = {}) {
 const SCALES = {
   chromatic: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
   major: [0, 2, 4, 5, 7, 9, 11],
-  minor: [0, 2, 3, 5, 7, 8, 10],
+  minor: [0, 2, 3, 5, 7, 8, 10],    // natural minor
   pentatonic: [0, 2, 4, 7, 9],
   minor_penta: [0, 3, 5, 7, 10],
   blues: [0, 3, 5, 6, 7, 10],
@@ -673,12 +673,15 @@ function midiToName(note) {
 }
 
 function columnToTime(col, bpm, subdivision) {
-  const beatDuration = 60 / bpm;
+  // subdivision: 1 = quarter notes, 2 = eighth, 4 = sixteenth
+  const beatDuration = 60 / bpm;               // seconds per beat
   const stepDuration = beatDuration / subdivision;
   return col * stepDuration;
 }
 
 function rowToNote(row, height, scale, rootNote) {
+  // row 0 = top = highest note
+  // row height-1 = bottom = lowest note
   const invertedRow = (height - 1) - row;
   const scaleIntervals = SCALES[scale] || SCALES.chromatic;
   const octave = Math.floor(invertedRow / scaleIntervals.length);
@@ -688,17 +691,18 @@ function rowToNote(row, height, scale, rootNote) {
 
 function colorToChannel(color) {
   const CHANNEL_MAP = {
-    '#ff0000': 0,
-    '#00ff00': 1,
-    '#0000ff': 2,
-    '#ffff00': 3,
-    '#ff00ff': 4,
-    '#00ffff': 5,
+    '#ff0000': 0,  // red    → lead
+    '#00ff00': 1,  // green  → bass
+    '#0000ff': 2,  // blue   → pad
+    '#ffff00': 3,  // yellow → arp
+    '#ff00ff': 4,  // magenta → drums
+    '#00ffff': 5,  // cyan   → fx
   };
   return CHANNEL_MAP[color?.toLowerCase()] ?? 0;
 }
 
 function cellToNoteEvent(cell, gridWidth, gridHeight, musicOpts) {
+  // Skip empty / rest cells
   if (!cell || cell.semantic === 'void') return null;
   const { bpm = 120, subdivision = 4, scale = 'chromatic', rootNote = 60 } = musicOpts || {};
   return {
@@ -706,11 +710,19 @@ function cellToNoteEvent(cell, gridWidth, gridHeight, musicOpts) {
     velocity: Math.min(127, Math.max(0, cell.channel?.audio?.velocity ?? Math.round((cell.density ?? 0.5) * 127))),
     time: columnToTime(cell.x, bpm, subdivision),
     duration: (cell.channel?.audio?.duration ?? 1) * (60 / bpm / subdivision),
-    channel: colorToChannel(cell.color),
-    char: cell.char,
+    channel: colorToChannel(cell.color),  // color → instrument/track
+    char: cell.char,                   // instrument hint for synthesis
   };
 }
 
+/**
+ * Scan an entire frame and produce a sorted list of note events.
+ *
+ * @param {Object} grid - Full grid object
+ * @param {number} frameIndex - Which frame to scan
+ * @param {Object} opts - { bpm, subdivision, scale, rootNote, channelMap }
+ * @returns {NoteEvent[]} - Sorted by time, then pitch
+ */
 function frameToNoteEvents(grid, frameIndex, opts) {
   const frame = grid.frames[frameIndex];
   if (!frame) return [];
