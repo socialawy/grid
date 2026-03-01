@@ -2190,6 +2190,9 @@ function applyImageImport(asNewProject = false) {
 function showNewProjectModal() { openModal('newProjectModal'); }
 
 function createNewProject() {
+  if (synth) { synth.stop(); synth = null; }
+  if (audioCtx) { audioCtx.close(); audioCtx = null; }
+  if (renderer) renderer.setPlayheadColumn(-1);
   const name = document.getElementById('npName').value || 'Untitled';
   const w = Math.max(1, Math.min(1000, +document.getElementById('npWidth').value || 40));
   const h = Math.max(1, Math.min(1000, +document.getElementById('npHeight').value || 20));
@@ -2304,6 +2307,9 @@ async function handleSaveFile() {
 // LOAD GRID INTO APP (shared helper)
 // ================================================================
 function loadGridIntoApp(g) {
+  if (synth) { synth.stop(); synth = null; }
+  if (audioCtx) { audioCtx.close(); audioCtx = null; }
+  if (renderer) renderer.setPlayheadColumn(-1);
   grid = g;
   selectedChar = grid.canvas.charset[0] || '@';
   selectedColor = grid.canvas.defaultColor || '#00ff88';
