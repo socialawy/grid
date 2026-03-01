@@ -411,4 +411,19 @@ dist/
 
 ----
 
+## Some fun:
+
+- This standalone .grid file showcases the multi-instrumental synthesis engine with Lead, Bass, Pads, Arps, and Drums all working together in an 'A Minor Pentatonic' scale at 110 BPM. `schemas\examples\grid-symphony.grid`
+
+- `neon-pulse-drive.grid` It features a "Neon Pulse Drive" groove at 110 BPM with a side-chained bass feel!
+
+- `scale-reference.grid`: A simple diagonal pattern showing how rows map to the A Minor Pentatonic scale across two octaves.
+- `basic-drum-loop.grid`: A standard 110 BPM percussion pattern with a kick on beats 1 & 3, snare on 2 & 4, and eighth-note hi-hats.
+These files are great for testing the music engine's pitch accuracy and channel separation. 
+
+-  Bach's "Prelude in C Major" (Measure 1-4) `schemas\examples\bach-prelude.grid`
+It's set to 75 BPM on the Chromatic scale. I used the Yellow "Arp" channel, which has a fast attack and low decay, making it perfect for the iconic flowing arpeggios of this piece.
+
+----
+
 **Next: Phase 4 — The 3D Consumer.**

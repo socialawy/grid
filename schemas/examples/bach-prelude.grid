@@ -1,0 +1,550 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "classic-aqqg4k5ze",
+    "name": "J.S. Bach - Prelude in C Major",
+    "author": "J.S. Bach (transcribed by Antigravity)",
+    "notes": "First 4 measures of BWV 846. Use 'Arp' or 'Lead' instrument."
+  },
+  "canvas": {
+    "width": 40,
+    "height": 24,
+    "charset": "█▓▒░· ",
+    "defaultChar": " ",
+    "background": "#050a05"
+  },
+  "project": {
+    "bpm": 75,
+    "scale": "chromatic",
+    "key": "C"
+  },
+  "frames": [
+    {
+      "id": "f0",
+      "index": 0,
+      "cells": [
+        {
+          "x": 0,
+          "y": 19,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 80,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 15,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 75,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 12,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 70,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 7,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 65,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 60,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 5,
+          "y": 19,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 80,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 6,
+          "y": 15,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 75,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 7,
+          "y": 12,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 70,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 7,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 65,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 9,
+          "y": 3,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 60,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 19,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 80,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 11,
+          "y": 17,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 75,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 10,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 70,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 13,
+          "y": 5,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 65,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 14,
+          "y": 2,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 60,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 19,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 80,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 17,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 75,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 10,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 70,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 5,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 65,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 2,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 60,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 20,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 80,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 17,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 75,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 12,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 70,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 5,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 65,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 2,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 60,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 20,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 80,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 17,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 75,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 12,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 70,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 5,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 65,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 2,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 60,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 19,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 80,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 15,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 75,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 12,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 70,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 7,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 65,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 3,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 60,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 19,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 80,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 36,
+          "y": 15,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 75,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 12,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 70,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 38,
+          "y": 7,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 65,
+              "duration": 2
+            }
+          }
+        },
+        {
+          "x": 39,
+          "y": 3,
+          "char": "█",
+          "color": "#ffff00",
+          "density": 0.8,
+          "channel": {
+            "audio": {
+              "velocity": 60,
+              "duration": 2
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

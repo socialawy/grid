@@ -1,0 +1,1292 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "demo-4w2kn5val",
+    "name": "Grid Symphony",
+    "created": "2026-03-01T19:15:08.045Z",
+    "modified": "2026-03-01T19:15:08.045Z",
+    "author": "Antigravity",
+    "notes": "A multi-instrumental procedural demo showcasing Lead, Bass, Pads, Arps, and Drums."
+  },
+  "canvas": {
+    "width": 40,
+    "height": 20,
+    "charset": "@#$%&*+=-.~:;|/\\^░▒▓█ ",
+    "defaultChar": " ",
+    "defaultColor": "#00ff88",
+    "background": "#050510",
+    "fontFamily": "monospace"
+  },
+  "project": {
+    "bpm": 110,
+    "scale": "minor_penta",
+    "key": "A",
+    "palette": {}
+  },
+  "frames": [
+    {
+      "id": "frame_001",
+      "index": 0,
+      "label": "Symphony Main",
+      "cells": [
+        {
+          "x": 0,
+          "y": 18,
+          "char": "█",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "entity"
+        },
+        {
+          "x": 2,
+          "y": 17,
+          "char": "▓",
+          "color": "#00ff00",
+          "density": 0.7,
+          "semantic": "entity"
+        },
+        {
+          "x": 4,
+          "y": 18,
+          "char": "█",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "entity"
+        },
+        {
+          "x": 6,
+          "y": 17,
+          "char": "▓",
+          "color": "#00ff00",
+          "density": 0.7,
+          "semantic": "entity"
+        },
+        {
+          "x": 8,
+          "y": 18,
+          "char": "█",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "entity"
+        },
+        {
+          "x": 10,
+          "y": 17,
+          "char": "▓",
+          "color": "#00ff00",
+          "density": 0.7,
+          "semantic": "entity"
+        },
+        {
+          "x": 12,
+          "y": 18,
+          "char": "█",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "entity"
+        },
+        {
+          "x": 14,
+          "y": 17,
+          "char": "▓",
+          "color": "#00ff00",
+          "density": 0.7,
+          "semantic": "entity"
+        },
+        {
+          "x": 16,
+          "y": 18,
+          "char": "█",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "entity"
+        },
+        {
+          "x": 18,
+          "y": 17,
+          "char": "▓",
+          "color": "#00ff00",
+          "density": 0.7,
+          "semantic": "entity"
+        },
+        {
+          "x": 20,
+          "y": 18,
+          "char": "█",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "entity"
+        },
+        {
+          "x": 22,
+          "y": 17,
+          "char": "▓",
+          "color": "#00ff00",
+          "density": 0.7,
+          "semantic": "entity"
+        },
+        {
+          "x": 24,
+          "y": 18,
+          "char": "█",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "entity"
+        },
+        {
+          "x": 26,
+          "y": 17,
+          "char": "▓",
+          "color": "#00ff00",
+          "density": 0.7,
+          "semantic": "entity"
+        },
+        {
+          "x": 28,
+          "y": 18,
+          "char": "█",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "entity"
+        },
+        {
+          "x": 30,
+          "y": 17,
+          "char": "▓",
+          "color": "#00ff00",
+          "density": 0.7,
+          "semantic": "entity"
+        },
+        {
+          "x": 32,
+          "y": 18,
+          "char": "█",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "entity"
+        },
+        {
+          "x": 34,
+          "y": 17,
+          "char": "▓",
+          "color": "#00ff00",
+          "density": 0.7,
+          "semantic": "entity"
+        },
+        {
+          "x": 36,
+          "y": 18,
+          "char": "█",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "entity"
+        },
+        {
+          "x": 38,
+          "y": 17,
+          "char": "▓",
+          "color": "#00ff00",
+          "density": 0.7,
+          "semantic": "entity"
+        },
+        {
+          "x": 0,
+          "y": 19,
+          "char": "✦",
+          "color": "#ff00ff",
+          "density": 1,
+          "semantic": "entity"
+        },
+        {
+          "x": 1,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 3,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 4,
+          "y": 19,
+          "char": "✦",
+          "color": "#ff00ff",
+          "density": 1,
+          "semantic": "entity"
+        },
+        {
+          "x": 4,
+          "y": 19,
+          "char": "✳",
+          "color": "#ff00ff",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 5,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 7,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 8,
+          "y": 19,
+          "char": "✦",
+          "color": "#ff00ff",
+          "density": 1,
+          "semantic": "entity"
+        },
+        {
+          "x": 9,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 11,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 12,
+          "y": 19,
+          "char": "✦",
+          "color": "#ff00ff",
+          "density": 1,
+          "semantic": "entity"
+        },
+        {
+          "x": 12,
+          "y": 19,
+          "char": "✳",
+          "color": "#ff00ff",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 13,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 15,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 16,
+          "y": 19,
+          "char": "✦",
+          "color": "#ff00ff",
+          "density": 1,
+          "semantic": "entity"
+        },
+        {
+          "x": 17,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 19,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 20,
+          "y": 19,
+          "char": "✦",
+          "color": "#ff00ff",
+          "density": 1,
+          "semantic": "entity"
+        },
+        {
+          "x": 20,
+          "y": 19,
+          "char": "✳",
+          "color": "#ff00ff",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 21,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 23,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 24,
+          "y": 19,
+          "char": "✦",
+          "color": "#ff00ff",
+          "density": 1,
+          "semantic": "entity"
+        },
+        {
+          "x": 25,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 27,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 28,
+          "y": 19,
+          "char": "✦",
+          "color": "#ff00ff",
+          "density": 1,
+          "semantic": "entity"
+        },
+        {
+          "x": 28,
+          "y": 19,
+          "char": "✳",
+          "color": "#ff00ff",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 29,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 31,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 32,
+          "y": 19,
+          "char": "✦",
+          "color": "#ff00ff",
+          "density": 1,
+          "semantic": "entity"
+        },
+        {
+          "x": 33,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 35,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 36,
+          "y": 19,
+          "char": "✦",
+          "color": "#ff00ff",
+          "density": 1,
+          "semantic": "entity"
+        },
+        {
+          "x": 36,
+          "y": 19,
+          "char": "✳",
+          "color": "#ff00ff",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 37,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 39,
+          "y": 19,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3,
+          "semantic": "entity"
+        },
+        {
+          "x": 0,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 0,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 0,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 3,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 3,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 6,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 6,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 6,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 9,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 9,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 9,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 12,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 12,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 12,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 15,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 15,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 15,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 18,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 18,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 18,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 21,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 21,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 21,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 24,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 24,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 24,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 27,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 27,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 27,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 30,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 30,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 30,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 33,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 33,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 33,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 36,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 36,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 36,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 39,
+          "y": 5,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 39,
+          "y": 7,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 39,
+          "y": 9,
+          "char": "░",
+          "color": "#0000ff",
+          "density": 0.2,
+          "semantic": "entity"
+        },
+        {
+          "x": 0,
+          "y": 10,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 2,
+          "y": 8,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 4,
+          "y": 12,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 6,
+          "y": 10,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 8,
+          "y": 14,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 10,
+          "y": 12,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 12,
+          "y": 10,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 14,
+          "y": 8,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 16,
+          "y": 10,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 18,
+          "y": 8,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 20,
+          "y": 12,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 22,
+          "y": 10,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 24,
+          "y": 14,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 26,
+          "y": 12,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 28,
+          "y": 10,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 30,
+          "y": 8,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 32,
+          "y": 10,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 34,
+          "y": 8,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 36,
+          "y": 12,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 38,
+          "y": 10,
+          "char": "@",
+          "color": "#ff0000",
+          "density": 0.8,
+          "semantic": "entity"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 6,
+          "y": 4,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 7,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 8,
+          "y": 2,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 9,
+          "y": 3,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 10,
+          "y": 4,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 11,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 12,
+          "y": 2,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 13,
+          "y": 3,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 14,
+          "y": 4,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 15,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 16,
+          "y": 2,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 17,
+          "y": 3,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 18,
+          "y": 4,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 19,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 20,
+          "y": 2,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 21,
+          "y": 3,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 22,
+          "y": 4,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 23,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 24,
+          "y": 2,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 25,
+          "y": 3,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 26,
+          "y": 4,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 27,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 28,
+          "y": 2,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 29,
+          "y": 3,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 30,
+          "y": 4,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 31,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 32,
+          "y": 2,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 33,
+          "y": 3,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 34,
+          "y": 4,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 35,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 36,
+          "y": 2,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 37,
+          "y": 3,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 38,
+          "y": 4,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        },
+        {
+          "x": 39,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.6,
+          "semantic": "entity"
+        }
+      ]
+    }
+  ]
+}

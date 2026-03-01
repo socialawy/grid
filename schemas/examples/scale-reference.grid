@@ -1,0 +1,110 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "ref-ccri0y1yc",
+    "name": "Scale Reference (Minor Penta)",
+    "author": "Antigravity",
+    "notes": "An upward diagonal representing an A Minor Pentatonic scale across 2 octaves."
+  },
+  "canvas": {
+    "width": 20,
+    "height": 10,
+    "charset": "█▓▒░· ",
+    "defaultChar": " ",
+    "background": "#00050a"
+  },
+  "project": {
+    "bpm": 120,
+    "scale": "minor_penta",
+    "key": "A"
+  },
+  "frames": [
+    {
+      "id": "f0",
+      "index": 0,
+      "cells": [
+        {
+          "x": 0,
+          "y": 9,
+          "char": "█",
+          "color": "#ff0000",
+          "density": 1,
+          "semantic": "solid"
+        },
+        {
+          "x": 1,
+          "y": 8,
+          "char": "█",
+          "color": "#ff0000",
+          "density": 1,
+          "semantic": "solid"
+        },
+        {
+          "x": 2,
+          "y": 7,
+          "char": "█",
+          "color": "#ff0000",
+          "density": 1,
+          "semantic": "solid"
+        },
+        {
+          "x": 3,
+          "y": 6,
+          "char": "█",
+          "color": "#ff0000",
+          "density": 1,
+          "semantic": "solid"
+        },
+        {
+          "x": 4,
+          "y": 5,
+          "char": "█",
+          "color": "#ff0000",
+          "density": 1,
+          "semantic": "solid"
+        },
+        {
+          "x": 5,
+          "y": 4,
+          "char": "█",
+          "color": "#ff0000",
+          "density": 1,
+          "semantic": "solid"
+        },
+        {
+          "x": 6,
+          "y": 3,
+          "char": "█",
+          "color": "#ff0000",
+          "density": 1,
+          "semantic": "solid"
+        },
+        {
+          "x": 7,
+          "y": 2,
+          "char": "█",
+          "color": "#ff0000",
+          "density": 1,
+          "semantic": "solid"
+        },
+        {
+          "x": 8,
+          "y": 1,
+          "char": "█",
+          "color": "#ff0000",
+          "density": 1,
+          "semantic": "solid"
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "char": "█",
+          "color": "#ff0000",
+          "density": 1,
+          "semantic": "solid"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "ref-bwl2ec2r6",
+    "name": "Basic Drum Loop",
+    "author": "Antigravity",
+    "notes": "Kick on 1 & 3, Snare on 2 & 4, Eighth-note hi-hats."
+  },
+  "canvas": {
+    "width": 16,
+    "height": 8,
+    "charset": "█▓▒░· ",
+    "defaultChar": " ",
+    "background": "#050005"
+  },
+  "project": {
+    "bpm": 120,
+    "scale": "chromatic",
+    "key": "C"
+  },
+  "frames": [
+    {
+      "id": "f0",
+      "index": 0,
+      "cells": [
+        {
+          "x": 0,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 0,
+          "y": 7,
+          "char": "█",
+          "color": "#ff00ff",
+          "density": 1
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "char": "▓",
+          "color": "#ff00ff",
+          "density": 0.8
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 4,
+          "y": 7,
+          "char": "█",
+          "color": "#ff00ff",
+          "density": 1
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 6,
+          "y": 4,
+          "char": "▓",
+          "color": "#ff00ff",
+          "density": 0.8
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 8,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 8,
+          "y": 7,
+          "char": "█",
+          "color": "#ff00ff",
+          "density": 1
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 10,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 10,
+          "y": 4,
+          "char": "▓",
+          "color": "#ff00ff",
+          "density": 0.8
+        },
+        {
+          "x": 11,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 12,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 12,
+          "y": 7,
+          "char": "█",
+          "color": "#ff00ff",
+          "density": 1
+        },
+        {
+          "x": 13,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 14,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        },
+        {
+          "x": 14,
+          "y": 4,
+          "char": "▓",
+          "color": "#ff00ff",
+          "density": 0.8
+        },
+        {
+          "x": 15,
+          "y": 0,
+          "char": "·",
+          "color": "#ff00ff",
+          "density": 0.3
+        }
+      ]
+    }
+  ]
+}
