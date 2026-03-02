@@ -218,10 +218,18 @@ function getCurrentHandle() {
 }
 
 /**
- * Clear the current file handle (e.g. when creating a new project).
+ * Clear current file handle (e.g. when creating a new project).
  */
 function clearCurrentHandle() {
   _currentFileHandle = null;
+}
+
+/**
+ * Set current file handle programmatically.
+ * @param {FileSystemFileHandle} handle
+ */
+function setCurrentHandle(handle) {
+  _currentFileHandle = handle;
 }
 
 // ============================================================
@@ -238,6 +246,7 @@ const FsAccess = {
   saveCascade,
   getCurrentHandle,
   clearCurrentHandle,
+  setCurrentHandle,
 };
 
 // Universal export (ESM + CJS + global)
@@ -258,5 +267,6 @@ export {
   saveCascade,
   getCurrentHandle,
   clearCurrentHandle,
+  setCurrentHandle,
 };
 export default FsAccess;
