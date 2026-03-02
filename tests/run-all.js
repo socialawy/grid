@@ -169,6 +169,11 @@ async function runAllTests() {
       name: 'Heightmap Engine (Task 4.1 - grid to heightmap conversion)',
       file: 'test-heightmap.js',
       environment: 'node'
+    },
+    {
+      name: 'SVG Exporter (Task 6.1 - grid frame to vector SVG)',
+      file: 'test-svg-exporter.js',
+      environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {

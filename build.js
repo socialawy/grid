@@ -31,7 +31,7 @@ const MODULES = [
   'src/consumers/spatial/heightmap.js',
   'src/consumers/spatial/scene-builder.js',
   // Phase 6 exporters — uncomment as they land:
-  // 'src/exporters/svg-exporter.js',
+  'src/exporters/svg-exporter.js',
   // 'src/exporters/midi-exporter.js',
   // 'src/exporters/gltf-exporter.js',
   // 'src/exporters/video-exporter.js',

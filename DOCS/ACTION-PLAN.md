@@ -671,3 +671,31 @@ dist/index.html — generated, never hand-edited again
 661 tests still passing
 
 ---
+
+# NEXT: `docs\plans\2026-03-02-build-and-phase-6-implementation.md`
+
+----
+
+## Task 6.1 — SVG Exporter ✅ COMPLETE
+
+```
+mkdir src/exporters -ErrorAction SilentlyContinue
+node tests/test-svg-exporter.js
+node tests/run-all.js
+node build.js
+```
+
+**Files:**
+- Create: `src/exporters/svg-exporter.js` (✅)
+- Create: `tests/test-svg-exporter.js` (✅)
+- Modify: `build.js` (uncomment SVG line) (✅)
+- Modify: `tests/run-all.js` (add suite) (✅)
+
+**Status:** 
+- ✅ SVG exporter implemented and tested (30/30 tests pass)
+- ✅ Successfully wired into build system (15/15 modules inlined)
+- ✅ Added to test runner (661 total tests passing)
+- ✅ Build generates 6,358 lines, 201.5 KB
+
+---
+

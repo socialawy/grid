@@ -34,15 +34,15 @@ B.0  Verify build output in browser (gate)
  │
  ├─── B.1  Fix midi-output.js in MODULES list
  │
- └─── BUILD GATE ─────────────────────────────────
+ └─── BUILD GATE ──────────────────────────────────
                                                    │
-      6.1  SVG exporter (pure, easy win)         │
+      6.1  SVG exporter (pure, easy win)           │
       6.2  MIDI exporter (pure, fix time→ticks)    │── can parallel
       6.3  PNG export (10 lines in app.js)         │
                                                    │
       6.UI Export modal tabs ──────────────────────┘
                                                    │
-      6.4  glTF exporter (browser-only, needs 3D)   │── sequential
+      6.4  glTF exporter (browser-only, needs 3D)  │── sequential
       6.5  Video exporter (defer)                  │── sequential
 ```
 
@@ -150,7 +150,7 @@ git commit -m "fix(build): add midi-output.js to MODULES list"
 
 ---
 
-## Task 6.1 — SVG Exporter
+## Task 6.1 — SVG Exporter (x)
 
 **Files:**
 - Create: `src/exporters/svg-exporter.js`
