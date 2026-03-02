@@ -614,22 +614,24 @@ function renderImagePreview() {
   const ramp = document.getElementById('imgCharRamp').value || '@%#*+=-:. ';
   const cellSize = Math.max(2, +document.getElementById('imgCellSize').value || 10);
   const contrast = +document.getElementById('imgContrast').value || 0;
-  const maxW = 60, maxH = 15;
+  const maxW = 120, maxH = 60;
   const previewGrid = imageToGrid(_importedImageEl, {
     charRamp: ramp, cellSize, contrast,
     gridWidth: Math.min(maxW, Math.max(1, Math.floor(_importedImageEl.naturalWidth / cellSize))),
     gridHeight: Math.min(maxH, Math.max(1, Math.floor(_importedImageEl.naturalHeight / cellSize)))
   });
-  const frame = previewGrid.frames[0];
-  const W = previewGrid.canvas.width, H = previewGrid.canvas.height;
-  const charMap = {};
-  for (const c of frame.cells) charMap[c.x + ',' + c.y] = c.char;
-  let text = '';
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) text += charMap[x + ',' + y] || ' ';
-    text += '\n';
+  const canvas = document.getElementById('imgPreview');
+  const ctx = canvas.getContext('2d');
+  const W = previewGrid.canvas.width;
+  const H = previewGrid.canvas.height;
+  canvas.width = W;
+  canvas.height = H;
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+  for (const c of previewGrid.frames[0].cells) {
+    ctx.fillStyle = c.color;
+    ctx.fillRect(c.x, c.y, 1, 1);
   }
-  document.getElementById('imgPreview').textContent = text;
 }
 
 function applyImageImport(asNewProject = false) {

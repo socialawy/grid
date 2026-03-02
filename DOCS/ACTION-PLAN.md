@@ -802,17 +802,25 @@ git commit -m "feat(export): tabbed export modal with SVG, PNG, MIDI, glTF, Vide
 
 The synth engine currently plays notes but doesn't save the `NoteEvent[]` array. Add a `synth._lastNoteEvents = events` property in the `play()` method of synth-engine.js so the MIDI exporter can access them. This is a 1-line change.
 
+> **Done:** Actually implemented by avoiding state entirely! The `doExportMidi` function in `app.js` simply calls `frameToNoteEvents` directly to generate the MIDI events on the fly during export.
+
 ### 2. Don't `.gitignore` dist/index.html yet
 
 The generated file IS the deliverable. Keep it committed so GitHub Pages / direct download works. Add a `<!-- GENERATED FILE — DO NOT EDIT. Run: node build.js -->` comment at the top (build.js should inject this).
+
+> **Done:** Verified in codebase. `build.js` injects the warning comment and `dist/index.html` remains tracked in the repo.
 
 ### 3. Add `--watch` to build.js later
 
 Not needed now, but after Phase 6, a `node build.js --watch` using `fs.watch()` on `src/` would improve the dev loop. Defer until the exporter count justifies it.
 
+> **Status:** Still deferred. No `--watch` flag is currently parsed or handled in `build.js`.
+
 ### 4. Import modal stays separate
 
 The current `importGrid()` function uses the `jsonModal` for import. When the export modal changes, keep the import path on its own modal (or reuse `jsonModal` for import only). Don't break Ctrl+O / Import button.
+
+> **Done:** Verified in `app.js`. The import functionality remains separate (e.g. `imageImportModal`) and is untangled from the new tabbed `exportModal`.
 
 ## Happy Accident:
 - GRID is designed as universal creative source format.
@@ -850,3 +858,33 @@ PS E:\co\GRID> node build.js
 
 ----
 
+## Two Quick Pre-Phase-5 Fixes (no AI, both < 20 lines)
+
+### 🎨 Fix B: Color Image Preview
+The image import modal now features a **pixel-perfect color preview** instead of basic green text.
+- Replaced the `<pre>` text block with a `<canvas id="imgPreview">`.
+- Updated [app.js](file:///e:/co/GRID/src/shell/app.js) to render the sampling results directly to the canvas using their actual cell colors.
+
+### 🎼 Fix A: Rich Channel Data on Import
+Imported images are now "full citizens" of the GRID engine, with audio and spatial data generated automatically:
+- **Audio Channel**:
+  - `note`: Calculated based on row position (higher = higher pitch).
+  - `velocity`: Mapped from cell density.
+- **Spatial Channel**:
+  - `height`: Mapped from cell density.
+  - `material`: Mapped from cell semantic.
+
+## Verification Results
+
+### Automated Tests
+- Updated [tests/test-image-importer.js](file:///e:/co/GRID/tests/test-image-importer.js) to include assertions for the new channel data.
+- **Result**: `node tests/run-all.js` → `✅ Passed: 667, ❌ Failed: 0`.
+
+### Build Status
+- `node build.js` successfully generated the updated [dist/index.html](file:///e:/co/GRID/dist/index.html).
+  - ✓ [dist/index.html](file:///e:/co/GRID/dist/index.html) — 6874 lines, 221.3 KB
+  - ✓ Modules inlined: 18/18
+
+----
+
+- `docs\plans\2026-03-03-phase-5-plan.md`

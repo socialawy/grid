@@ -12,8 +12,8 @@
 // MINI ASSERT LIBRARY
 // ============================================================
 
-let passed  = 0;
-let failed  = 0;
+let passed = 0;
+let failed = 0;
 const failures = [];
 
 function assert(condition, message) {
@@ -61,7 +61,7 @@ function makeImageData(w, h, r, g, b) {
   const size = w * h * 4;
   const data = new Uint8ClampedArray(size);
   for (let i = 0; i < size; i += 4) {
-    data[i]     = r;
+    data[i] = r;
     data[i + 1] = g;
     data[i + 2] = b;
     data[i + 3] = 255; // fully opaque
@@ -74,7 +74,7 @@ function makeImageData(w, h, r, g, b) {
  */
 function makeMockCtx(r, g, b) {
   return {
-    drawImage() {},
+    drawImage() { },
     getImageData(x, y, w, h) {
       return makeImageData(w, h, r, g, b);
     },
@@ -86,7 +86,7 @@ function makeMockCtx(r, g, b) {
  */
 function makeMockCanvas(ctx) {
   return {
-    width:  0,
+    width: 0,
     height: 0,
     getContext() { return ctx; },
   };
@@ -137,14 +137,14 @@ const { imageToGrid, DEFAULT_CHAR_RAMP, rgbToHex } =
 
 section('rgbToHex');
 
-assertEqual(rgbToHex(255, 0,   0),   '#ff0000', 'red');
-assertEqual(rgbToHex(0,   255, 0),   '#00ff00', 'green');
-assertEqual(rgbToHex(0,   0,   255), '#0000ff', 'blue');
-assertEqual(rgbToHex(0,   0,   0),   '#000000', 'black');
+assertEqual(rgbToHex(255, 0, 0), '#ff0000', 'red');
+assertEqual(rgbToHex(0, 255, 0), '#00ff00', 'green');
+assertEqual(rgbToHex(0, 0, 255), '#0000ff', 'blue');
+assertEqual(rgbToHex(0, 0, 0), '#000000', 'black');
 assertEqual(rgbToHex(255, 255, 255), '#ffffff', 'white');
-assertEqual(rgbToHex(16,  32,  48),  '#102030', 'arbitrary color');
+assertEqual(rgbToHex(16, 32, 48), '#102030', 'arbitrary color');
 // Rounding: fractional values
-assertEqual(rgbToHex(127.6, 0, 0),   '#800000', 'rounds fractional R');
+assertEqual(rgbToHex(127.6, 0, 0), '#800000', 'rounds fractional R');
 // Clamping: out-of-range values
 assertEqual(rgbToHex(300, -10, 128), '#ff0080', 'clamps out-of-range values');
 
@@ -154,10 +154,10 @@ assertEqual(rgbToHex(300, -10, 128), '#ff0080', 'clamps out-of-range values');
 
 section('DEFAULT_CHAR_RAMP');
 
-assert(typeof DEFAULT_CHAR_RAMP === 'string',    'DEFAULT_CHAR_RAMP is a string');
-assert(DEFAULT_CHAR_RAMP.length > 0,             'DEFAULT_CHAR_RAMP is non-empty');
-assert(DEFAULT_CHAR_RAMP.endsWith(' '),          'DEFAULT_CHAR_RAMP ends with space (lightest)');
-assert(DEFAULT_CHAR_RAMP.startsWith('@'),        'DEFAULT_CHAR_RAMP starts with @ (darkest)');
+assert(typeof DEFAULT_CHAR_RAMP === 'string', 'DEFAULT_CHAR_RAMP is a string');
+assert(DEFAULT_CHAR_RAMP.length > 0, 'DEFAULT_CHAR_RAMP is non-empty');
+assert(DEFAULT_CHAR_RAMP.endsWith(' '), 'DEFAULT_CHAR_RAMP ends with space (lightest)');
+assert(DEFAULT_CHAR_RAMP.startsWith('@'), 'DEFAULT_CHAR_RAMP starts with @ (darkest)');
 
 // ============================================================
 // TESTS: imageToGrid — structure
@@ -166,19 +166,19 @@ assert(DEFAULT_CHAR_RAMP.startsWith('@'),        'DEFAULT_CHAR_RAMP starts with 
 section('imageToGrid — grid structure');
 
 {
-  const ctx   = makeMockCtx(128, 64, 32);  // mid-grey-ish color
+  const ctx = makeMockCtx(128, 64, 32);  // mid-grey-ish color
   global._setMockCtx?.(ctx);
 
-  const img  = makeMockImage(100, 50);
+  const img = makeMockImage(100, 50);
   const grid = imageToGrid(img, { cellSize: 10 });
 
-  assert(grid.grid === 'grid',            'format identifier correct');
-  assert(grid.version === '0.1.0',        'version correct');
-  assert(Array.isArray(grid.frames),      'has frames array');
-  assert(grid.frames.length >= 1,         'at least one frame');
-  assert(grid.canvas.width  === 10,       'gridWidth = floor(100/10) = 10');
-  assert(grid.canvas.height === 5,        'gridHeight = floor(50/10) = 5');
-  assert(typeof grid.meta.id === 'string','has meta.id');
+  assert(grid.grid === 'grid', 'format identifier correct');
+  assert(grid.version === '0.1.0', 'version correct');
+  assert(Array.isArray(grid.frames), 'has frames array');
+  assert(grid.frames.length >= 1, 'at least one frame');
+  assert(grid.canvas.width === 10, 'gridWidth = floor(100/10) = 10');
+  assert(grid.canvas.height === 5, 'gridHeight = floor(50/10) = 5');
+  assert(typeof grid.meta.id === 'string', 'has meta.id');
   assert(grid.meta.name === 'Imported Image', 'default project name');
 }
 
@@ -190,10 +190,10 @@ section('imageToGrid — cell channels');
 
 {
   // Use bright red (255,0,0) — high brightness → light char (near end of ramp)
-  const ctx  = makeMockCtx(255, 0, 0);
+  const ctx = makeMockCtx(255, 0, 0);
   global._setMockCtx?.(ctx);
 
-  const img  = makeMockImage(20, 10);
+  const img = makeMockImage(20, 10);
   const grid = imageToGrid(img, { cellSize: 10 });
   const frame = grid.frames[0];
 
@@ -201,10 +201,18 @@ section('imageToGrid — cell channels');
   // Expected non-space char
   if (frame.cells.length > 0) {
     const cell = frame.cells[0];
-    assert(typeof cell.char  === 'string' && cell.char.length > 0, 'cell has char');
+    assert(typeof cell.char === 'string' && cell.char.length > 0, 'cell has char');
     assert(typeof cell.color === 'string' && /^#[0-9a-f]{6}$/.test(cell.color), 'cell has hex color');
     assert(typeof cell.density === 'number' && cell.density >= 0 && cell.density <= 1, 'density in [0,1]');
-    assert(typeof cell.semantic === 'string' && cell.semantic.length > 0,              'cell has semantic');
+    assert(typeof cell.semantic === 'string' && cell.semantic.length > 0, 'cell has semantic');
+
+    // Fix A Verification
+    assert(cell.channel && cell.channel.audio, 'cell has audio channel');
+    assert(typeof cell.channel.audio.note === 'number', 'audio has note');
+    assert(typeof cell.channel.audio.velocity === 'number', 'audio has velocity');
+    assert(cell.channel.spatial, 'cell has spatial channel');
+    assert(typeof cell.channel.spatial.height === 'number', 'spatial has height');
+    assertEqual(cell.channel.spatial.material, cell.semantic, 'spatial material matches semantic');
   } else {
     // All bright pixels map to space — that is also valid (sparse grid)
     assert(true, 'imageToGrid ran without error (all space cells skipped)');
@@ -218,10 +226,10 @@ section('imageToGrid — cell channels');
 section('imageToGrid — dark image uses dark char');
 
 {
-  const ctx  = makeMockCtx(0, 0, 0);   // pure black
+  const ctx = makeMockCtx(0, 0, 0);   // pure black
   global._setMockCtx?.(ctx);
 
-  const img  = makeMockImage(10, 10);
+  const img = makeMockImage(10, 10);
   const grid = imageToGrid(img, { cellSize: 10 });
   const frame = grid.frames[0];
 
@@ -242,10 +250,10 @@ section('imageToGrid — dark image uses dark char');
 section('imageToGrid — white image produces empty frame');
 
 {
-  const ctx  = makeMockCtx(255, 255, 255);   // pure white
+  const ctx = makeMockCtx(255, 255, 255);   // pure white
   global._setMockCtx?.(ctx);
 
-  const img  = makeMockImage(10, 10);
+  const img = makeMockImage(10, 10);
   const grid = imageToGrid(img, { cellSize: 10 });
   const frame = grid.frames[0];
 
@@ -261,17 +269,17 @@ section('imageToGrid — contrast adjustment');
 
 {
   // Mid-grey with high contrast — should push toward extremes
-  const ctx  = makeMockCtx(200, 200, 200);   // fairly bright
+  const ctx = makeMockCtx(200, 200, 200);   // fairly bright
   global._setMockCtx?.(ctx);
 
-  const imgLow  = makeMockImage(10, 10);
+  const imgLow = makeMockImage(10, 10);
   const imgHigh = makeMockImage(10, 10);
 
-  const gridLow  = imageToGrid(imgLow,  { cellSize: 10, contrast: 0   });
+  const gridLow = imageToGrid(imgLow, { cellSize: 10, contrast: 0 });
   const gridHigh = imageToGrid(imgHigh, { cellSize: 10, contrast: 150 });
 
   // Both valid grids
-  assert(gridLow.frames.length  >= 1, 'low contrast: valid grid');
+  assert(gridLow.frames.length >= 1, 'low contrast: valid grid');
   assert(gridHigh.frames.length >= 1, 'high contrast: valid grid');
 }
 
@@ -282,10 +290,10 @@ section('imageToGrid — contrast adjustment');
 section('imageToGrid — custom charRamp');
 
 {
-  const ctx  = makeMockCtx(0, 0, 0);   // black
+  const ctx = makeMockCtx(0, 0, 0);   // black
   global._setMockCtx?.(ctx);
 
-  const img  = makeMockImage(10, 10);
+  const img = makeMockImage(10, 10);
   const grid = imageToGrid(img, { cellSize: 10, charRamp: 'X ' });
   const frame = grid.frames[0];
 
@@ -303,13 +311,13 @@ section('imageToGrid — custom charRamp');
 section('imageToGrid — forced dimensions');
 
 {
-  const ctx  = makeMockCtx(128, 128, 128);
+  const ctx = makeMockCtx(128, 128, 128);
   global._setMockCtx?.(ctx);
 
-  const img  = makeMockImage(100, 80);
+  const img = makeMockImage(100, 80);
   const grid = imageToGrid(img, { gridWidth: 20, gridHeight: 10 });
 
-  assertEqual(grid.canvas.width,  20, 'gridWidth override respected');
+  assertEqual(grid.canvas.width, 20, 'gridWidth override respected');
   assertEqual(grid.canvas.height, 10, 'gridHeight override respected');
 }
 
@@ -320,10 +328,10 @@ section('imageToGrid — forced dimensions');
 section('imageToGrid — projectName');
 
 {
-  const ctx  = makeMockCtx(0, 0, 0);
+  const ctx = makeMockCtx(0, 0, 0);
   global._setMockCtx?.(ctx);
 
-  const img  = makeMockImage(10, 10);
+  const img = makeMockImage(10, 10);
   const grid = imageToGrid(img, { cellSize: 10, projectName: 'My Photo' });
 
   assertEqual(grid.meta.name, 'My Photo', 'projectName set in meta.name');

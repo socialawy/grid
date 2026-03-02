@@ -89,18 +89,18 @@ function makeSamplingCanvas(width, height) {
  */
 function imageToGrid(imageElement, options = {}) {
   const {
-    charRamp      = DEFAULT_CHAR_RAMP,
-    cellSize      = 10,
-    contrast      = 0,
-    defaultColor  = '#00ff00',
-    projectName   = 'Imported Image',
+    charRamp = DEFAULT_CHAR_RAMP,
+    cellSize = 10,
+    contrast = 0,
+    defaultColor = '#00ff00',
+    projectName = 'Imported Image',
   } = options;
 
-  const ramp       = [...charRamp];
+  const ramp = [...charRamp];
   const rampLength = ramp.length;
 
   // --- Image dimensions ---
-  const imgWidth  = imageElement.naturalWidth  ?? imageElement.width;
+  const imgWidth = imageElement.naturalWidth ?? imageElement.width;
   const imgHeight = imageElement.naturalHeight ?? imageElement.height;
 
   if (!imgWidth || !imgHeight) {
@@ -112,15 +112,15 @@ function imageToGrid(imageElement, options = {}) {
   ctx.drawImage(imageElement, 0, 0);
 
   // --- Grid dimensions ---
-  let gridWidth  = options.gridWidth  ?? Math.max(1, Math.floor(imgWidth  / cellSize));
+  let gridWidth = options.gridWidth ?? Math.max(1, Math.floor(imgWidth / cellSize));
   let gridHeight = options.gridHeight ?? Math.max(1, Math.floor(imgHeight / cellSize));
 
   // Clamp to .grid spec limits (1–1000)
-  gridWidth  = Math.min(1000, Math.max(1, gridWidth));
+  gridWidth = Math.min(1000, Math.max(1, gridWidth));
   gridHeight = Math.min(1000, Math.max(1, gridHeight));
 
   // Sampling block size per cell (may differ from cellSize if dimensions forced)
-  const blockW = imgWidth  / gridWidth;
+  const blockW = imgWidth / gridWidth;
   const blockH = imgHeight / gridHeight;
 
   // Charset: unique chars from ramp (ensures grid can render every char)
@@ -130,7 +130,7 @@ function imageToGrid(imageElement, options = {}) {
   const contrastFactor = (100 + contrast) / 100;
 
   // --- Create grid ---
-  let grid  = createGrid(gridWidth, gridHeight, charset, defaultColor, { name: projectName });
+  let grid = createGrid(gridWidth, gridHeight, charset, defaultColor, { name: projectName });
   let frame = grid.frames[0];
 
   // --- Sample each cell block ---
@@ -149,7 +149,7 @@ function imageToGrid(imageElement, options = {}) {
         continue;
       }
 
-      const data  = imageData.data;
+      const data = imageData.data;
       let rSum = 0, gSum = 0, bSum = 0, count = 0;
 
       for (let i = 0; i < data.length; i += 4) {
@@ -192,7 +192,14 @@ function imageToGrid(imageElement, options = {}) {
       // Semantic inferred from char character class
       const semantic = inferSemantic(char);
 
-      frame = setCell(frame, cx, cy, { char, color, density, semantic });
+      // Channel data for audio and spatial consumers
+      const note = Math.round((1 - cy / gridHeight) * 127);
+      const channel = {
+        audio: { note, velocity: Math.round(density * 127), duration: 1 },
+        spatial: { height: density, material: semantic }
+      };
+
+      frame = setCell(frame, cx, cy, { char, color, density, semantic, channel });
     }
   }
 
