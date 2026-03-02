@@ -184,6 +184,11 @@ async function runAllTests() {
       name: 'glTF Exporter (Task 6.4 - THREE.Scene to glTF/glb)',
       file: 'test-gltf-exporter.js',
       environment: 'node'
+    },
+    {
+      name: 'Video Exporter (Task 6.5 - WebCodecs MP4 Encoding)',
+      file: 'test-video-exporter.js',
+      environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {

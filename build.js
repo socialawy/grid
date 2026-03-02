@@ -34,14 +34,14 @@ const MODULES = [
   'src/exporters/svg-exporter.js',
   'src/exporters/midi-exporter.js',
   'src/exporters/gltf-exporter.js',
-  // 'src/exporters/video-exporter.js',
+  'src/exporters/video-exporter.js',
 ];
 
 const SHELL = {
-  head:  'src/shell/head.html',
+  head: 'src/shell/head.html',
   style: 'src/shell/style.css',
-  body:  'src/shell/body.html',
-  app:   'src/shell/app.js',
+  body: 'src/shell/body.html',
+  app: 'src/shell/app.js',
 };
 
 const OUT = 'dist/index.html';
@@ -85,10 +85,10 @@ function inlineModule(relPath) {
     console.warn(`  ⚠  Missing: ${relPath} — skipped`);
     return `\n    // ⚠ MISSING MODULE: ${relPath}\n`;
   }
-  const raw  = readFileSync(full, 'utf8');
-  const src  = stripModuleDestructuring(stripEsm(raw));
+  const raw = readFileSync(full, 'utf8');
+  const src = stripModuleDestructuring(stripEsm(raw));
   const name = relPath.replace(/^src\//, '').replace(/\.js$/, '');
-  const sep  = '='.repeat(60);
+  const sep = '='.repeat(60);
   return `\n    // ${sep}\n    // ${name}\n    // ${sep}\n${src}\n`;
 }
 
@@ -105,10 +105,10 @@ function readShell(key) {
 // ── Build ─────────────────────────────────────────────────────────────
 console.log('[GRID] Building dist/index.html...');
 
-const head    = readShell('head');
-const style   = readShell('style');
-const body    = readShell('body');
-const app     = stripEsm(readShell('app'));
+const head = readShell('head');
+const style = readShell('style');
+const body = readShell('body');
+const app = stripEsm(readShell('app'));
 const modules = MODULES.map(inlineModule).join('\n');
 
 const html = [
@@ -136,7 +136,7 @@ const outPath = join(__dirname, OUT);
 writeFileSync(outPath, html, 'utf8');
 
 const lineCount = html.split('\n').length;
-const kb        = (Buffer.byteLength(html, 'utf8') / 1024).toFixed(1);
-const present   = MODULES.filter(m => existsSync(join(__dirname, m))).length;
+const kb = (Buffer.byteLength(html, 'utf8') / 1024).toFixed(1);
+const present = MODULES.filter(m => existsSync(join(__dirname, m))).length;
 console.log(`  ✓  dist/index.html — ${lineCount} lines, ${kb} KB`);
 console.log(`  ✓  Modules inlined: ${present}/${MODULES.length}`);

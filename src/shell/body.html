@@ -173,16 +173,76 @@
     </div>
   </div>
 
-  <!-- Import/Export Modal -->
-  <div class="modal-overlay" id="jsonModal">
+  <!-- Import Modal -->
+  <div class="modal-overlay" id="importModal">
     <div class="modal">
-      <h2 id="jsonModalTitle">Export</h2>
-      <textarea id="jsonArea"></textarea>
+      <h2>Import .grid</h2>
+      <textarea id="importArea"></textarea>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-        <button onclick="closeModal('jsonModal')">Close</button>
-        <button id="jsonCopyBtn" onclick="copyJson()">📋 Copy</button>
-        <button id="jsonLoadBtn" onclick="loadJson()" style="display:none">📥 Load</button>
-        <button id="jsonDownloadBtn" onclick="downloadJson()">💾 Download</button>
+        <button onclick="closeModal('importModal')">Close</button>
+        <button onclick="loadJson()">📥 Load</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Modal -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal" style="max-width:520px">
+      <h2>Export</h2>
+      <div class="export-tabs">
+        <button class="export-tab active" data-tab="json">JSON</button>
+        <button class="export-tab" data-tab="svg">SVG</button>
+        <button class="export-tab" data-tab="png">PNG</button>
+        <button class="export-tab" data-tab="midi" id="midiTabBtn">MIDI</button>
+        <button class="export-tab" data-tab="gltf" id="gltfTabBtn">glTF</button>
+        <button class="export-tab" data-tab="video" id="videoTabBtn">Video</button>
+      </div>
+      <div class="export-panels">
+        <!-- JSON panel (existing behavior) -->
+        <div class="export-panel active" id="exportJson">
+          <textarea id="jsonArea" rows="10"></textarea>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+            <button onclick="copyJson()">Copy</button>
+            <button onclick="downloadJson()">Download .grid</button>
+          </div>
+        </div>
+        <!-- SVG panel -->
+        <div class="export-panel" id="exportSvg">
+          <label>Font size: <input type="number" id="svgFontSize" value="14" min="8" max="48" style="width:60px"> px</label>
+          <label>Background: <input type="color" id="svgBg" value="#0a0a1a" style="width:40px">
+            <label><input type="checkbox" id="svgTransparent"> Transparent</label>
+          </label>
+          <label><input type="checkbox" id="svgGridLines"> Show grid lines</label>
+          <div style="margin-top:8px"><button onclick="doExportSvg()">Download .svg</button></div>
+        </div>
+        <!-- PNG panel -->
+        <div class="export-panel" id="exportPng">
+          <p style="color:var(--dim)">Downloads the current canvas view as a PNG image.</p>
+          <div style="margin-top:8px"><button onclick="exportPng()">Download .png</button></div>
+        </div>
+        <!-- MIDI panel -->
+        <div class="export-panel" id="exportMidi">
+          <p style="color:var(--dim)">Export note events as a Standard MIDI File (.mid).<br>Play the grid in Music mode first to generate note data.</p>
+          <div style="margin-top:8px"><button onclick="doExportMidi()" id="midiExportBtn">Download .mid</button></div>
+        </div>
+        <!-- glTF panel -->
+        <div class="export-panel" id="exportGltf">
+          <label><input type="checkbox" id="gltfBinary" checked> Binary (.glb) — smaller, Blender-ready</label>
+          <div style="margin-top:8px"><button onclick="doExportGltf()" id="gltfExportBtn">Download .glb</button></div>
+        </div>
+        <!-- Video panel -->
+        <div class="export-panel" id="exportVideo">
+          <label>FPS: <input type="number" id="videoFps" value="10" min="1" max="60" style="width:60px"></label>
+          <label>Bitrate: <input type="number" id="videoBitrate" value="2000000" step="500000" style="width:100px"> bps</label>
+          <div id="videoProgress" style="display:none;margin-top:8px">
+            <progress id="videoBar" value="0" max="100" style="width:100%"></progress>
+            <span id="videoStatus">Encoding...</span>
+          </div>
+          <div style="margin-top:8px"><button onclick="doExportVideo()" id="videoExportBtn">Encode MP4</button></div>
+        </div>
+      </div>
+      <div style="text-align:right;margin-top:8px">
+        <button onclick="closeModal('exportModal')">Close</button>
       </div>
     </div>
   </div>

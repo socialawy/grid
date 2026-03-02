@@ -88,7 +88,7 @@ function createRenderer(canvasEl, grid, options = {}) {
 
   return {
     render, next, prev, goTo, play, pause, stop, toggle, eventToGrid, setGridRef, setFontSize, setShowGrid, setFps,
-    get current() { return currentFrame }, get count() { return grid.frames.length }, get playing() { return isPlaying }, get cellSize() { return { w: cellW, h: cellH } }, setPlayheadColumn
+    get current() { return currentFrame }, get count() { return grid.frames.length }, get playing() { return isPlaying }, get cellSize() { return { w: cellW, h: cellH } }, get canvas() { return canvasEl; }, setPlayheadColumn
   };
 }
 

@@ -50,7 +50,7 @@ B.0  Verify build output in browser (gate)
 
 ---
 
-## Task B.0 — Verify Build Output (Gate)
+## Task B.0 — Verify Build Output (Gate) (x)
 
 **Files:**
 - Read: `dist/index.html` (generated)
@@ -90,7 +90,7 @@ Open DevTools → Console. There should be zero `SyntaxError`, `ReferenceError`,
 
 ---
 
-## Task B.1 — Add midi-output.js to Build
+## Task B.1 — Add midi-output.js to Build (x)
 
 **Files:**
 - Modify: `build.js:28-31`
@@ -229,7 +229,7 @@ git commit -m "feat(export): add SVG exporter — grid frame to vector SVG"
 
 ---
 
-## Task 6.2 — MIDI File Exporter
+## Task 6.2 — MIDI File Exporter (x)
 
 **Files:**
 - Create: `src/exporters/midi-exporter.js`
@@ -299,7 +299,7 @@ git commit -m "feat(export): add MIDI file exporter — NoteEvent[] to .mid bina
 
 ---
 
-## Task 6.3 — PNG Export (inline)
+## Task 6.3 — PNG Export (inline) (x)
 
 **Files:**
 - Modify: `src/shell/app.js` (add ~10 lines)
@@ -341,7 +341,7 @@ git commit -m "feat(export): add PNG export — canvas.toBlob download"
 
 ---
 
-## Task 6.4 — glTF Exporter
+## Task 6.4 — glTF Exporter (x)
 
 **Files:**
 - Create: `src/exporters/gltf-exporter.js`
@@ -360,88 +360,9 @@ git commit -m "feat(export): add PNG export — canvas.toBlob download"
  * glTF Exporter tests — Task 6.4
  * Uses mock THREE objects. Tests wrapper logic, not THREE internals.
  */
-
-let passed = 0, failed = 0;
-const results = [];
-
-function assert(cond, msg) {
-  if (cond) { passed++; results.push({ status: 'pass', name: msg }); }
-  else { failed++; results.push({ status: 'fail', name: msg }); console.error('  FAIL:', msg); }
-}
-
-// ── Mock THREE.GLTFExporter ──────────────────────
-class MockGLTFExporter {
-  parse(scene, onDone, onError, opts) {
-    if (scene._fail) { onError(new Error('mock fail')); return; }
-    if (opts && opts.binary) {
-      onDone(new ArrayBuffer(8));  // mock .glb
-    } else {
-      onDone({ asset: { version: '2.0' } });  // mock .gltf JSON
-    }
-  }
-}
-
-// Setup global mocks
-global.window = global.window || {};
-global.THREE = global.THREE || {};
-global.THREE.GLTFExporter = MockGLTFExporter;
-
-import { sceneToGltf, isGltfExportAvailable, gltfExportDefaults } from '../src/exporters/gltf-exporter.js';
-
-console.log('\n🧪 glTF Exporter (Task 6.4)\n' + '='.repeat(50));
-
-// ── availability ──────────────────────────────────
-{
-  assert(isGltfExportAvailable() === true, 'available when THREE.GLTFExporter exists');
-}
-
-// ── defaults ──────────────────────────────────────
-{
-  const d = gltfExportDefaults();
-  assert(d.binary === true, 'default binary = true (.glb)');
-  assert(d.onlyVisible === true, 'default onlyVisible = true');
-}
-
-// ── binary export → ArrayBuffer ───────────────────
-{
-  const scene = { type: 'Scene' };
-  const result = await sceneToGltf(scene, { binary: true });
-  assert(result.ok === true, 'binary export succeeds');
-  assert(result.data instanceof ArrayBuffer, 'binary export returns ArrayBuffer');
-}
-
-// ── JSON export → object ──────────────────────────
-{
-  const scene = { type: 'Scene' };
-  const result = await sceneToGltf(scene, { binary: false });
-  assert(result.ok === true, 'JSON export succeeds');
-  assert(typeof result.data === 'object', 'JSON export returns object');
-  assert(result.data.asset.version === '2.0', 'glTF version 2.0');
-}
-
-// ── error handling ────────────────────────────────
-{
-  const scene = { type: 'Scene', _fail: true };
-  const result = await sceneToGltf(scene);
-  assert(result.ok === false, 'failed export returns ok:false');
-  assert(typeof result.error === 'string', 'error message present');
-}
-
-// ── unavailable when no GLTFExporter ──────────────
-{
-  const saved = global.THREE.GLTFExporter;
-  delete global.THREE.GLTFExporter;
-  // Re-check availability (function reads global at call time)
-  // Note: isGltfExportAvailable checks window.THREE or global.THREE
-  assert(isGltfExportAvailable() === false, 'unavailable when GLTFExporter missing');
-  global.THREE.GLTFExporter = saved;
-}
-
-console.log(`\ntest-gltf-exporter.js: ${passed} passed, ${failed} failed\n`);
-export { results, passed, failed };
 ```
 
-**Step 2: Create the exporter**
+### Step 2: Create the exporter
 
 Create `src/exporters/gltf-exporter.js`:
 
@@ -454,54 +375,6 @@ Create `src/exporters/gltf-exporter.js`:
  *
  * @module gltf-exporter
  */
-
-function gltfExportDefaults() {
-  return { binary: true, onlyVisible: true };
-}
-
-function _getGLTFExporter() {
-  if (typeof THREE !== 'undefined' && THREE.GLTFExporter) return THREE.GLTFExporter;
-  if (typeof window !== 'undefined' && window.THREE && window.THREE.GLTFExporter) return window.THREE.GLTFExporter;
-  if (typeof global !== 'undefined' && global.THREE && global.THREE.GLTFExporter) return global.THREE.GLTFExporter;
-  return null;
-}
-
-function isGltfExportAvailable() {
-  return _getGLTFExporter() !== null;
-}
-
-/**
- * Export a THREE.Scene to glTF or glb.
- *
- * @param {Object} scene - THREE.Scene
- * @param {Object} [opts] - { binary: true, onlyVisible: true }
- * @returns {Promise<{ok: boolean, data?: ArrayBuffer|Object, error?: string}>}
- */
-function sceneToGltf(scene, opts = {}) {
-  const o = { ...gltfExportDefaults(), ...opts };
-  const Exporter = _getGLTFExporter();
-  if (!Exporter) {
-    return Promise.resolve({ ok: false, error: 'THREE.GLTFExporter not available' });
-  }
-  return new Promise(resolve => {
-    const exporter = new Exporter();
-    exporter.parse(
-      scene,
-      data => resolve({ ok: true, data }),
-      err => resolve({ ok: false, error: err.message || String(err) }),
-      { binary: o.binary, onlyVisible: o.onlyVisible }
-    );
-  });
-}
-
-// Universal export
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { sceneToGltf, isGltfExportAvailable, gltfExportDefaults };
-}
-if (typeof window !== 'undefined') {
-  window.GltfExporter = { sceneToGltf, isGltfExportAvailable, gltfExportDefaults };
-}
-export { sceneToGltf, isGltfExportAvailable, gltfExportDefaults };
 ```
 
 **Step 3: Add GLTFExporter CDN to head.html**

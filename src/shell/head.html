@@ -21,3 +21,11 @@
       document.head.appendChild(s);
     })();
   </script>
+  <script type="module">
+    if (typeof window.VideoEncoder !== 'undefined') {
+      import('https://cdn.jsdelivr.net/npm/mp4box/dist/mp4box.all.min.js').then(module => {
+        window.MP4Box = module.default || module;
+      }).catch(e => console.error('GRID: Failed to load MP4Box', e));
+    }
+  </script>
+</head>

@@ -14,7 +14,7 @@ let is3DMode = false;
 let sceneBuilder = null;
 let _autoSaveTimer = null;
 
-const COLORS = ['#00ff88','#00aaff','#ff4466','#ffcc00','#ff44ff','#44ffff','#ffffff','#ff8800','#88ff00','#8844ff','#ff0000','#00ff00','#4488ff','#888888','#cccccc','#444444'];
+const COLORS = ['#00ff88', '#00aaff', '#ff4466', '#ffcc00', '#ff44ff', '#44ffff', '#ffffff', '#ff8800', '#88ff00', '#8844ff', '#ff0000', '#00ff00', '#4488ff', '#888888', '#cccccc', '#444444'];
 
 // ================================================================
 // INITIALIZATION
@@ -42,11 +42,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   const mode3dBtn = document.getElementById('mode3dBtn');
   if (mode3dBtn) mode3dBtn.addEventListener('click', toggle3DMode);
 
-  ['camOrbit','camTop','camFlyover'].forEach(id => {
+  ['camOrbit', 'camTop', 'camFlyover'].forEach(id => {
     const btn = document.getElementById(id);
     if (btn) btn.addEventListener('click', () => {
-      if (sceneBuilder) sceneBuilder.setCameraPreset(id.replace('cam','').toLowerCase());
-      ['camOrbit','camTop','camFlyover'].forEach(pid => document.getElementById(pid).classList.remove('active'));
+      if (sceneBuilder) sceneBuilder.setCameraPreset(id.replace('cam', '').toLowerCase());
+      ['camOrbit', 'camTop', 'camFlyover'].forEach(pid => document.getElementById(pid).classList.remove('active'));
       btn.classList.add('active');
     });
   });
@@ -62,7 +62,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   }
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
+    navigator.serviceWorker.register('./sw.js').catch(() => { });
   }
 });
 
@@ -255,8 +255,8 @@ function updateCellInfo(x, y) {
   const frame = grid.frames[renderer.current];
   const cell = getCell(frame, x, y);
   if (cell) {
-    el.innerHTML = `<b>(${x},${y})</b> char:"${cell.char}" den:${(cell.density||0).toFixed(2)}<br>` +
-      `<span class="sem-dot sem-${cell.semantic||'solid'}"></span>${cell.semantic||'solid'} col:${cell.color||grid.canvas.defaultColor}`;
+    el.innerHTML = `<b>(${x},${y})</b> char:"${cell.char}" den:${(cell.density || 0).toFixed(2)}<br>` +
+      `<span class="sem-dot sem-${cell.semantic || 'solid'}"></span>${cell.semantic || 'solid'} col:${cell.color || grid.canvas.defaultColor}`;
   } else {
     el.innerHTML = `<b>(${x},${y})</b> <i>default</i>`;
   }
@@ -276,7 +276,8 @@ function addNewFrame() {
 
 function duplicateFrame() {
   const src = grid.frames[renderer.current];
-  const dup = { ...JSON.parse(JSON.stringify(src)),
+  const dup = {
+    ...JSON.parse(JSON.stringify(src)),
     id: 'frame_' + String(grid.frames.length + 1).padStart(3, '0'),
     index: grid.frames.length, label: (src.label || '') + ' (copy)'
   };
@@ -330,7 +331,7 @@ function stopPlayback() {
 }
 
 function keyToMidi(key) {
-  const map = {C:60,'C#':61,D:62,'D#':63,E:64,F:65,'F#':66,G:67,'G#':68,A:69,'A#':70,B:71};
+  const map = { C: 60, 'C#': 61, D: 62, 'D#': 63, E: 64, F: 65, 'F#': 66, G: 67, 'G#': 68, A: 69, 'A#': 70, B: 71 };
   return map[key] ?? 60;
 }
 
@@ -426,26 +427,17 @@ function generate(type) {
 // IMPORT / EXPORT
 // ================================================================
 function exportGrid() {
-  document.getElementById('jsonModalTitle').textContent = 'Export .grid';
-  document.getElementById('jsonArea').value = serializeGrid(grid);
-  document.getElementById('jsonLoadBtn').style.display = 'none';
-  document.getElementById('jsonDownloadBtn').style.display = '';
-  document.getElementById('jsonCopyBtn').style.display = '';
-  openModal('jsonModal');
+  showExportModal();
 }
 
 function importGrid() {
-  document.getElementById('jsonModalTitle').textContent = 'Import .grid';
-  document.getElementById('jsonArea').value = '';
-  document.getElementById('jsonLoadBtn').style.display = '';
-  document.getElementById('jsonDownloadBtn').style.display = 'none';
-  document.getElementById('jsonCopyBtn').style.display = 'none';
-  openModal('jsonModal');
+  document.getElementById('importArea').value = '';
+  openModal('importModal');
   const fi = document.getElementById('fileInput');
   fi.onchange = (e) => {
     const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => { document.getElementById('jsonArea').value = ev.target.result; loadJson(); };
+    reader.onload = (ev) => { document.getElementById('importArea').value = ev.target.result; loadJson(); };
     reader.readAsText(file); fi.value = '';
   };
   fi.click();
@@ -453,12 +445,12 @@ function importGrid() {
 
 function loadJson() {
   try {
-    const imported = deserializeProject(document.getElementById('jsonArea').value);
+    const imported = deserializeProject(document.getElementById('importArea').value);
     grid = imported;
     clearCurrentHandle();
     renderer.setGridRef(grid);
     buildCharPalette(); updateUI();
-    closeModal('jsonModal'); scheduleAutoSave();
+    closeModal('importModal'); scheduleAutoSave();
     if (is3DMode) exit3DMode();
     setStatus('Project imported: ' + grid.meta.name);
   } catch (e) { setStatus('Import error: ' + e.message, true); }
@@ -471,26 +463,122 @@ function copyJson() {
 
 function downloadJson() {
   const blob = new Blob([serializeGrid(grid)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = (grid.meta.name || 'project').replace(/[^a-zA-Z0-9_-]/g, '_') + '.grid';
-  a.click(); URL.revokeObjectURL(url);
-  setStatus('Downloaded: ' + a.download);
+  downloadBlob(blob, (grid.meta.name || 'project').replace(/[^a-zA-Z0-9_-]/g, '_') + '.grid');
+  setStatus('Downloaded JSON');
 }
 
 function exportPng() {
   const canvas = document.getElementById('gridCanvas');
   if (!canvas) return;
   canvas.toBlob(blob => {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = (grid.meta.name || 'grid').replace(/[^a-zA-Z0-9_-]/g, '_') + '.png';
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadBlob(blob, (grid.meta.name || 'grid').replace(/[^a-zA-Z0-9_-]/g, '_') + '.png');
     setStatus('PNG downloaded');
   }, 'image/png');
+}
+
+// ── Export modal tab switching ────────────────────
+function showExportModal() {
+  // Set initial state
+  document.getElementById('jsonArea').value = serializeGrid(grid);
+  // Conditional enables
+  const hasMidi = true; // MIDI export always available (uses frameToNoteEvents)
+  const hasGltf = typeof isGltfExportAvailable !== 'undefined' && isGltfExportAvailable() && sceneBuilder;
+  const hasVideo = typeof VideoEncoder !== 'undefined' && typeof window.MP4Box !== 'undefined';
+  document.getElementById('midiTabBtn').disabled = !hasMidi;
+  document.getElementById('gltfTabBtn').disabled = !hasGltf;
+  document.getElementById('videoTabBtn').disabled = !hasVideo;
+  switchExportTab('json');
+  openModal('exportModal');
+}
+
+function switchExportTab(tab) {
+  document.querySelectorAll('.export-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.export-panel').forEach(p => p.classList.toggle('active', p.id === 'export' + tab.charAt(0).toUpperCase() + tab.slice(1)));
+}
+
+// Wire tab clicks
+document.querySelectorAll('.export-tab').forEach(btn => {
+  btn.addEventListener('click', () => { if (!btn.disabled) switchExportTab(btn.dataset.tab); });
+});
+
+function doExportSvg() {
+  const opts = {
+    fontSize: +document.getElementById('svgFontSize').value || 14,
+    background: document.getElementById('svgTransparent').checked
+      ? 'transparent' : document.getElementById('svgBg').value,
+    includeGrid: document.getElementById('svgGridLines').checked,
+    frameIndex: renderer ? renderer.current : 0,
+  };
+  const svg = gridToSvg(grid, opts);
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  downloadBlob(blob, (grid.meta.name || 'grid') + '.svg');
+}
+
+function doExportMidi() {
+  const events = frameToNoteEvents(grid, renderer.current, {
+    bpm: grid.project.bpm || 120,
+    scale: grid.project.scale || 'chromatic',
+    rootNote: keyToMidi(grid.project.key || 'C'),
+    subdivision: 4
+  });
+  if (!events.length) { setStatus('No notes in frame', true); return; }
+  const buf = noteEventsToMidi(events, {
+    bpm: grid.project.bpm || 120,
+    trackName: grid.meta.name || 'GRID Export',
+  });
+  const blob = new Blob([buf], { type: 'audio/midi' });
+  downloadBlob(blob, (grid.meta.name || 'grid') + '.mid');
+}
+
+async function doExportGltf() {
+  if (!sceneBuilder) { setStatus('Enter 3D mode first', true); return; }
+  const binary = document.getElementById('gltfBinary').checked;
+  const result = await sceneToGltf(sceneBuilder.getScene(), { binary });
+  if (!result.ok) { setStatus('glTF export failed: ' + result.error, true); return; }
+  const ext = binary ? '.glb' : '.gltf';
+  const type = binary ? 'model/gltf-binary' : 'model/gltf+json';
+  const data = binary ? result.data : JSON.stringify(result.data, null, 2);
+  const blob = new Blob([data], { type });
+  downloadBlob(blob, (grid.meta.name || 'grid') + ext);
+}
+
+async function doExportVideo() {
+  if (typeof gridToMp4 !== 'function') { setStatus('Video export not available', true); return; }
+  const btn = document.getElementById('videoExportBtn');
+  const bar = document.getElementById('videoBar');
+  const status = document.getElementById('videoStatus');
+  const prog = document.getElementById('videoProgress');
+  btn.disabled = true;
+  prog.style.display = 'block';
+  try {
+    const isMusic = playbackMode === 'music';
+    const bpm = grid.project?.bpm || 120;
+
+    const blob = await gridToMp4(grid, renderer, {
+      fps: +document.getElementById('videoFps').value || 10,
+      bitrate: +document.getElementById('videoBitrate').value || 2000000,
+      musicMode: isMusic,
+      bpm: bpm
+    }, (done, total) => {
+      bar.value = (done / total) * 100;
+      status.textContent = `Encoding... ${done}/${total}`;
+    });
+    downloadBlob(blob, (grid.meta.name || 'grid') + '.mp4');
+    setStatus('MP4 exported');
+  } catch (e) {
+    setStatus('Video export error: ' + e.message, true);
+  }
+  btn.disabled = false;
+  prog.style.display = 'none';
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // ================================================================

@@ -393,6 +393,17 @@
       resize: vertical
     }
 
+    .export-tabs { display: flex; gap: 2px; margin-bottom: 12px; flex-wrap: wrap; }
+    .export-tab {
+      padding: 4px 10px; background: var(--surface); border: 1px solid var(--border);
+      color: var(--dim); cursor: pointer; font-size: 12px;
+    }
+    .export-tab.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .export-tab:disabled { opacity: 0.3; cursor: not-allowed; }
+    .export-panel { display: none; }
+    .export-panel.active { display: block; }
+    .export-panel label { display: block; margin: 6px 0; font-size: 13px; }
+
     /* PROJECT BROWSER */
     .project-list {
       list-style: none;
