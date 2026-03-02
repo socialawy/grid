@@ -174,6 +174,11 @@ async function runAllTests() {
       name: 'SVG Exporter (Task 6.1 - grid frame to vector SVG)',
       file: 'test-svg-exporter.js',
       environment: 'node'
+    },
+    {
+      name: 'MIDI File Exporter (Task 6.2 - NoteEvent[] to Standard MIDI File)',
+      file: 'test-midi-exporter.js',
+      environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {

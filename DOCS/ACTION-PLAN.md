@@ -699,3 +699,20 @@ node build.js
 
 ---
 
+## Task 6.2 — MIDI File Exporter ✅ COMPLETE
+
+**Files:**
+- Create: `src/exporters/midi-exporter.js` (✅)
+- Create: `tests/test-midi-exporter.js` (✅)
+- Modify: `build.js` (uncomment MIDI line) (✅)
+- Modify: `tests/run-all.js` (add suite) (✅)
+
+**What it does:** Takes `NoteEvent[]` (from music-mapper) + BPM → produces a `Uint8Array` containing a Standard MIDI File (Type 0, single track). Pure binary buffer generation, zero DOM, zero Web MIDI API.
+
+**Status:** 
+- ✅ MIDI exporter implemented and tested (32/32 tests pass)
+- ✅ Successfully wired into build system (16/16 modules inlined)
+- ✅ Added to test runner (661 total tests passing)
+- ✅ Build generates 6,482 lines, 205.6 KB
+- ✅ Uses NoteEvent time property (no synth dependency)
+- ✅ Proper time→ticks mapping: `tick = Math.round(time / (60/bpm) * ticksPerBeat)`

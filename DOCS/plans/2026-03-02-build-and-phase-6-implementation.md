@@ -168,151 +168,6 @@ git commit -m "fix(build): add midi-output.js to MODULES list"
  * SVG Exporter tests — Task 6.1
  * Pure Node, zero DOM.
  */
-
-import { gridToSvg, svgExportDefaults } from '../src/exporters/svg-exporter.js';
-import GridCore from '../src/core/grid-core.js';
-
-const { createGrid, setCell } = GridCore;
-
-let passed = 0, failed = 0;
-const results = [];
-
-function assert(cond, msg) {
-  if (cond) { passed++; results.push({ status: 'pass', name: msg }); }
-  else { failed++; results.push({ status: 'fail', name: msg }); console.error('  FAIL:', msg); }
-}
-
-// ── Helpers ───────────────────────────────────────────────
-function makeGrid(w, h) {
-  return createGrid(w, h, '@#. ', '#00ff88', { name: 'test' });
-}
-
-// ── Tests ─────────────────────────────────────────────────
-console.log('\n🧪 SVG Exporter (Task 6.1)\n' + '='.repeat(50));
-
-// --- defaults ---
-{
-  const d = svgExportDefaults();
-  assert(d.fontSize === 14, 'default fontSize is 14');
-  assert(d.fontFamily.includes('monospace'), 'default fontFamily includes monospace');
-  assert(d.background === '#0a0a1a', 'default background is dark');
-  assert(d.includeGrid === false, 'grid lines off by default');
-  assert(d.frameIndex === 0, 'default frame is 0');
-}
-
-// --- empty grid ---
-{
-  const g = makeGrid(3, 2);
-  const svg = gridToSvg(g);
-  assert(svg.startsWith('<svg'), 'output starts with <svg');
-  assert(svg.endsWith('</svg>'), 'output ends with </svg>');
-  assert(svg.includes('xmlns="http://www.w3.org/2000/svg"'), 'has SVG namespace');
-  assert(!svg.includes('<text'), 'empty grid has no <text> elements');
-}
-
-// --- single cell ---
-{
-  const g = makeGrid(5, 5);
-  g.frames[0] = setCell(g.frames[0], 0, 0, { char: '@', color: '#ff0000' });
-  const svg = gridToSvg(g);
-  assert(svg.includes('<text'), 'has <text> element');
-  assert(svg.includes('fill="#ff0000"'), 'cell color as fill');
-  assert(svg.includes('>@</text>'), 'cell char as text content');
-}
-
-// --- viewBox dimensions ---
-{
-  const g = makeGrid(10, 8);
-  const svg = gridToSvg(g, { fontSize: 16 });
-  // viewBox should be "0 0 (10*16*0.6) (8*16)" = "0 0 96 128"
-  // charWidth = fontSize * 0.6
-  assert(svg.includes('viewBox="0 0 96 128"'), 'viewBox matches grid dimensions x fontSize');
-}
-
-// --- custom background ---
-{
-  const g = makeGrid(2, 2);
-  const svg = gridToSvg(g, { background: '#ffffff' });
-  assert(svg.includes('fill="#ffffff"'), 'custom background color in rect');
-}
-
-// --- transparent background ---
-{
-  const g = makeGrid(2, 2);
-  const svg = gridToSvg(g, { background: 'transparent' });
-  assert(!svg.includes('<rect'), 'no background rect when transparent');
-}
-
-// --- grid lines ---
-{
-  const g = makeGrid(3, 3);
-  const svg = gridToSvg(g, { includeGrid: true });
-  assert(svg.includes('<line'), 'grid lines rendered as <line> elements');
-}
-
-// --- no grid lines by default ---
-{
-  const g = makeGrid(3, 3);
-  const svg = gridToSvg(g);
-  assert(!svg.includes('<line'), 'no grid lines by default');
-}
-
-// --- multiple cells preserve order ---
-{
-  const g = makeGrid(4, 4);
-  g.frames[0] = setCell(g.frames[0], 0, 0, { char: 'A', color: '#ff0000' });
-  g.frames[0] = setCell(g.frames[0], 0, 1, { char: 'B', color: '#00ff00' });
-  g.frames[0] = setCell(g.frames[0], 0, 2, { char: 'C', color: '#0000ff' });
-  const svg = gridToSvg(g);
-  const aIdx = svg.indexOf('>A</text>');
-  const bIdx = svg.indexOf('>B</text>');
-  const cIdx = svg.indexOf('>C</text>');
-  assert(aIdx < bIdx && bIdx < cIdx, 'cells rendered in row-major order');
-}
-
-// --- frame index selects correct frame ---
-{
-  const g = makeGrid(3, 3);
-  g.frames[0] = setCell(g.frames[0], 0, 0, { char: 'X', color: '#111111' });
-  // Add a second frame
-  const f1 = { id: GridCore.generateId(), cells: [{ x: 0, y: 0, char: 'Y', color: '#222222' }] };
-  g.frames.push(f1);
-  const svg0 = gridToSvg(g, { frameIndex: 0 });
-  const svg1 = gridToSvg(g, { frameIndex: 1 });
-  assert(svg0.includes('>X</text>'), 'frame 0 has X');
-  assert(svg1.includes('>Y</text>'), 'frame 1 has Y');
-  assert(!svg0.includes('>Y</text>'), 'frame 0 does not have Y');
-}
-
-// --- special chars are XML-escaped ---
-{
-  const g = makeGrid(3, 3);
-  g.frames[0] = setCell(g.frames[0], 0, 0, { char: '<', color: '#aaaaaa' });
-  g.frames[0] = setCell(g.frames[0], 0, 1, { char: '&', color: '#bbbbbb' });
-  const svg = gridToSvg(g);
-  assert(svg.includes('&lt;'), '< is escaped to &lt;');
-  assert(svg.includes('&amp;'), '& is escaped to &amp;');
-}
-
-// --- font family option ---
-{
-  const g = makeGrid(2, 2);
-  const svg = gridToSvg(g, { fontFamily: 'IBM Plex Mono' });
-  assert(svg.includes('font-family="IBM Plex Mono"'), 'custom font family applied');
-}
-
-// --- output is valid standalone SVG ---
-{
-  const g = makeGrid(2, 2);
-  g.frames[0] = setCell(g.frames[0], 0, 0, { char: '#', color: '#00ff88' });
-  const svg = gridToSvg(g);
-  assert(svg.includes('xmlns'), 'has xmlns');
-  assert(svg.split('<text').length === 2, 'exactly one <text> element for one cell');
-}
-
-// ── Summary ───────────────────────────────────────────────
-console.log(`\ntest-svg-exporter.js: ${passed} passed, ${failed} failed\n`);
-export { results, passed, failed };
 ```
 
 **Step 2: Run test — verify it fails**
@@ -322,7 +177,7 @@ node tests/test-svg-exporter.js
 ```
 Expected: `Error: Cannot find module '../src/exporters/svg-exporter.js'`
 
-**Step 3: Create the exporter**
+### Step 3: Create the exporter
 
 Create `src/exporters/svg-exporter.js`:
 
@@ -337,105 +192,16 @@ Create `src/exporters/svg-exporter.js`:
  */
 
 const CHAR_WIDTH_RATIO = 0.6;  // monospace char width ≈ 0.6 × fontSize
-
-function svgExportDefaults() {
-  return {
-    fontSize: 14,
-    fontFamily: 'Courier New, monospace',
-    background: '#0a0a1a',
-    includeGrid: false,
-    frameIndex: 0,
-  };
-}
-
-function escapeXml(str) {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-/**
- * Convert a .grid frame to an SVG string.
- *
- * @param {Object} grid - A .grid object
- * @param {Object} [opts] - Export options (see svgExportDefaults)
- * @returns {string} Complete <svg>...</svg> markup
- */
-function gridToSvg(grid, opts = {}) {
-  const o = { ...svgExportDefaults(), ...opts };
-  const { fontSize, fontFamily, background, includeGrid, frameIndex } = o;
-
-  const cols = grid.canvas.width;
-  const rows = grid.canvas.height;
-  const charW = fontSize * CHAR_WIDTH_RATIO;
-  const charH = fontSize;
-  const w = cols * charW;
-  const h = rows * charH;
-
-  const parts = [];
-
-  // SVG open tag
-  parts.push(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" ` +
-    `width="${w}" height="${h}" font-family="${fontFamily}" font-size="${fontSize}">`
-  );
-
-  // Background rect
-  if (background !== 'transparent') {
-    parts.push(`<rect width="${w}" height="${h}" fill="${background}"/>`);
-  }
-
-  // Grid lines
-  if (includeGrid) {
-    const lineColor = '#333';
-    for (let x = 0; x <= cols; x++) {
-      parts.push(`<line x1="${x * charW}" y1="0" x2="${x * charW}" y2="${h}" stroke="${lineColor}" stroke-width="0.5"/>`);
-    }
-    for (let y = 0; y <= rows; y++) {
-      parts.push(`<line x1="0" y1="${y * charH}" x2="${w}" y2="${y * charH}" stroke="${lineColor}" stroke-width="0.5"/>`);
-    }
-  }
-
-  // Cells — read from the selected frame
-  const frame = grid.frames[frameIndex] || grid.frames[0];
-  if (frame && frame.cells) {
-    // Sort cells row-major for deterministic output
-    const sorted = [...frame.cells].sort((a, b) => a.y - b.y || a.x - b.x);
-    for (const cell of sorted) {
-      const cx = cell.x * charW + charW * 0.5;
-      const cy = cell.y * charH + charH * 0.85;  // baseline offset
-      const fill = cell.color || grid.canvas.defaultColor || '#ffffff';
-      parts.push(
-        `<text x="${cx}" y="${cy}" fill="${fill}" text-anchor="middle">` +
-        `${escapeXml(cell.char)}</text>`
-      );
-    }
-  }
-
-  parts.push('</svg>');
-  return parts.join('\n');
-}
-
-// Universal export
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { gridToSvg, svgExportDefaults };
-}
-if (typeof window !== 'undefined') {
-  window.SvgExporter = { gridToSvg, svgExportDefaults };
-}
-export { gridToSvg, svgExportDefaults };
 ```
 
-**Step 4: Run test — verify it passes**
+### Step 4: Run test — verify it passes
 
 ```bash
 node tests/test-svg-exporter.js
 ```
 Expected: all tests pass.
 
-**Step 5: Wire into build and test runner**
+### Step 5: Wire into build and test runner
 
 In `build.js`, uncomment the SVG exporter line:
 ```javascript
@@ -481,219 +247,16 @@ git commit -m "feat(export): add SVG exporter — grid frame to vector SVG"
  * MIDI File Exporter tests — Task 6.2
  * Pure Node, zero DOM. Tests SMF binary generation.
  */
-
-import { noteEventsToMidi, midiExportDefaults } from '../src/exporters/midi-exporter.js';
-
-let passed = 0, failed = 0;
-const results = [];
-
-function assert(cond, msg) {
-  if (cond) { passed++; results.push({ status: 'pass', name: msg }); }
-  else { failed++; results.push({ status: 'fail', name: msg }); console.error('  FAIL:', msg); }
-}
-
-function assertEq(a, b, msg) {
-  assert(a === b, `${msg} (got ${a}, expected ${b})`);
-}
-
-console.log('\n🧪 MIDI File Exporter (Task 6.2)\n' + '='.repeat(50));
-
-// ── Helpers ────────────────────────────────────────
-function makeEvent(time, note, velocity = 100, duration = 1, channel = 0) {
-  return { time, note, velocity, duration, channel };
-}
-
-// ── defaults ───────────────────────────────────────
-{
-  const d = midiExportDefaults();
-  assertEq(d.bpm, 120, 'default BPM');
-  assertEq(d.ticksPerBeat, 480, 'default ticks per beat');
-  assert(typeof d.trackName === 'string', 'default trackName is string');
-}
-
-// ── empty events → valid MIDI file ─────────────────
-{
-  const buf = noteEventsToMidi([]);
-  assert(buf instanceof Uint8Array, 'returns Uint8Array');
-  assert(buf.length > 0, 'non-empty for empty events');
-  // SMF header: MThd
-  assertEq(buf[0], 0x4D, 'byte 0 = M');
-  assertEq(buf[1], 0x54, 'byte 1 = T');
-  assertEq(buf[2], 0x68, 'byte 2 = h');
-  assertEq(buf[3], 0x64, 'byte 3 = d');
-}
-
-// ── header chunk structure ─────────────────────────
-{
-  const buf = noteEventsToMidi([]);
-  // Header length: 6 bytes
-  assertEq(buf[7], 6, 'header data length = 6');
-  // Format type 0
-  assertEq(buf[9], 0, 'format type = 0 (single track)');
-  // 1 track
-  assertEq(buf[11], 1, 'number of tracks = 1');
-}
-
-// ── track chunk present ────────────────────────────
-{
-  const buf = noteEventsToMidi([]);
-  // MTrk at byte 14
-  assertEq(buf[14], 0x4D, 'track byte 0 = M');
-  assertEq(buf[15], 0x54, 'track byte 1 = T');
-  assertEq(buf[16], 0x72, 'track byte 2 = r');
-  assertEq(buf[17], 0x6B, 'track byte 3 = k');
-}
-
-// ── single note produces note-on and note-off ──────
-{
-  const events = [makeEvent(0, 60, 100, 1)];
-  const buf = noteEventsToMidi(events, { bpm: 120, ticksPerBeat: 480 });
-  assert(buf.length > 22, 'output has data beyond headers');
-  // Scan for note-on (0x90) and note-off (0x80)
-  let hasNoteOn = false, hasNoteOff = false;
-  for (let i = 14; i < buf.length; i++) {
-    if ((buf[i] & 0xF0) === 0x90) hasNoteOn = true;
-    if ((buf[i] & 0xF0) === 0x80) hasNoteOff = true;
-  }
-  assert(hasNoteOn, 'contains note-on event');
-  assert(hasNoteOff, 'contains note-off event');
-}
-
-// ── note pitch and velocity preserved ──────────────
-{
-  const events = [makeEvent(0, 72, 110, 1)];
-  const buf = noteEventsToMidi(events);
-  // Find note-on (0x90), next byte = note, next = velocity
-  let found = false;
-  for (let i = 14; i < buf.length - 2; i++) {
-    if ((buf[i] & 0xF0) === 0x90 && buf[i + 1] === 72 && buf[i + 2] === 110) {
-      found = true;
-      break;
-    }
-  }
-  assert(found, 'note 72, velocity 110 found in note-on');
-}
-
-// ── multiple notes sorted by time ────────────────
-{
-  const events = [
-    makeEvent(0, 60, 100, 1),
-    makeEvent(1, 64, 90, 1),
-    makeEvent(2, 67, 80, 1),
-  ];
-  const buf = noteEventsToMidi(events);
-  // All three notes should be present
-  let noteOns = 0;
-  for (let i = 14; i < buf.length; i++) {
-    if ((buf[i] & 0xF0) === 0x90 && buf[i + 2] > 0) noteOns++;
-  }
-  assertEq(noteOns, 3, '3 note-on events for 3 notes');
-}
-
-// ── MIDI channels mapped correctly ─────────────────
-{
-  const events = [makeEvent(0, 60, 100, 1, 3)];
-  const buf = noteEventsToMidi(events);
-  let found = false;
-  for (let i = 14; i < buf.length - 2; i++) {
-    if (buf[i] === (0x90 | 3) && buf[i + 1] === 60) {
-      found = true;
-      break;
-    }
-  }
-  assert(found, 'channel 3 encoded in status byte (0x93)');
-}
-
-// ── tempo meta-event present ───────────────────────
-{
-  const buf = noteEventsToMidi([], { bpm: 140 });
-  // Tempo meta event: FF 51 03 xx xx xx
-  let hasTempo = false;
-  for (let i = 14; i < buf.length - 5; i++) {
-    if (buf[i] === 0xFF && buf[i + 1] === 0x51 && buf[i + 2] === 0x03) {
-      hasTempo = true;
-      // microseconds per beat = 60000000 / 140 ≈ 428571
-      const uspb = (buf[i + 3] << 16) | (buf[i + 4] << 8) | buf[i + 5];
-      const expectedUspb = Math.round(60000000 / 140);
-      assert(Math.abs(uspb - expectedUspb) < 2, `tempo meta = ${uspb} ≈ ${expectedUspb}`);
-      break;
-    }
-  }
-  assert(hasTempo, 'tempo meta-event present');
-}
-
-// ── end-of-track marker ────────────────────────────
-{
-  const buf = noteEventsToMidi([makeEvent(0, 60, 100, 1)]);
-  // Last 3 bytes should be: FF 2F 00
-  const len = buf.length;
-  assertEq(buf[len - 3], 0xFF, 'end-of-track: FF');
-  assertEq(buf[len - 2], 0x2F, 'end-of-track: 2F');
-  assertEq(buf[len - 1], 0x00, 'end-of-track: 00');
-}
-
-// ── round-trip: note count ─────────────────────────
-{
-  const events = [];
-  for (let i = 0; i < 10; i++) events.push(makeEvent(i, 48 + i, 80, 1));
-  const buf = noteEventsToMidi(events);
-  let noteOns = 0, noteOffs = 0;
-  for (let i = 14; i < buf.length; i++) {
-    if ((buf[i] & 0xF0) === 0x90 && buf[i + 2] > 0) noteOns++;
-    if ((buf[i] & 0xF0) === 0x80) noteOffs++;
-  }
-  assertEq(noteOns, 10, '10 note-ons');
-  assertEq(noteOffs, 10, '10 note-offs');
-}
-
-// ── clamps note to 0-127 ──────────────────────────
-{
-  const events = [makeEvent(0, 200, 100, 1), makeEvent(1, -5, 50, 1)];
-  const buf = noteEventsToMidi(events);
-  let notes = [];
-  for (let i = 14; i < buf.length - 2; i++) {
-    if ((buf[i] & 0xF0) === 0x90 && buf[i + 2] > 0) notes.push(buf[i + 1]);
-  }
-  assert(notes.every(n => n >= 0 && n <= 127), 'all notes clamped to 0-127');
-}
-
-// ── custom BPM changes tick spacing ────────────────
-{
-  const events = [makeEvent(0, 60, 100, 1), makeEvent(1, 64, 100, 1)];
-  const fast = noteEventsToMidi(events, { bpm: 240 });
-  const slow = noteEventsToMidi(events, { bpm: 60 });
-  // Different BPMs should produce different tempo meta-events
-  // but same tick structure (ticks are relative to tempo)
-  assert(fast.length > 0 && slow.length > 0, 'both BPMs produce valid output');
-}
-
-// ── track name meta-event ──────────────────────────
-{
-  const buf = noteEventsToMidi([], { trackName: 'TestTrack' });
-  // Track name: FF 03 len bytes
-  let hasName = false;
-  for (let i = 14; i < buf.length - 3; i++) {
-    if (buf[i] === 0xFF && buf[i + 1] === 0x03) {
-      hasName = true;
-      break;
-    }
-  }
-  assert(hasName, 'track name meta-event present');
-}
-
-// ── Summary ───────────────────────────────────────
-console.log(`\ntest-midi-exporter.js: ${passed} passed, ${failed} failed\n`);
-export { results, passed, failed };
 ```
 
-**Step 2: Run test — verify it fails**
+### Step 2: Run test — verify it fails
 
 ```bash
 node tests/test-midi-exporter.js
 ```
 Expected: module not found error.
 
-**Step 3: Implement the exporter**
+### Step 3: Implement the exporter
 
 Create `src/exporters/midi-exporter.js`:
 
@@ -708,130 +271,20 @@ Create `src/exporters/midi-exporter.js`:
  * @module midi-exporter
  */
 
-function midiExportDefaults() {
-  return {
-    bpm: 120,
-    ticksPerBeat: 480,
-    trackName: 'GRID Export',
-  };
-}
-
-function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
-
-// ── Variable-length quantity encoding (MIDI spec) ────────
-function writeVLQ(value) {
-  if (value < 0) value = 0;
-  const bytes = [];
-  bytes.push(value & 0x7F);
-  value >>= 7;
-  while (value > 0) {
-    bytes.push((value & 0x7F) | 0x80);
-    value >>= 7;
-  }
-  bytes.reverse();
-  return bytes;
-}
-
-// ── Write big-endian uint16/uint32 ───────────────────────
-function u16(v) { return [(v >> 8) & 0xFF, v & 0xFF]; }
-function u32(v) { return [(v >> 24) & 0xFF, (v >> 16) & 0xFF, (v >> 8) & 0xFF, v & 0xFF]; }
-
-/**
- * Convert NoteEvent[] to a Standard MIDI File (Type 0).
- *
- * @param {Array} events - [{time, note, velocity, duration, channel}]
- * @param {Object} [opts] - {bpm, ticksPerBeat, trackName}
- * @returns {Uint8Array} SMF binary data
- */
-function noteEventsToMidi(events, opts = {}) {
-  const o = { ...midiExportDefaults(), ...opts };
-  const { bpm, ticksPerBeat, trackName } = o;
-
-  // ── Build track data ────────────────────────────────
-  const trackBytes = [];
-
-  // Track name meta-event: FF 03 len name
-  const nameBytes = Array.from(new TextEncoder().encode(trackName));
-  trackBytes.push(0x00);  // delta time 0
-  trackBytes.push(0xFF, 0x03, nameBytes.length, ...nameBytes);
-
-  // Tempo meta-event: FF 51 03 tt tt tt
-  const usPerBeat = Math.round(60000000 / bpm);
-  trackBytes.push(0x00);  // delta time 0
-  trackBytes.push(0xFF, 0x51, 0x03);
-  trackBytes.push((usPerBeat >> 16) & 0xFF, (usPerBeat >> 8) & 0xFF, usPerBeat & 0xFF);
-
-  // Sort events by time, then by note (for deterministic output)
-  const sorted = [...events].sort((a, b) => a.time - b.time || a.note - b.note);
-
-  // Convert note events to MIDI messages with absolute tick positions
-  const midiMsgs = [];
-  for (const ev of sorted) {
-    const note = clamp(Math.round(ev.note), 0, 127);
-    const vel = clamp(Math.round(ev.velocity), 1, 127);
-    const ch = clamp(ev.channel || 0, 0, 15);
-    const startTick = Math.round(ev.time / (60 / bpm) * ticksPerBeat);
-    const durTicks = Math.max(1, Math.round((ev.duration || 1) * ticksPerBeat));
-
-    midiMsgs.push({ tick: startTick, data: [0x90 | ch, note, vel] });      // note on
-    midiMsgs.push({ tick: startTick + durTicks, data: [0x80 | ch, note, 0] }); // note off
-  }
-
-  // Sort all messages by absolute tick
-  midiMsgs.sort((a, b) => a.tick - b.tick);
-
-  // Write messages with delta times
-  let prevTick = 0;
-  for (const msg of midiMsgs) {
-    const delta = msg.tick - prevTick;
-    trackBytes.push(...writeVLQ(delta));
-    trackBytes.push(...msg.data);
-    prevTick = msg.tick;
-  }
-
-  // End of track: FF 2F 00
-  trackBytes.push(0x00, 0xFF, 0x2F, 0x00);
-
-  // ── Assemble file ───────────────────────────────────
-  const headerChunk = [
-    0x4D, 0x54, 0x68, 0x64,  // MThd
-    ...u32(6),                 // header length
-    ...u16(0),                 // format type 0
-    ...u16(1),                 // 1 track
-    ...u16(ticksPerBeat),      // ticks per beat
-  ];
-
-  const trackChunk = [
-    0x4D, 0x54, 0x72, 0x6B,   // MTrk
-    ...u32(trackBytes.length),  // track length
-    ...trackBytes,
-  ];
-
-  return new Uint8Array([...headerChunk, ...trackChunk]);
-}
-
-// Universal export
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { noteEventsToMidi, midiExportDefaults };
-}
-if (typeof window !== 'undefined') {
-  window.MidiExporter = { noteEventsToMidi, midiExportDefaults };
-}
-export { noteEventsToMidi, midiExportDefaults };
 ```
 
-**Step 4: Run test — verify it passes**
+### Step 4: Run test — verify it passes
 
 ```bash
 node tests/test-midi-exporter.js
 ```
 Expected: all tests pass.
 
-**Step 5: Wire into build and test runner**
+### Step 5: Wire into build and test runner
 
 In `build.js`, uncomment the MIDI exporter line. In `tests/run-all.js`, add the import.
 
-**Step 6: Full build + test**
+### Step 6: Full build + test
 
 ```bash
 node build.js && node tests/run-all.js
