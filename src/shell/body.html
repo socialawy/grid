@@ -1,0 +1,298 @@
+<body>
+
+  <div class="header">
+    <h1>▦ GRID</h1>
+    <span class="meta" id="projectMeta">Untitled — 40×20</span>
+    <div style="display:flex;gap:4px">
+      <button onclick="toggleMobileSidebar()" class="small" id="menuBtn" style="display:none">☰</button>
+      <button onclick="showProjectBrowser()" class="small">Projects</button>
+      <button onclick="showNewProjectModal()" class="small">New</button>
+      <button onclick="importGrid()" class="small">Import</button>
+      <button onclick="importImage()" class="small">📷 Image</button>
+      <button onclick="exportGrid()" class="small">Export</button>
+      <button onclick="showProjectSettings()" class="small" title="Ctrl+,">Settings</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="sidebar" id="sidebar">
+
+      <section>
+        <h3>Character</h3>
+        <div class="char-palette" id="charPalette"></div>
+      </section>
+
+      <section>
+        <h3>Color</h3>
+        <div class="color-palette" id="colorPalette"></div>
+        <div style="margin-top:6px">
+          <label>Custom</label>
+          <input type="text" id="customColor" value="#00ff88" style="width:100%" oninput="selectColor(this.value)">
+        </div>
+      </section>
+
+      <section>
+        <h3>Brush</h3>
+        <label>Semantic</label>
+        <select id="semSelect">
+          <option value="">Auto-infer</option>
+          <option value="solid">⬤ Solid</option>
+          <option value="void">○ Void</option>
+          <option value="fluid">◎ Fluid</option>
+          <option value="emissive">✦ Emissive</option>
+          <option value="entity">◆ Entity</option>
+          <option value="control">◇ Control</option>
+          <option value="boundary">▮ Boundary</option>
+        </select>
+        <label style="margin-top:6px">Density Override</label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="densityOverride">
+          <input type="range" id="densitySlider" min="0" max="100" value="50" style="flex:1">
+          <span id="densityVal" style="font-size:11px;width:30px">0.50</span>
+        </div>
+        <label style="margin-top:6px">Eraser</label>
+        <button id="eraserBtn" onclick="toggleEraser()" class="small">🧹 Eraser Off</button>
+      </section>
+
+      <section>
+        <h3>Generators</h3>
+        <div style="margin-bottom:6px">
+          <label>Color Mode</label>
+          <select id="genColorMode" style="width:100%">
+            <option value="fixed">Fixed (selected color)</option>
+            <option value="mono">Mono (hue-matched)</option>
+            <option value="derived">Derived (geometry hue)</option>
+          </select>
+        </div>
+        <div class="gen-grid">
+          <button onclick="generate('spiral')">🌀 Spiral</button>
+          <button onclick="generate('wave')">🌊 Wave</button>
+          <button onclick="generate('mandala')">❋ Mandala</button>
+          <button onclick="generate('noise')">▓ Noise</button>
+          <button onclick="generate('geometric')">◆ Geometric</button>
+          <button onclick="generate('rain')">🌧 Rain</button>
+          <button onclick="generate('gradient')">▤ Gradient</button>
+          <button onclick="generate('pulse')">◎ Pulse</button>
+          <button onclick="generate('matrix')">⌨ Matrix</button>
+          <button onclick="generate('terrain')">⛰ Terrain</button>
+          <button onclick="clearFrame()">✕ Clear</button>
+        </div>
+      </section>
+
+      <section>
+        <h3>Image Import</h3>
+        <button onclick="importImage()" style="width:100%">📷 Image → Grid</button>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">Converts a photo to ASCII art using pixel sampling
+        </div>
+      </section>
+
+      <section>
+        <h3>Display</h3>
+        <label>Font Size: <span id="fontSizeVal">14</span>px</label>
+        <input type="range" id="fontSizeSlider" min="6" max="32" value="14" oninput="updateFontSize(+this.value)">
+        <label style="margin-top:6px">
+          <input type="checkbox" id="showGridCheck" onchange="toggleGridLines()"> Grid Lines
+        </label>
+      </section>
+
+      <section>
+        <h3>Info</h3>
+        <div id="cellInfo" style="font-size:11px;color:var(--dim)">Hover a cell</div>
+      </section>
+    </div>
+
+    <div class="canvas-area">
+      <div class="toolbar">
+        <div class="playback">
+          <button onclick="prevFrameAction()" class="small">◀</button>
+          <button onclick="togglePlayback()" class="small" id="playBtn">▶ Play</button>
+          <button onclick="nextFrameAction()" class="small">▶</button>
+          <button onclick="stopPlayback()" class="small">⏹</button>
+        </div>
+        <div class="sep"></div>
+        <button id="modeToggleBtn" onclick="togglePlaybackMode()" class="small"
+          title="Switch between frame animation and music playback">Frames</button>
+        <div class="sep"></div>
+        <label style="margin:0;display:flex;align-items:center;gap:4px">
+          FPS <input type="number" id="fpsInput" value="10" min="1" max="60" style="width:45px"
+            onchange="updateFps(+this.value)">
+        </label>
+        <!-- Camera preset controls — shown only in 3D mode -->
+        <span id="cameraPresets">
+          <button id="camOrbit" title="Orbit view">⊙ Orbit</button>
+          <button id="camTop" title="Top view">⊤ Top</button>
+          <button id="camFlyover" title="Flyover">↗ Fly</button>
+        </span>
+
+        <div class="sep"></div>
+        <button onclick="addNewFrame()" class="small">+ Frame</button>
+        <button onclick="duplicateFrame()" class="small">⧉ Dupe</button>
+        <button onclick="deleteCurrentFrame()" class="small">✕ Del</button>
+        <div class="sep"></div>
+        <button id="mode3dBtn" title="3D View" hidden>🧊 3D</button>
+        <div class="sep"></div>
+        <span id="frameLabel" style="font-size:11px;color:var(--dim)">Frame 1/1</span>
+      </div>
+
+      <div class="canvas-wrap" id="canvasWrap">
+        <!-- Phase 4: Spatial 3D Support -->
+        <div id="viewport3d"></div>
+        <canvas id="gridCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-strip" id="frameStrip"></div>
+
+  <div class="status">
+    <span id="statusLeft">Ready</span>
+    <span id="statusCenter"></span>
+    <span id="statusRight">.grid v0.1.0</span>
+  </div>
+
+  <!-- New Project Modal -->
+  <div class="modal-overlay" id="newProjectModal">
+    <div class="modal">
+      <h2>New Project</h2>
+      <label>Name</label>
+      <input type="text" id="npName" value="Untitled" style="width:100%;margin-bottom:8px">
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <div style="flex:1"><label>Width</label><input type="number" id="npWidth" value="40" min="1" max="1000"
+            style="width:100%"></div>
+        <div style="flex:1"><label>Height</label><input type="number" id="npHeight" value="20" min="1" max="1000"
+            style="width:100%"></div>
+      </div>
+      <label>Charset</label>
+      <input type="text" id="npCharset" value="@#$%&*+=-.~:;|/\^░▒▓█ " style="width:100%;margin-bottom:8px">
+      <label>Default Character</label>
+      <input type="text" id="npDefaultChar" value=" " maxlength="1" style="width:60px;margin-bottom:12px">
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="closeModal('newProjectModal')">Cancel</button>
+        <button onclick="createNewProject()" style="border-color:var(--accent);color:var(--accent)">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import/Export Modal -->
+  <div class="modal-overlay" id="jsonModal">
+    <div class="modal">
+      <h2 id="jsonModalTitle">Export</h2>
+      <textarea id="jsonArea"></textarea>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+        <button onclick="closeModal('jsonModal')">Close</button>
+        <button id="jsonCopyBtn" onclick="copyJson()">📋 Copy</button>
+        <button id="jsonLoadBtn" onclick="loadJson()" style="display:none">📥 Load</button>
+        <button id="jsonDownloadBtn" onclick="downloadJson()">💾 Download</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Browser Modal -->
+  <div class="modal-overlay" id="projectBrowserModal">
+    <div class="modal" style="max-width:550px">
+      <h2>Projects</h2>
+      <div id="projectListContainer">
+        <div class="project-empty">Loading...</div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button onclick="closeModal('projectBrowserModal')">Close</button>
+        <button onclick="showNewProjectModal();closeModal('projectBrowserModal')"
+          style="border-color:var(--accent);color:var(--accent)">+ New Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Settings Modal -->
+  <div class="modal-overlay" id="projectSettingsModal">
+    <div class="modal">
+      <h2>Project Settings</h2>
+      <div class="settings-grid full">
+        <div>
+          <label>Project Name</label>
+          <input type="text" id="psName" style="width:100%">
+        </div>
+      </div>
+      <div class="settings-grid">
+        <div>
+          <label>BPM</label>
+          <input type="number" id="psBpm" min="1" max="999" style="width:100%">
+        </div>
+        <div>
+          <label>Key</label>
+          <select id="psKey" style="width:100%">
+            <option value="C">C</option>
+            <option value="C#">C#</option>
+            <option value="D">D</option>
+            <option value="D#">D#</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="F#">F#</option>
+            <option value="G">G</option>
+            <option value="G#">G#</option>
+            <option value="A">A</option>
+            <option value="A#">A#</option>
+            <option value="B">B</option>
+          </select>
+        </div>
+      </div>
+      <div class="settings-grid">
+        <div>
+          <label>Scale</label>
+          <select id="psScale" style="width:100%">
+            <option value="chromatic">Chromatic</option>
+            <option value="major">Major</option>
+            <option value="minor">Minor</option>
+            <option value="pentatonic">Pentatonic</option>
+          </select>
+        </div>
+        <div>
+          <label>Charset</label>
+          <input type="text" id="psCharset" style="width:100%">
+        </div>
+      </div>
+      <div class="settings-grid full" style="margin-top:4px">
+        <div>
+          <label>Palette Colors (comma-separated hex)</label>
+          <input type="text" id="psPalette" placeholder="#ff0000,#00ff00,#0000ff" style="width:100%">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button onclick="closeModal('projectSettingsModal')">Cancel</button>
+        <button onclick="applyProjectSettings()" style="border-color:var(--accent);color:var(--accent)">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="fileInput" accept=".grid,.json" style="display:none">
+  <input type="file" id="imageFileInput" accept="image/*" style="display:none">
+
+  <!-- Image Import Modal -->
+  <div class="modal-overlay" id="imageImportModal">
+    <div class="modal">
+      <h2>📷 Image → .grid</h2>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <div style="flex:1"><label>Cell Size (px)</label>
+          <input type="number" id="imgCellSize" value="10" min="2" max="64" style="width:100%"
+            oninput="renderImagePreview()">
+        </div>
+        <div style="flex:1"><label>Contrast (-100–200)</label>
+          <input type="number" id="imgContrast" value="0" min="-100" max="200" style="width:100%"
+            oninput="renderImagePreview()">
+        </div>
+      </div>
+      <label>Char Ramp (dark → light)</label>
+      <input type="text" id="imgCharRamp" value="@%#*+=-:. " style="width:100%;margin-bottom:8px"
+        oninput="renderImagePreview()">
+      <label>Preview</label>
+      <div id="imgPreview"
+        style="font-size:8px;line-height:1.1;white-space:pre;overflow:hidden;max-height:120px;background:#000;color:#0f0;padding:6px;border:1px solid var(--border);border-radius:3px;margin-bottom:8px;font-family:'Courier New',monospace">
+        Select an image to preview...</div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="closeModal('imageImportModal')">Cancel</button>
+        <button id="imgApplyBtn" onclick="applyImageImport()"
+          style="border-color:var(--accent);color:var(--accent);display:none">✓ Apply to Current Frame</button>
+        <button id="imgNewBtn" onclick="applyImageImport(true)"
+          style="border-color:var(--accent2);color:var(--accent2);display:none">+ Apply as New Project</button>
+      </div>
+    </div>
+  </div>

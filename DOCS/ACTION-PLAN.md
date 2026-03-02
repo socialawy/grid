@@ -594,56 +594,6 @@ reads them in the right order.
 Phase 6 adds to this list — exporters slot in at positions 18–21,
 before app.js.
 
-### The Build Script: `build.js`
-
-### Tests pass, build runs, 13/13 modules inlined. Two errors to fix:
-- Error 1: inferSemantic has already been declared (line 2282)
-The build inlines grid-core.js which defines inferSemantic, then app.js still contains the old inline copy of it. The extraction captured app.js starting at line 2060, but some grid-core functions were also inlined in that region.
-- Error 2: showNewProjectModal is not defined
-The generators block (lines 2535+) was in the old file after app state but is now missing from app.js — the extraction stopped at 3152 but the generators UI wiring and modal functions live further down or were in a different region.
-
-### The generators module (lines 2535–2709) sits inside the app.js range AND gets re-inlined by build.js.
-- The fix is to change the APP_START in the migration script — but since migration already ran, the cleaner fix is to strip the duplicate block from src/shell/app.js directly, and update build.js to note this pattern.
-The exact range to delete from src/shell/app.js is lines that correspond to original file lines 2535–2709. In app.js (which starts at original line 2060), that's lines 476–650 of app.js.
-
-Clean boundaries. Now write the PowerShell fix — a small targeted script that removes lines 476–650 from src/shell/app.js
-
-
-### inferSemantic is still being declared twice.
-- The generators block was removed from app.js but inferSemantic is also defined inside canvas-renderer.js or another module that's being inlined. Let me find all declarations:
-
-- Root cause confirmed. src/generators/generators.js declares inferSemantic (and likely calcDensity) locally so it can run standalone in Node tests. When build.js inlines it after grid-core.js, the symbol is declared twice.
-The right fix is in build.js — add a deduplication step that strips known grid-core re-declarations from subsequent modules
-
-- What changed: dedupeGridCore() runs after stripEsm() on every module except grid-core.js itself. It replaces any single-line function inferSemantic(...) or const inferSemantic = ... declarations with a comment marker, so the symbol is only declared once — by grid-core.js. The original function body is gone but irrelevant since grid-core's version is already in scope.
-
-### The dedup regex isn't matching — the declaration at line 2282 is either multi-line or has different whitespace.
-
--  Line 19: const { inferSemantic } = GridCore; — this is a destructuring assignment, not a function declaration. The stripEsm function strips the import GridCore line but leaves the destructuring, which then redeclares inferSemantic that grid-core already declared as a plain function.
-The fix is simple: strip const { ... } = GridCore; lines in dedupeGridCore.
-
-- The actual bug: generators.js line 19 was const { inferSemantic } = GridCore; — a destructuring assignment. stripEsm correctly removed the import GridCore line above it, but left the destructuring intact, which re-declared inferSemantic as a const in the same scope where grid-core.js had already declared it as a function. const can't shadow a function declaration — hence the error.
-The new dedupeGridCore now explicitly strips any const { ... } = GridCore line, which is the correct pattern to remove.
-
-### The pattern is clear now — multiple src/ modules use the same const { X } = GridCore pattern. Rather than whack-a-mole,
-
-- The problem is structural: build.js is doing surgery on files it hasn't seen, fixing one duplicate at a time. Every new src/ file that imports from grid-core will hit the same issue. Whack-a-mole indefinitely.
-
-### The clean approach after restore:
-Instead of stripping duplicates at build time, fix it at the source — make grid-core.js expose a global window.GridCore object, and have all other modules pull from that when the import is stripped. That's the universal export pattern that was already planned.
-The sequence:
-
-1. git restore dist/index.html — back to working state
-2. Check src/core/grid-core.js  — verify it already does window.GridCore = { inferSemantic, calcDensity, ... }
-3. If yes: build.js just needs one additional line after inlining grid-core — nothing else changes
-4. If no: add that one export to grid-core.js, then build
-
-The working dist/index.html already proved the functions coexist fine when inlined manually — because the manual inline only declared each function once. The build system just needs to replicate that, not fight the module boundaries.
-
-----
-
-# Decision: One more round to fix, plan phase 6 ahead. No git restore yet.
-
 ----
 
 # Build System Fix + Phase 6 Export Pipeline — Implementation Plan
@@ -656,24 +606,7 @@ The working dist/index.html already proved the functions coexist fine when inlin
 
 ---
 
-## Current State (verified 2026-03-02)
-
-| Item | Status | Detail |
-|------|--------|--------|
-| `build.js` | Working | 165 lines, ESM strip + GridCore dedup, 13/13 modules |
-| `src/shell/` | Extracted | head.html (19), style.css (548), body.html (299), app.js (917) |
-| Tests | 661/0/1 | All passing in Node |
-| Dedup | Working | 3 `const {...} = GridCore` lines stripped at build time |
-| `dist/index.html` | Generated | 6218 lines, 198.7 KB |
-| Browser verify | **TESTED** | Build output confirmed in browser, many errors, not working |
-
-### Known Issues
-
-1. **`midi-output.js` missing from MODULES** — build.js jumps from `synth-engine.js` to `heightmap.js`, skipping midi-output. The module exists at `src/consumers/music/midi-output.js` but isn't inlined.
-2. **Browser runtime not verified** — Node tests pass, but the ACTION-PLAN documents `inferSemantic already declared` and `showNewProjectModal not defined` errors from earlier build attempts. Dedup logic was added to fix these, but no browser confirmation recorded.
-3. **`dist/index.html` in git** — currently tracked and modified. Once the build is trusted, this file should be `.gitignore`'d (or committed as a generated artifact with a clear "DO NOT EDIT" header).
-
-## Task B.0 — Verify Build Output (Gate)
+## Task B.0 — Verify Build Output (Gate) (x)
 
 **Files:**
 - Read: `dist/index.html` (generated)
@@ -685,7 +618,7 @@ The working dist/index.html already proved the functions coexist fine when inlin
 cd E:\co\GRID
 node build.js
 ```
-Expected: `✓ dist/index.html — ~6218 lines, ~198 KB`
+Expected: `✓ dist/index.html — ~6250 lines, ~200 KB`
 
 **Step 2: Serve and test in browser**
 
@@ -711,102 +644,30 @@ Open DevTools → Console. There should be zero `SyntaxError`, `ReferenceError`,
 
 **If errors found:** Document them and fix before proceeding. The dedup logic handles `const {...} = GridCore` but there may be other patterns.
 
+--
+
+- Hand-crafted ` src\shell\app.js`
+- `extract-shell.js`
+- `build.js`
+
+![alt text](image.png)
+![alt text](image-1.png)
+
+📊 FINAL RESULTS
+==================================================
+✅ Passed: 661
+❌ Failed: 0
+⏭️  Skipped: 1
+⏱️  Duration: 183ms
+
+🎉 ALL TESTS PASSED!
+
+### Current state:
+
+src/shell/ (head.html, style.css, body.html, app.js) — source of truth for UI
+src/ modules — source of truth for logic
+node build.js — generates dist/index.html
+dist/index.html — generated, never hand-edited again
+661 tests still passing
 
 ---
-
-### CRLF. The src/ files are Windows line endings (\r\n). The dedup regex used $ in multiline mode, which in JavaScript matches before \n but leaves the \r on the line — so GridCore;\r didn't match GridCore;. The fix adds two normalization lines at the top of stripEsm that convert all \r\n and stray \r to \n before any regex runs. This also means the fix is permanent — any future src/ file written on Windows will be handled correctly.
-This build.js also includes B.1 already — midi-output.js is in the MODULES list (14 modules now), and the GENERATED comment header is injected at the top of dist/index.html.
-
-- serializeProject now. Same pattern — another module does const { serializeProject } = SomeModule. 
-
-###  The previous regex only targeted GridCore by name.
-
-- The new stripModuleDestructuring targets the pattern const { ... } = AnyCapitalizedIdentifier — which covers every possible module object destructuring in the codebase regardless of the module name. The s flag handles single-line and multi-line blocks. CRLF normalization ensures Windows files don't break the match.
-
-### no more SyntaxError, UI is rendering, modals work. Now runtime errors only:
-TypeError: Cannot read properties of null (reading 'current')
-at generate()       ← line 6157
-at clearFrame()     ← line 6033
-Both try to read renderer.current but renderer is null. The renderer isn't initializing. This is a timing issue — generate() and clearFrame() in app.js reference renderer before it's been created by DOMContentLoaded.
-
-### The original hand-inlined dist/index.html had app-level wrapper functions:
-
-(_isOpfsAvailable, opfsListProjects, opfsLoadProject, etc.) defined inline inside the OPFS block. Those wrappers called the underlying module functions. When the build system replaced that inline with the actual src/persistence/opfs-store.js, the module defines isOpfsAvailable, listProjects, loadProject — different names. app.js kept calling the old wrapper names, which no longer existed, so isOpfsAvailable() was undefined, DOMContentLoaded threw silently, and renderer was never assigned — causing every subsequent click to fail with Cannot read properties of null.
-The fix renames all 5 call sites in app.js to match the module's actual function names, and adds if (!renderer) return guards to generate() and clearFrame() as a safety net.
-
-```
-(index):6411 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'cells')
-    at updateUI ((index):6411:14)
-    at initRenderer ((index):5764:3)
-    at (index):5711:3
-updateUI @ (index):6411
-initRenderer @ (index):5764
-(anonymous) @ (index):5711
-(index):6411 Uncaught TypeError: Cannot read properties of undefined (reading 'cells')
-    at updateUI ((index):6411:14)
-    at thumb.onclick ((index):6148:63)
-updateUI @ (index):6411
-thumb.onclick @ (index):6148
-(index):6411 Uncaught TypeError: Cannot read properties of undefined (reading 'cells')
-    at updateUI ((index):6411:14)
-    at thumb.onclick ((index):6148:63)
-updateUI @ (index):6411
-thumb.onclick @ (index):6148
-(index):6338 Uncaught TypeError: renderer.setPlayheadColumn is not a function
-    at createNewProject ((index):6338:26)
-    at HTMLButtonElement.onclick ((index):744:101)
-createNewProject @ (index):6338
-onclick @ (index):744
-(index):6169 Uncaught TypeError: renderer.render is not a function
-    at generate ((index):6169:12)
-    at HTMLButtonElement.onclick ((index):642:46)
-generate @ (index):6169
-onclick @ (index):642
-(index):6025 Uncaught TypeError: renderer.setGridRef is not a function
-    at deleteCurrentFrame ((index):6025:12)
-    at HTMLButtonElement.onclick ((index):703:62)
-deleteCurrentFrame @ (index):6025
-onclick @ (index):703
-(index):6012 Uncaught TypeError: renderer.setGridRef is not a function
-    at duplicateFrame ((index):6012:12)
-    at HTMLButtonElement.onclick ((index):702:58)
-duplicateFrame @ (index):6012
-onclick @ (index):702
-(index):5995 Uncaught TypeError: renderer.setGridRef is not a function
-    at addNewFrame ((index):5995:12)
-    at HTMLButtonElement.onclick ((index):701:55)
-addNewFrame @ (index):5995
-onclick @ (index):701
-(index):6101 Uncaught TypeError: renderer.setPlayheadColumn is not a function
-    at stopMusicPlayback ((index):6101:26)
-    at togglePlaybackMode ((index):6112:5)
-    at HTMLButtonElement.onclick ((index):687:69)
-stopMusicPlayback @ (index):6101
-togglePlaybackMode @ (index):6112
-onclick @ (index):687
-(index):6101 Uncaught TypeError: renderer.setPlayheadColumn is not a function
-    at stopMusicPlayback ((index):6101:26)
-    at stopPlayback ((index):6055:35)
-    at HTMLButtonElement.onclick ((index):683:58)
-stopMusicPlayback @ (index):6101
-stopPlayback @ (index):6055
-onclick @ (index):683
-(index):681 [Violation] 'click' handler took 322ms
-(index):6093 Uncaught TypeError: renderer.setPlayheadColumn is not a function
-    at Object.onColumnChange ((index):6093:36)
-    at tick ((index):4238:26)
-onColumnChange @ (index):6093
-tick @ (index):4238
-requestAnimationFrame
-play @ (index):4250
-toggleMusicPlayback @ (index):6087
-togglePlayback @ (index):6045
-onclick @ (index):681
-(index):6101 Uncaught TypeError: renderer.setPlayheadColumn is not a function
-    at stopMusicPlayback ((index):6101:26)
-    at stopPlayback ((index):6055:35)
-    at HTMLButtonElement.onclick ((index):683:58)
-stopMusicPlayback @ (index):6101
-stopPlayback @ (index):6055
-onclick @ (index):683
-```

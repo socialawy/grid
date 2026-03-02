@@ -1,0 +1,19 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00ff88">
+  <title>GRID — ASCII Creative Studio v0.1.0</title>
+  <!-- Three.js CDN — Tier 1 only. If this fails, 3D tab stays hidden. -->
+  <script>
+    (function () {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      s.onerror = () => { window._threeLoadFailed = true; };
+      s.onload = () => {
+        const btn = document.getElementById('mode3dBtn');
+        if (btn) btn.hidden = false;
+      };
+      document.head.appendChild(s);
+    })();
+  </script>
