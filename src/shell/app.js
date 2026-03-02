@@ -453,9 +453,7 @@ function importGrid() {
 
 function loadJson() {
   try {
-    const imported = deserializeGrid(document.getElementById('jsonArea').value);
-    const v = validateGrid(imported);
-    if (!v.valid) { setStatus('Invalid: ' + v.errors.join(', '), true); return; }
+    const imported = deserializeProject(document.getElementById('jsonArea').value);
     grid = imported;
     clearCurrentHandle();
     renderer.setGridRef(grid);

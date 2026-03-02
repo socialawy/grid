@@ -16,6 +16,10 @@
       s.onload = () => {
         const btn = document.getElementById('mode3dBtn');
         if (btn) btn.hidden = false;
+        // Load GLTFExporter addon
+        const ge = document.createElement('script');
+        ge.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js';
+        document.head.appendChild(ge);
       };
       document.head.appendChild(s);
     })();
@@ -5702,6 +5706,66 @@ if (typeof window !== 'undefined') {
   window.MidiExporter = { noteEventsToMidi, midiExportDefaults };
 }
 
+
+    // ============================================================
+    // exporters/gltf-exporter
+    // ============================================================
+/**
+ * gltf-exporter.js — Task 6.4: THREE.Scene → glTF/glb
+ *
+ * Thin wrapper around THREE.GLTFExporter.
+ * Browser-only (requires THREE.js CDN). Promisified parse.
+ *
+ * @module gltf-exporter
+ */
+
+function gltfExportDefaults() {
+  return { binary: true, onlyVisible: true };
+}
+
+function _getGLTFExporter() {
+  if (typeof THREE !== 'undefined' && THREE.GLTFExporter) return THREE.GLTFExporter;
+  if (typeof window !== 'undefined' && window.THREE && window.THREE.GLTFExporter) return window.THREE.GLTFExporter;
+  if (typeof global !== 'undefined' && global.THREE && global.THREE.GLTFExporter) return global.THREE.GLTFExporter;
+  return null;
+}
+
+function isGltfExportAvailable() {
+  return _getGLTFExporter() !== null;
+}
+
+/**
+ * Export a THREE.Scene to glTF or glb.
+ *
+ * @param {Object} scene - THREE.Scene
+ * @param {Object} [opts] - { binary: true, onlyVisible: true }
+ * @returns {Promise<{ok: boolean, data?: ArrayBuffer|Object, error?: string}>}
+ */
+function sceneToGltf(scene, opts = {}) {
+  const o = { ...gltfExportDefaults(), ...opts };
+  const Exporter = _getGLTFExporter();
+  if (!Exporter) {
+    return Promise.resolve({ ok: false, error: 'THREE.GLTFExporter not available' });
+  }
+  return new Promise(resolve => {
+    const exporter = new Exporter();
+    exporter.parse(
+      scene,
+      data => resolve({ ok: true, data }),
+      err => resolve({ ok: false, error: err.message || String(err) }),
+      { binary: o.binary, onlyVisible: o.onlyVisible }
+    );
+  });
+}
+
+// Universal export
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { sceneToGltf, isGltfExportAvailable, gltfExportDefaults };
+}
+if (typeof window !== 'undefined') {
+  window.GltfExporter = { sceneToGltf, isGltfExportAvailable, gltfExportDefaults };
+}
+
     // ============================================================
     // APP
     // ============================================================
@@ -6160,9 +6224,7 @@ function importGrid() {
 
 function loadJson() {
   try {
-    const imported = deserializeGrid(document.getElementById('jsonArea').value);
-    const v = validateGrid(imported);
-    if (!v.valid) { setStatus('Invalid: ' + v.errors.join(', '), true); return; }
+    const imported = deserializeProject(document.getElementById('jsonArea').value);
     grid = imported;
     clearCurrentHandle();
     renderer.setGridRef(grid);
@@ -6186,6 +6248,20 @@ function downloadJson() {
   a.download = (grid.meta.name || 'project').replace(/[^a-zA-Z0-9_-]/g, '_') + '.grid';
   a.click(); URL.revokeObjectURL(url);
   setStatus('Downloaded: ' + a.download);
+}
+
+function exportPng() {
+  const canvas = document.getElementById('gridCanvas');
+  if (!canvas) return;
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (grid.meta.name || 'grid').replace(/[^a-zA-Z0-9_-]/g, '_') + '.png';
+    a.click();
+    URL.revokeObjectURL(url);
+    setStatus('PNG downloaded');
+  }, 'image/png');
 }
 
 // ================================================================
