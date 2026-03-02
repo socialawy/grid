@@ -481,6 +481,20 @@ function downloadJson() {
   setStatus('Downloaded: ' + a.download);
 }
 
+function exportPng() {
+  const canvas = document.getElementById('gridCanvas');
+  if (!canvas) return;
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (grid.meta.name || 'grid').replace(/[^a-zA-Z0-9_-]/g, '_') + '.png';
+    a.click();
+    URL.revokeObjectURL(url);
+    setStatus('PNG downloaded');
+  }, 'image/png');
+}
+
 // ================================================================
 // IMAGE IMPORT
 // ================================================================
