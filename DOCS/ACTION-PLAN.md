@@ -187,7 +187,6 @@ Phase 2 exit gate (after 2.5):
 "Projects persist across sessions. Ctrl+S saves to disk. Ctrl+, opens settings.
 Users can install as PWA. Phase 3 (audio engine) can begin."
 
-
 ----
 
 # PHASE 3 ACTION PLAN: THE MUSIC CONSUMER
@@ -283,7 +282,6 @@ node tests/run-all.js            → 554 passed, 0 failed, 1 skipped
 
 ### Verification
 - Test suite: 554 passed, 0 failed, 1 skipped
-
 
 ## Task 3.4 — Web MIDI Output (src/consumers/music/midi-output.js)
 ### Delivered
@@ -451,38 +449,10 @@ It's set to 75 BPM on the Chromatic scale. I used the Yellow "Arp" channel, whic
 -  UX hint has been added to `enter3DMode()` in `dist/index.html`.
 > The 3D button's tooltip will now dynamically show which frame is being rendered if the project has multiple frames, and defaults to just "3D View" if there's only one. 
 
-
 ## Deferred:
 4.3 VSP bridge → Phase 8. 4.4 glTF export → Phase 6 (export pipeline is the natural home — `getScene()` is already the hook).
 
 ## Test end:
-```
---- saveCascade ---
-  PASS: cascade silent-saves to existing handle
-  PASS: cascade shows saveAs dialog when no handle
-  PASS: cascade falls back to download when no FSAPI
-
-FS Access: 35 passed, 0 failed
-FS Access: 35 passed, 0 failed
-
-🧪 Music Mapper (Task 3.1 - grid to music events)
-==================================================
-
-🧪 Synth Engine (Task 3.2 - Web Audio synthesis layer)
-==================================================
-
-🧪 MIDI Output (Task 3.4 - Web MIDI scheduling)
-==================================================
-
-midi-output: 39 passed, 0 failed
-midi-output: 39 passed, 0 failed
-
-🧪 Heightmap Engine (Task 4.1 - grid to heightmap conversion)
-==================================================
-
-test-heightmap.js: 68 passed, 0 failed
-
-test-heightmap.js: 68 passed, 0 failed
 
 ==================================================
 📊 FINAL RESULTS
@@ -493,7 +463,7 @@ test-heightmap.js: 68 passed, 0 failed
 ⏱️  Duration: 182ms
 
 🎉 ALL TESTS PASSED!
-```
+
 ![alt text](image-2.png) 
 
 ## Phase 4 (The 3D Consumer) is now complete. 
@@ -613,37 +583,19 @@ before app.js.
 - Compare against: `git show HEAD:dist/index.html` (last committed hand-crafted version)
 
 **Step 1: Run the build**
-
-```bash
-cd E:\co\GRID
-node build.js
-```
-Expected: `✓ dist/index.html — ~6250 lines, ~200 KB`
-
 **Step 2: Serve and test in browser**
-
-```bash
-npx serve dist -p 3000
-```
 Open `http://localhost:3000`. Verify:
-- Grid renders with character palette
-- Click to paint cells
-- Generator buttons work (Random, Gradient, Maze, etc.)
-- Play button works (frames mode)
-- Music mode toggle + play works
-- 3D button appears (if THREE.js CDN loads)
-- Ctrl+S triggers save cascade
-- Export button opens JSON modal
-- Projects button shows OPFS browser
+- Grid renders with character palette ✅
+- Click to paint cells ✅
+- Generator buttons work (Random, Gradient, Maze, etc.) ✅
+- Play button works (frames mode) ✅
+- Music mode toggle + play works ✅
+- 3D button appears (if THREE.js CDN loads) ✅
+- Ctrl+S triggers save cascade ✅
+- Export button opens JSON modal ✅
+- Projects button shows OPFS browser ✅
 
 **Step 3: Check browser console for errors**
-
-Open DevTools → Console. There should be zero `SyntaxError`, `ReferenceError`, or `TypeError` on load.
-
-**Exit:** App works identically to the last hand-crafted version. Zero console errors.
-
-**If errors found:** Document them and fix before proceeding. The dedup logic handles `const {...} = GridCore` but there may be other patterns.
-
 --
 
 - Hand-crafted ` src\shell\app.js`
@@ -777,7 +729,7 @@ That's it. The strict path was for raw JSON; the project path handles real .grid
 
 --
 
-## Task 6.5 — Video Exporter (WebCodecs)
+## Task 6.5 — Video Exporter (WebCodecs) ✅ COMPLETE
 
 **Files:**
 - Create: `src/exporters/video-exporter.js`
@@ -799,8 +751,6 @@ gridToMp4(grid, renderer, opts, onProgress) → Promise<Blob>
 
 ### Step 1: Write tests with mock VideoEncoder + mp4box
 
-Test the scheduling logic, progress callbacks, and error handling. Mock `VideoEncoder`, `VideoFrame`, and `MP4Box.createFile()`.
-
 ### Step 2: Implement
 
 The pipeline: for each frame → render to OffscreenCanvas → `new VideoFrame(canvas)` → `encoder.encode(frame)` → `encoder.flush()` → mp4box mux → `Blob`.
@@ -809,27 +759,13 @@ The pipeline: for each frame → render to OffscreenCanvas → `new VideoFrame(c
 
 In `src/shell/head.html`, add conditional load (only if WebCodecs available):
 
-```javascript
-if (typeof VideoEncoder !== 'undefined') {
-  const mp4 = document.createElement('script');
-  mp4.src = 'https://cdn.jsdelivr.net/npm/mp4box/dist/mp4box.all.min.js';
-  document.head.appendChild(mp4);
-}
-```
-
 ### Step 4: Wire, test, commit
 
 Same pattern as previous tasks.
 
-```bash
-git commit -m "feat(export): add video exporter — WebCodecs MP4 encoding"
-```
-
-**Note:** This task has the highest risk of scope creep. If WebCodecs proves too fiddly, defer and ship 6.UI without the Video tab. The other 4 export formats already deliver high value.
-
 ---
 
-## Task 6.UI — Export Modal with Tabs
+## Task 6.UI — Export Modal with Tabs ✅ COMPLETE
 
 **Files:**
 - Modify: `src/shell/body.html` (replace JSON modal with tabbed export panel)
@@ -840,23 +776,9 @@ git commit -m "feat(export): add video exporter — WebCodecs MP4 encoding"
 
 ### Step 1: Update body.html — export modal
 
-Replace the `jsonModal` contents with a tabbed layout:
-
-```html
-<!-- Export Modal -->
-```
-
 ### Step 2: Add CSS for tabs
 
-In `src/shell/style.css`
-
 ### Step 3: Wire export functions in app.js
-
-Add to `src/shell/app.js`:
-
-```javascript
-    // ── Export modal tab switching ────────────────────
-```
 
 ### Step 4: Update exportGrid() and the toolbar
 
@@ -864,11 +786,6 @@ Change `exportGrid()` to call `showExportModal()` instead.
 Update `importGrid()` references if the modal ID changed.
 
 ### Step 5: Full build + browser test
-
-```bash
-node build.js && node tests/run-all.js
-```
-Open in browser. Verify each tab works.
 
 ### Step 6: Commit
 
@@ -881,31 +798,30 @@ git commit -m "feat(export): tabbed export modal with SVG, PNG, MIDI, glTF, Vide
 
 ## Decisions:
 
-### 1. Skip video exporter initially
-
-WebCodecs + mp4box.js is the highest-risk task. Ship SVG/PNG/MIDI/glTF first — those 4 cover the most valuable use cases. Add video in a follow-up.
-
-### 2. Store note events for MIDI export
+### 1. Store note events for MIDI export
 
 The synth engine currently plays notes but doesn't save the `NoteEvent[]` array. Add a `synth._lastNoteEvents = events` property in the `play()` method of synth-engine.js so the MIDI exporter can access them. This is a 1-line change.
 
-### 3. Don't `.gitignore` dist/index.html yet
+### 2. Don't `.gitignore` dist/index.html yet
 
 The generated file IS the deliverable. Keep it committed so GitHub Pages / direct download works. Add a `<!-- GENERATED FILE — DO NOT EDIT. Run: node build.js -->` comment at the top (build.js should inject this).
 
-### 4. Add `--watch` to build.js later
+### 3. Add `--watch` to build.js later
 
 Not needed now, but after Phase 6, a `node build.js --watch` using `fs.watch()` on `src/` would improve the dev loop. Defer until the exporter count justifies it.
 
-### 5. Import modal stays separate
+### 4. Import modal stays separate
 
 The current `importGrid()` function uses the `jsonModal` for import. When the export modal changes, keep the import path on its own modal (or reuse `jsonModal` for import only). Don't break Ctrl+O / Import button.
+
+## Happy Accident:
+- GRID is designed as universal creative source format.
+One file. Five outputs. When the midi file exported in same path with mp4, same name "as in subtitles" it will play together in video player.
 
 ---
 
 ## Phase 6 Exit Criteria
 
-```
 [x] node build.js produces working dist/index.html from src/ (14+ modules)
 [x] SVG export → .svg file opens in Illustrator/Inkscape at any resolution
 [x] PNG export → .png file downloads current canvas view
@@ -916,4 +832,21 @@ The current `importGrid()` function uses the `jsonModal` for import. When the ex
 [x] All new code has Node-passing test suites
 [x] node tests/run-all.js → 0 failures
 [x] Browser verification: zero console errors, all tabs functional
-```
+
+==================================================
+📊 FINAL RESULTS
+==================================================
+✅ Passed: 661
+❌ Failed: 0
+⏭️  Skipped: 1
+⏱️  Duration: 222ms
+
+🎉 ALL TESTS PASSED!
+
+PS E:\co\GRID> node build.js
+[GRID] Building dist/index.html...
+  ✓  dist/index.html — 6874 lines, 221.1 KB
+  ✓  Modules inlined: 18/18
+
+----
+
