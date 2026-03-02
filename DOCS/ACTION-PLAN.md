@@ -596,473 +596,217 @@ before app.js.
 
 ### The Build Script: `build.js`
 
-```javascript
-// build.js — GRID concatenation build
-// Usage: node build.js
-// Output: dist/index.html
+### Tests pass, build runs, 13/13 modules inlined. Two errors to fix:
+- Error 1: inferSemantic has already been declared (line 2282)
+The build inlines grid-core.js which defines inferSemantic, then app.js still contains the old inline copy of it. The extraction captured app.js starting at line 2060, but some grid-core functions were also inlined in that region.
+- Error 2: showNewProjectModal is not defined
+The generators block (lines 2535+) was in the old file after app state but is now missing from app.js — the extraction stopped at 3152 but the generators UI wiring and modal functions live further down or were in a different region.
 
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
+### The generators module (lines 2535–2709) sits inside the app.js range AND gets re-inlined by build.js.
+- The fix is to change the APP_START in the migration script — but since migration already ran, the cleaner fix is to strip the duplicate block from src/shell/app.js directly, and update build.js to note this pattern.
+The exact range to delete from src/shell/app.js is lines that correspond to original file lines 2535–2709. In app.js (which starts at original line 2060), that's lines 476–650 of app.js.
 
-const ROOT = new URL('.', import.meta.url).pathname;
+Clean boundaries. Now write the PowerShell fix — a small targeted script that removes lines 476–650 from src/shell/app.js
 
-// ── Module list in dependency order ──────────────────────────────────
-const MODULES = [
-  'src/core/grid-core.js',
-  'src/renderers/canvas-renderer.js',
-  'src/input/key-bindings.js',
-  'src/input/input-system.js',
-  'src/generators/generators.js',
-  'src/importers/image-importer.js',
-  'src/persistence/serializer.js',
-  'src/persistence/opfs-store.js',
-  'src/persistence/fs-access.js',
-  'src/consumers/music/music-mapper.js',
-  'src/consumers/music/synth-engine.js',
-  'src/consumers/music/midi-output.js',
-  'src/consumers/spatial/heightmap.js',
-  'src/consumers/spatial/scene-builder.js',
-  // Phase 6 slots in here:
-  // 'src/exporters/svg-exporter.js',
-  // 'src/exporters/midi-exporter.js',
-  // 'src/exporters/gltf-exporter.js',
-  // 'src/exporters/video-exporter.js',
-];
 
-const APP_JS    = 'src/shell/app.js';
-const HEAD_HTML = 'src/shell/head.html';
-const BODY_HTML = 'src/shell/body.html';
-const STYLE_CSS = 'src/shell/style.css';
-const OUT       = 'dist/index.html';
+### inferSemantic is still being declared twice.
+- The generators block was removed from app.js but inferSemantic is also defined inside canvas-renderer.js or another module that's being inlined. Let me find all declarations:
 
-// ── Strip ESM import/export for browser inlining ─────────────────────
-function stripEsm(src) {
-  return src
-    .replace(/^import\s+.*?from\s+['"][^'"]+['"]\s*;?\s*$/gm, '')
-    .replace(/^export\s+(default\s+)?/gm, '')
-    .replace(/^export\s*\{[^}]*\}\s*;?\s*$/gm, '')
-    .trim();
-}
+- Root cause confirmed. src/generators/generators.js declares inferSemantic (and likely calcDensity) locally so it can run standalone in Node tests. When build.js inlines it after grid-core.js, the symbol is declared twice.
+The right fix is in build.js — add a deduplication step that strips known grid-core re-declarations from subsequent modules
 
-// ── Read a file, strip ESM, wrap in section comment ───────────────────
-function inlineModule(path) {
-  const full = join(ROOT, path);
-  if (!existsSync(full)) {
-    console.warn(`  ⚠️  Missing: ${path} — skipped`);
-    return '';
-  }
-  const src  = readFileSync(full, 'utf8');
-  const name = path.replace('src/', '').replace('.js', '');
-  return `\n    // ═══ ${name} ═══\n${stripEsm(src)}\n`;
-}
+- What changed: dedupeGridCore() runs after stripEsm() on every module except grid-core.js itself. It replaces any single-line function inferSemantic(...) or const inferSemantic = ... declarations with a comment marker, so the symbol is only declared once — by grid-core.js. The original function body is gone but irrelevant since grid-core's version is already in scope.
 
-// ── Build ─────────────────────────────────────────────────────────────
-const head  = readFileSync(join(ROOT, HEAD_HTML), 'utf8');
-const style = readFileSync(join(ROOT, STYLE_CSS), 'utf8');
-const body  = readFileSync(join(ROOT, BODY_HTML), 'utf8');
-const app   = readFileSync(join(ROOT, APP_JS),    'utf8');
+### The dedup regex isn't matching — the declaration at line 2282 is either multi-line or has different whitespace.
 
-const modules = MODULES.map(inlineModule).join('\n');
+-  Line 19: const { inferSemantic } = GridCore; — this is a destructuring assignment, not a function declaration. The stripEsm function strips the import GridCore line but leaves the destructuring, which then redeclares inferSemantic that grid-core already declared as a plain function.
+The fix is simple: strip const { ... } = GridCore; lines in dedupeGridCore.
 
-const html = `<!DOCTYPE html>
-<html lang="en">
-${head}
-<style>
-${style}
-</style>
-${body}
-<script>
-${modules}
-    // ═══ app ═══
-${stripEsm(app)}
-</script>
-</body>
-</html>`;
+- The actual bug: generators.js line 19 was const { inferSemantic } = GridCore; — a destructuring assignment. stripEsm correctly removed the import GridCore line above it, but left the destructuring intact, which re-declared inferSemantic as a const in the same scope where grid-core.js had already declared it as a function. const can't shadow a function declaration — hence the error.
+The new dedupeGridCore now explicitly strips any const { ... } = GridCore line, which is the correct pattern to remove.
 
-writeFileSync(join(ROOT, OUT), html, 'utf8');
-const lines = html.split('\n').length;
-console.log(`✅ Built dist/index.html — ${lines} lines`);
-```
+### The pattern is clear now — multiple src/ modules use the same const { X } = GridCore pattern. Rather than whack-a-mole,
 
-### Migration Task (one-time, before Phase 6 starts)
+- The problem is structural: build.js is doing surgery on files it hasn't seen, fixing one duplicate at a time. Every new src/ file that imports from grid-core will hit the same issue. Whack-a-mole indefinitely.
 
-```
-TASK B.1 — Extract src/shell/ from current dist/index.html
-  B.1.1  Copy lines   1– 21 → src/shell/head.html
-  B.1.2  Copy lines  22–590 → src/shell/style.css
-  B.1.3  Copy lines 591–873 → src/shell/body.html
-  B.1.4  Copy lines 2079–end (app state, init, generators UI, image
-          import UI, modals, auto-save, settings) → src/shell/app.js
-  B.1.5  Delete the 13 inlined module blocks from app.js
-          (they will be re-injected by build.js)
-  B.1.6  node build.js → verify dist/index.html renders identically
-  B.1.7  node tests/run-all.js → still 661/0/1
+### The clean approach after restore:
+Instead of stripping duplicates at build time, fix it at the source — make grid-core.js expose a global window.GridCore object, and have all other modules pull from that when the import is stripped. That's the universal export pattern that was already planned.
+The sequence:
 
-TASK B.2 — Wire build into package.json
-  "build": "node build.js",
-  "dev":   "node build.js && npx serve dist"
+1. git restore dist/index.html — back to working state
+2. Check src/core/grid-core.js  — verify it already does window.GridCore = { inferSemantic, calcDensity, ... }
+3. If yes: build.js just needs one additional line after inlining grid-core — nothing else changes
+4. If no: add that one export to grid-core.js, then build
 
-EXIT: node build.js produces a working dist/index.html from sources.
-      Manual inline patching is retired.
-```
+The working dist/index.html already proved the functions coexist fine when inlined manually — because the manual inline only declared each function once. The build system just needs to replicate that, not fight the module boundaries.
 
-## Run from the project root:
+----
+
+# Decision: One more round to fix, plan phase 6 ahead. No git restore yet.
+
+----
+
+# Build System Fix + Phase 6 Export Pipeline — Implementation Plan
+
+**Goal:** Stabilize the build system so `dist/index.html` is generated (never hand-edited), then ship 5 export formats (SVG, PNG, MIDI, glTF, MP4) behind a tabbed Export modal.
+
+**Architecture:** Concatenation build (`node build.js`) reads `src/shell/` templates + `src/` modules in dependency order, strips ESM, deduplicates GridCore symbols, writes a single self-contained HTML file. Each exporter is a standalone `src/exporters/*.js` module (pure where possible, browser-only where required), tested in Node with mocks. The export UI replaces the current JSON-only modal with a tabbed panel.
+
+**Tech Stack:** Vanilla JS (zero npm deps), Node `fs` for build, Web Audio, WebCodecs, THREE.js CDN, mp4box.js CDN, Standard MIDI File binary format.
+
+---
+
+## Current State (verified 2026-03-02)
+
+| Item | Status | Detail |
+|------|--------|--------|
+| `build.js` | Working | 165 lines, ESM strip + GridCore dedup, 13/13 modules |
+| `src/shell/` | Extracted | head.html (19), style.css (548), body.html (299), app.js (917) |
+| Tests | 661/0/1 | All passing in Node |
+| Dedup | Working | 3 `const {...} = GridCore` lines stripped at build time |
+| `dist/index.html` | Generated | 6218 lines, 198.7 KB |
+| Browser verify | **TESTED** | Build output confirmed in browser, many errors, not working |
+
+### Known Issues
+
+1. **`midi-output.js` missing from MODULES** — build.js jumps from `synth-engine.js` to `heightmap.js`, skipping midi-output. The module exists at `src/consumers/music/midi-output.js` but isn't inlined.
+2. **Browser runtime not verified** — Node tests pass, but the ACTION-PLAN documents `inferSemantic already declared` and `showNewProjectModal not defined` errors from earlier build attempts. Dedup logic was added to fix these, but no browser confirmation recorded.
+3. **`dist/index.html` in git** — currently tracked and modified. Once the build is trusted, this file should be `.gitignore`'d (or committed as a generated artifact with a clear "DO NOT EDIT" header).
+
+## Task B.0 — Verify Build Output (Gate)
+
+**Files:**
+- Read: `dist/index.html` (generated)
+- Compare against: `git show HEAD:dist/index.html` (last committed hand-crafted version)
+
+**Step 1: Run the build**
 
 ```bash
-.\scripts\migrate-to-build.ps1
+cd E:\co\GRID
+node build.js
 ```
+Expected: `✓ dist/index.html — ~6218 lines, ~198 KB`
 
-- What it does in order:
+**Step 2: Serve and test in browser**
 
-  - Reads the real dist/index.html
-  - Extracts the 4 shell files into src/shell/ using the exact verified line numbers
-  - Writes build.js at the project root
-  - Patches package.json with build and dev scripts
-  - Runs node build.js immediately to verify
-  - Prints next steps
+```bash
+npx serve dist -p 3000
+```
+Open `http://localhost:3000`. Verify:
+- Grid renders with character palette
+- Click to paint cells
+- Generator buttons work (Random, Gradient, Maze, etc.)
+- Play button works (frames mode)
+- Music mode toggle + play works
+- 3D button appears (if THREE.js CDN loads)
+- Ctrl+S triggers save cascade
+- Export button opens JSON modal
+- Projects button shows OPFS browser
 
-### Two checks before trusting it:
+**Step 3: Check browser console for errors**
 
-- Open the generated dist/index.html in the browser — should look identical
-- node tests/run-all.js — should still be 661/0/1
+Open DevTools → Console. There should be zero `SyntaxError`, `ReferenceError`, or `TypeError` on load.
 
-> If both pass, dist/index.html is now generated and never touched directly again. Phase 6 exporters slot into the MODULES array in build.js as single commented lines.
+**Exit:** App works identically to the last hand-crafted version. Zero console errors.
+
+**If errors found:** Document them and fix before proceeding. The dedup logic handles `const {...} = GridCore` but there may be other patterns.
+
 
 ---
 
-## PART 2 — PHASE 6: THE EXPORT PIPELINE
+### CRLF. The src/ files are Windows line endings (\r\n). The dedup regex used $ in multiline mode, which in JavaScript matches before \n but leaves the \r on the line — so GridCore;\r didn't match GridCore;. The fix adds two normalization lines at the top of stripEsm that convert all \r\n and stray \r to \n before any regex runs. This also means the fix is permanent — any future src/ file written on Windows will be handled correctly.
+This build.js also includes B.1 already — midi-output.js is in the MODULES list (14 modules now), and the GENERATED comment header is injected at the top of dist/index.html.
 
-### Scope Decision
+- serializeProject now. Same pattern — another module does const { serializeProject } = SomeModule. 
 
-Full Phase 6 from the charter has 6 tasks. Prioritized by value/effort:
+###  The previous regex only targeted GridCore by name.
 
-| Task | Deliverable | Effort | Value | Decision |
-|------|-------------|--------|-------|----------|
-| 6.2a SVG export | Vector grid render, print quality | Low | High | **PHASE 6** |
-| 6.3b MIDI file | .mid download from music consumer | Low | High | **PHASE 6** |
-| 6.4  glTF export | 3D scene → Blender-ready | Medium | High | **PHASE 6** |
-| 6.1  Video (WebCodecs) | MP4 animation | High | High | **PHASE 6** |
-| 6.2b PNG export | Rasterized grid | Low | Medium | **PHASE 6** |
-| 6.2c GIF export | Animated sequence | High | Medium | **DEFER → Phase 8** |
-| 6.3a WAV render | Audio from synth | High | Medium | **DEFER → Phase 8** |
-| 6.5  Combined mux | Video + audio | High | Low now | **DEFER → Phase 8** |
-| 6.6  VideoFormation bridge | External project | Medium | Conditional | **DEFER** |
+- The new stripModuleDestructuring targets the pattern const { ... } = AnyCapitalizedIdentifier — which covers every possible module object destructuring in the codebase regardless of the module name. The s flag handles single-line and multi-line blocks. CRLF normalization ensures Windows files don't break the match.
 
-GIF and WAV deferred — GIF requires frame-by-frame canvas capture + encoder
-(complex), WAV requires offline AudioContext render (fiddly). Neither is
-blocking for the Doxascope MIST visual pipeline. (My personal project/transmedia art)
+### no more SyntaxError, UI is rendering, modals work. Now runtime errors only:
+TypeError: Cannot read properties of null (reading 'current')
+at generate()       ← line 6157
+at clearFrame()     ← line 6033
+Both try to read renderer.current but renderer is null. The renderer isn't initializing. This is a timing issue — generate() and clearFrame() in app.js reference renderer before it's been created by DOMContentLoaded.
 
-### Architecture: `src/exporters/`
+### The original hand-inlined dist/index.html had app-level wrapper functions:
 
-Every exporter is a pure function module — no DOM dependency except where
-the spec requires it (WebCodecs, canvas). Each is independently testable.
+(_isOpfsAvailable, opfsListProjects, opfsLoadProject, etc.) defined inline inside the OPFS block. Those wrappers called the underlying module functions. When the build system replaced that inline with the actual src/persistence/opfs-store.js, the module defines isOpfsAvailable, listProjects, loadProject — different names. app.js kept calling the old wrapper names, which no longer existed, so isOpfsAvailable() was undefined, DOMContentLoaded threw silently, and renderer was never assigned — causing every subsequent click to fail with Cannot read properties of null.
+The fix renames all 5 call sites in app.js to match the module's actual function names, and adds if (!renderer) return guards to generate() and clearFrame() as a safety net.
 
 ```
-src/exporters/
-├── svg-exporter.js     ← grid frame → SVG string (pure, no DOM)
-├── midi-exporter.js    ← NoteEvent[] → .mid binary (pure, no DOM)
-├── gltf-exporter.js    ← THREE.Scene → glTF JSON/binary (browser)
-└── video-exporter.js   ← grid frames → MP4 via WebCodecs (browser)
+(index):6411 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'cells')
+    at updateUI ((index):6411:14)
+    at initRenderer ((index):5764:3)
+    at (index):5711:3
+updateUI @ (index):6411
+initRenderer @ (index):5764
+(anonymous) @ (index):5711
+(index):6411 Uncaught TypeError: Cannot read properties of undefined (reading 'cells')
+    at updateUI ((index):6411:14)
+    at thumb.onclick ((index):6148:63)
+updateUI @ (index):6411
+thumb.onclick @ (index):6148
+(index):6411 Uncaught TypeError: Cannot read properties of undefined (reading 'cells')
+    at updateUI ((index):6411:14)
+    at thumb.onclick ((index):6148:63)
+updateUI @ (index):6411
+thumb.onclick @ (index):6148
+(index):6338 Uncaught TypeError: renderer.setPlayheadColumn is not a function
+    at createNewProject ((index):6338:26)
+    at HTMLButtonElement.onclick ((index):744:101)
+createNewProject @ (index):6338
+onclick @ (index):744
+(index):6169 Uncaught TypeError: renderer.render is not a function
+    at generate ((index):6169:12)
+    at HTMLButtonElement.onclick ((index):642:46)
+generate @ (index):6169
+onclick @ (index):642
+(index):6025 Uncaught TypeError: renderer.setGridRef is not a function
+    at deleteCurrentFrame ((index):6025:12)
+    at HTMLButtonElement.onclick ((index):703:62)
+deleteCurrentFrame @ (index):6025
+onclick @ (index):703
+(index):6012 Uncaught TypeError: renderer.setGridRef is not a function
+    at duplicateFrame ((index):6012:12)
+    at HTMLButtonElement.onclick ((index):702:58)
+duplicateFrame @ (index):6012
+onclick @ (index):702
+(index):5995 Uncaught TypeError: renderer.setGridRef is not a function
+    at addNewFrame ((index):5995:12)
+    at HTMLButtonElement.onclick ((index):701:55)
+addNewFrame @ (index):5995
+onclick @ (index):701
+(index):6101 Uncaught TypeError: renderer.setPlayheadColumn is not a function
+    at stopMusicPlayback ((index):6101:26)
+    at togglePlaybackMode ((index):6112:5)
+    at HTMLButtonElement.onclick ((index):687:69)
+stopMusicPlayback @ (index):6101
+togglePlaybackMode @ (index):6112
+onclick @ (index):687
+(index):6101 Uncaught TypeError: renderer.setPlayheadColumn is not a function
+    at stopMusicPlayback ((index):6101:26)
+    at stopPlayback ((index):6055:35)
+    at HTMLButtonElement.onclick ((index):683:58)
+stopMusicPlayback @ (index):6101
+stopPlayback @ (index):6055
+onclick @ (index):683
+(index):681 [Violation] 'click' handler took 322ms
+(index):6093 Uncaught TypeError: renderer.setPlayheadColumn is not a function
+    at Object.onColumnChange ((index):6093:36)
+    at tick ((index):4238:26)
+onColumnChange @ (index):6093
+tick @ (index):4238
+requestAnimationFrame
+play @ (index):4250
+toggleMusicPlayback @ (index):6087
+togglePlayback @ (index):6045
+onclick @ (index):681
+(index):6101 Uncaught TypeError: renderer.setPlayheadColumn is not a function
+    at stopMusicPlayback ((index):6101:26)
+    at stopPlayback ((index):6055:35)
+    at HTMLButtonElement.onclick ((index):683:58)
+stopMusicPlayback @ (index):6101
+stopPlayback @ (index):6055
+onclick @ (index):683
 ```
-
-Export button in UI: single **Export** modal with tabs.
-Already exists in toolbar — currently only exports JSON. Phase 6 replaces
-that modal with the full export panel.
-
----
-
-### Task 6.2a — SVG Exporter
-
-**File**: `src/exporters/svg-exporter.js`
-**Deps**: zero. Pure string generation.
-**Tests**: Node-compatible, ~40 tests.
-
-```
-gridToSvg(grid, frameIndex, opts) → string (SVG markup)
-
-opts:
-  fontSize:    number   — px per cell (default 14)
-  fontFamily:  string   — (default 'Courier New, monospace')
-  colorMode:   'cell' | 'mono' | 'none'
-  background:  string   — fill color or 'transparent'
-  includeGrid: boolean  — draw cell border lines
-
-Output: complete <svg>…</svg> string, ready for:
-  - download as .svg
-  - embed in HTML
-  - open in Illustrator/Inkscape at any resolution
-  - use as Doxascope visual asset
-```
-
-Each cell → `<text>` element with `x`, `y`, `fill`, `font-size`.
-Grid lines (optional) → `<line>` elements.
-Viewbox sized to canvas dimensions × fontSize.
-
----
-
-### Task 6.3b — MIDI File Exporter
-
-**File**: `src/exporters/midi-exporter.js`
-**Deps**: zero. Pure binary buffer generation. No Web MIDI API.
-**Tests**: Node-compatible, ~35 tests.
-
-```
-noteEventsToMidi(noteEvents, opts) → Uint8Array (Standard MIDI File)
-
-opts:
-  bpm:        number  — tempo (default 120)
-  ticksPerBeat: number — resolution (default 480)
-  trackName:  string
-
-Output: SMF Type 0 (single track), downloadable as .mid
-        Opens in any DAW (Ableton, Logic, FL Studio, GarageBand)
-```
-
-SMF format is well-specified and pure binary — no external library needed.
-Header chunk + track chunk, delta-time encoded note on/off events.
-The music-mapper already produces `NoteEvent[]` — this is the missing
-"save to disk" step for that consumer.
-
----
-
-### Task 6.4 — glTF Exporter
-
-**File**: `src/exporters/gltf-exporter.js`
-**Deps**: THREE.js (browser, CDN). Uses THREE.GLTFExporter from CDN.
-**Tests**: mock-based, ~20 tests for the wrapper logic.
-
-```
-sceneToGltf(threeScene, opts) → Promise<{ json?, binary? }>
-
-opts:
-  binary:  boolean  — .glb (binary) vs .gltf (JSON) (default false)
-  onlyVisible: boolean
-
-Output: .glb or .gltf file, opens in Blender, Unity, Unreal
-```
-
-THREE.GLTFExporter is the standard exporter — it's part of the Three.js
-examples, loadable from CDN. The `getScene()` hook in scene-builder.js
-already exposes the THREE.Scene. This task is largely wiring.
-
-CDN URL for GLTFExporter (r128):
-`https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js`
-
----
-
-### Task 6.1 — Video Exporter (WebCodecs)
-
-**File**: `src/exporters/video-exporter.js`
-**Deps**: WebCodecs API (Chrome 94+, no CDN needed), mp4box.js (CDN).
-**Tests**: feature-detect + mock, ~25 tests.
-**Tier**: 1+ only (Chrome/Edge). Safari: pending. Firefox: no.
-
-```
-gridToMp4(grid, opts, onProgress) → Promise<Blob>
-
-opts:
-  fps:        number   — frames per second (default 10)
-  width:      number   — output px width (default canvas cells × fontSize)
-  height:     number   — output px height
-  codec:      'avc'    — H.264 (universal) — AV1 optional upgrade
-  bitrate:    number   — bits/sec (default 2_000_000)
-
-Pipeline:
-  1. For each frame: render grid to OffscreenCanvas
-  2. OffscreenCanvas → VideoFrame
-  3. VideoFrame → VideoEncoder (H.264)
-  4. Encoded chunks → mp4box.js (MP4 container)
-  5. Return Blob
-
-onProgress: (framesEncoded, totalFrames) → void
-```
-
-CDN: `https://cdn.jsdelivr.net/npm/mp4box/dist/mp4box.all.min.js`
-
-Feature detect:
-```js
-function isVideoExportAvailable() {
-  return typeof VideoEncoder !== 'undefined' &&
-         typeof VideoFrame  !== 'undefined';
-}
-```
-
----
-
-### Task 6.2b — PNG Exporter
-
-**File**: inline in app.js (10 lines, no separate module needed)
-
-```js
-function exportPng(canvasEl, filename) {
-  canvasEl.toBlob(blob => {
-    const url = URL.createObjectURL(blob);
-    const a = Object.assign(document.createElement('a'),
-      { href: url, download: filename });
-    a.click();
-    URL.revokeObjectURL(url);
-  }, 'image/png');
-}
-```
-
-Canvas already renders the grid. This is just download-the-canvas.
-No separate module, no tests needed. Goes straight into app.js.
-
----
-
-### Export UI — Updated Export Modal
-
-Replace the current JSON-only export modal with a tabbed panel:
-
-```
-┌──────────────────────────────────────────┐
-│  EXPORT                              [X] │
-├──────┬──────┬──────┬──────┬────────┬─────┤
-│ SVG  │ PNG  │ MIDI │ glTF │ Video  │JSON │
-├──────┴──────┴──────┴──────┴────────┴─────┤
-│                                          │
-│  [SVG tab]                               │
-│  Font size:  [14px    ]                  │
-│  Background: [#0a0a1a ] [ Transparent ]  │
-│  Grid lines: [ ] Show                    │
-│                                          │
-│  Preview: [small SVG thumbnail]          │
-│                                          │
-│            [ ⬇ Download SVG ]            │
-└──────────────────────────────────────────┘
-```
-
-Each tab: minimal options + single download button.
-Video tab shows progress bar during encode.
-MIDI tab only enabled when music consumer has run (noteEvents exist).
-glTF tab only enabled when 3D mode has been entered (sceneBuilder exists).
-
----
-
-### File Tree After Phase 6
-
-```
-src/
-├── core/
-│   └── grid-core.js
-├── renderers/
-│   ├── canvas-renderer.js
-│   └── webgl2-renderer.js
-├── rendering/
-│   ├── font-atlas.js
-│   ├── instance-buffer.js
-│   └── shaders.js
-├── generators/
-│   └── generators.js
-├── input/
-│   ├── key-bindings.js
-│   └── input-system.js
-├── importers/
-│   └── image-importer.js
-├── persistence/
-│   ├── serializer.js
-│   ├── opfs-store.js
-│   └── fs-access.js
-├── consumers/
-│   ├── music/
-│   │   ├── music-mapper.js
-│   │   ├── synth-engine.js
-│   │   └── midi-output.js
-│   └── spatial/
-│       ├── heightmap.js
-│       └── scene-builder.js
-├── exporters/              ← NEW
-│   ├── svg-exporter.js
-│   ├── midi-exporter.js
-│   ├── gltf-exporter.js
-│   └── video-exporter.js
-└── shell/                  ← NEW (extracted from dist/index.html)
-    ├── head.html
-    ├── body.html
-    ├── style.css
-    └── app.js
-
-build.js                    ← NEW (root level)
-
-dist/
-├── index.html              ← GENERATED by build.js (not hand-edited)
-├── manifest.json
-├── sw.js
-├── icon-192.png
-└── icon-512.png
-
-tests/
-├── test-svg-exporter.js    ← NEW ~40 tests
-├── test-midi-exporter.js   ← NEW ~35 tests
-├── test-gltf-exporter.js   ← NEW ~20 tests
-├── test-video-exporter.js  ← NEW ~25 tests
-└── ... (existing 12 suites)
-```
-
----
-
-### Task Sequence
-
-```
-B.1  Extract src/shell/ from dist/index.html  (one-time migration)
-B.2  Write build.js                           (20-line concat script)
-B.3  Wire into package.json                   (build + dev scripts)
-B.4  Verify: node build.js → working app      (visual + test check)
-     ── BUILD GATE: manual inlining retired ──
-
-6.2a  svg-exporter.js    + test-svg-exporter.js
-6.3b  midi-exporter.js   + test-midi-exporter.js
-6.4   gltf-exporter.js   + test-gltf-exporter.js
-6.1   video-exporter.js  + test-video-exporter.js
-6.2b  exportPng() inline in app.js
-6.UI  Export modal tabs wired to all exporters
-      node build.js → dist/index.html updated automatically
-      ── PHASE 6 EXIT GATE ──
-```
-
----
-
-### Phase 6 Exit Criteria
-
-```
-✓ node build.js produces dist/index.html from src/ sources
-✓ Single HTML file still works offline (Tier 0 unaffected)
-✓ SVG export opens in Illustrator at poster resolution
-✓ MIDI export opens in Ableton / any DAW
-✓ glTF export opens in Blender
-✓ Video export: Chrome → MP4 with correct frame sequence
-✓ PNG export: single button, downloads current frame
-✓ All exporters have Node-passing test suites
-✓ node tests/run-all.js → 0 failures
-✓ Export modal: tabs, progress bar for video, conditional enable for MIDI/glTF
-```
-
----
-
-### Deferred to Phase 8
-
-```
-6.2c  GIF export         (frame capture + encoder, complex)
-6.3a  WAV render         (offline AudioContext, fiddly)
-6.5   Video + audio mux  (needs WAV first)
-6.6   VideoFormation bridge (external project dependency)
-```
-
----
-
-## APPENDIX — Doxascope / MIST Connection
-
-Phase 6 is what makes GRID → MIST viable as a media pipeline:
-
-| Export | MIST use |
-|--------|----------|
-| SVG    | Faction cards, poster assets, wiki illustrations |
-| PNG    | Social assets, Experience platform images |
-| MIDI   | Doxascope ambient score generation |
-| glTF   | 3D assets for Experience platform or future game levels |
-| MP4    | Intro sequences, Experience reveal animations |
-
-The named presets (Mist, Coherence, Fracture, The Doors) can be
-added to generators.js at any point — they're just generator configs.
-Export pipeline is what turns them from interactive toys into
-usable production assets.
