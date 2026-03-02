@@ -36,17 +36,17 @@ B.0  Verify build output in browser (gate)
  │
  └─── BUILD GATE ─────────────────────────────────
                                                    │
-      6.1  SVG exporter (pure, Node-testable)      │
-      6.2  MIDI file exporter (pure, Node-testable)│── can parallel
+      6.1  SVG exporter (pure, easy win)         │
+      6.2  MIDI exporter (pure, fix time→ticks)    │── can parallel
       6.3  PNG export (10 lines in app.js)         │
                                                    │
-      6.4  glTF exporter (needs THREE.js CDN)      │── sequential
-      6.5  Video exporter (WebCodecs + mp4box CDN) │── sequential
-                                                   │
       6.UI Export modal tabs ──────────────────────┘
+                                                   │
+      6.4  glTF exporter (browser-only, needs 3D)   │── sequential
+      6.5  Video exporter (defer)                  │── sequential
 ```
 
-**Recommended order:** B.0 → B.1 → 6.1 → 6.2 → 6.3 → 6.4 → 6.5 → 6.UI
+**Recommended order:** B.0 → B.1 → 6.1 → 6.2 → 6.3 → 6.UI → 6.4 → 6.5
 
 ---
 
@@ -213,7 +213,7 @@ console.log('\n🧪 SVG Exporter (Task 6.1)\n' + '='.repeat(50));
 // --- single cell ---
 {
   const g = makeGrid(5, 5);
-  setCell(g, 0, 0, 0, { char: '@', color: '#ff0000' });
+  g.frames[0] = setCell(g.frames[0], 0, 0, { char: '@', color: '#ff0000' });
   const svg = gridToSvg(g);
   assert(svg.includes('<text'), 'has <text> element');
   assert(svg.includes('fill="#ff0000"'), 'cell color as fill');
@@ -260,9 +260,9 @@ console.log('\n🧪 SVG Exporter (Task 6.1)\n' + '='.repeat(50));
 // --- multiple cells preserve order ---
 {
   const g = makeGrid(4, 4);
-  setCell(g, 0, 0, 0, { char: 'A', color: '#ff0000' });
-  setCell(g, 0, 1, 0, { char: 'B', color: '#00ff00' });
-  setCell(g, 0, 2, 1, { char: 'C', color: '#0000ff' });
+  g.frames[0] = setCell(g.frames[0], 0, 0, { char: 'A', color: '#ff0000' });
+  g.frames[0] = setCell(g.frames[0], 0, 1, { char: 'B', color: '#00ff00' });
+  g.frames[0] = setCell(g.frames[0], 0, 2, { char: 'C', color: '#0000ff' });
   const svg = gridToSvg(g);
   const aIdx = svg.indexOf('>A</text>');
   const bIdx = svg.indexOf('>B</text>');
@@ -273,7 +273,7 @@ console.log('\n🧪 SVG Exporter (Task 6.1)\n' + '='.repeat(50));
 // --- frame index selects correct frame ---
 {
   const g = makeGrid(3, 3);
-  setCell(g, 0, 0, 0, { char: 'X', color: '#111111' });
+  g.frames[0] = setCell(g.frames[0], 0, 0, { char: 'X', color: '#111111' });
   // Add a second frame
   const f1 = { id: GridCore.generateId(), cells: [{ x: 0, y: 0, char: 'Y', color: '#222222' }] };
   g.frames.push(f1);
@@ -287,8 +287,8 @@ console.log('\n🧪 SVG Exporter (Task 6.1)\n' + '='.repeat(50));
 // --- special chars are XML-escaped ---
 {
   const g = makeGrid(3, 3);
-  setCell(g, 0, 0, 0, { char: '<', color: '#aaaaaa' });
-  setCell(g, 0, 1, 0, { char: '&', color: '#bbbbbb' });
+  g.frames[0] = setCell(g.frames[0], 0, 0, { char: '<', color: '#aaaaaa' });
+  g.frames[0] = setCell(g.frames[0], 0, 1, { char: '&', color: '#bbbbbb' });
   const svg = gridToSvg(g);
   assert(svg.includes('&lt;'), '< is escaped to &lt;');
   assert(svg.includes('&amp;'), '& is escaped to &amp;');
@@ -304,7 +304,7 @@ console.log('\n🧪 SVG Exporter (Task 6.1)\n' + '='.repeat(50));
 // --- output is valid standalone SVG ---
 {
   const g = makeGrid(2, 2);
-  setCell(g, 0, 0, 0, { char: '#', color: '#00ff88' });
+  g.frames[0] = setCell(g.frames[0], 0, 0, { char: '#', color: '#00ff88' });
   const svg = gridToSvg(g);
   assert(svg.includes('xmlns'), 'has xmlns');
   assert(svg.split('<text').length === 2, 'exactly one <text> element for one cell');
@@ -499,8 +499,8 @@ function assertEq(a, b, msg) {
 console.log('\n🧪 MIDI File Exporter (Task 6.2)\n' + '='.repeat(50));
 
 // ── Helpers ────────────────────────────────────────
-function makeEvent(col, note, velocity = 100, duration = 1, channel = 0) {
-  return { column: col, note, velocity, duration, channel };
+function makeEvent(time, note, velocity = 100, duration = 1, channel = 0) {
+  return { time, note, velocity, duration, channel };
 }
 
 // ── defaults ───────────────────────────────────────
@@ -574,7 +574,7 @@ function makeEvent(col, note, velocity = 100, duration = 1, channel = 0) {
   assert(found, 'note 72, velocity 110 found in note-on');
 }
 
-// ── multiple notes sorted by column ────────────────
+// ── multiple notes sorted by time ────────────────
 {
   const events = [
     makeEvent(0, 60, 100, 1),
@@ -739,7 +739,7 @@ function u32(v) { return [(v >> 24) & 0xFF, (v >> 16) & 0xFF, (v >> 8) & 0xFF, v
 /**
  * Convert NoteEvent[] to a Standard MIDI File (Type 0).
  *
- * @param {Array} events - [{column, note, velocity, duration, channel}]
+ * @param {Array} events - [{time, note, velocity, duration, channel}]
  * @param {Object} [opts] - {bpm, ticksPerBeat, trackName}
  * @returns {Uint8Array} SMF binary data
  */
@@ -761,8 +761,8 @@ function noteEventsToMidi(events, opts = {}) {
   trackBytes.push(0xFF, 0x51, 0x03);
   trackBytes.push((usPerBeat >> 16) & 0xFF, (usPerBeat >> 8) & 0xFF, usPerBeat & 0xFF);
 
-  // Sort events by column, then by note (for deterministic output)
-  const sorted = [...events].sort((a, b) => a.column - b.column || a.note - b.note);
+  // Sort events by time, then by note (for deterministic output)
+  const sorted = [...events].sort((a, b) => a.time - b.time || a.note - b.note);
 
   // Convert note events to MIDI messages with absolute tick positions
   const midiMsgs = [];
@@ -770,7 +770,7 @@ function noteEventsToMidi(events, opts = {}) {
     const note = clamp(Math.round(ev.note), 0, 127);
     const vel = clamp(Math.round(ev.velocity), 1, 127);
     const ch = clamp(ev.channel || 0, 0, 15);
-    const startTick = ev.column * ticksPerBeat;
+    const startTick = Math.round(ev.time / (60 / bpm) * ticksPerBeat);
     const durTicks = Math.max(1, Math.round((ev.duration || 1) * ticksPerBeat));
 
     midiMsgs.push({ tick: startTick, data: [0x90 | ch, note, vel] });      // note on
@@ -1233,7 +1233,7 @@ Add to `src/shell/app.js`:
       // Set initial state
       document.getElementById('jsonArea').value = serializeGrid(grid);
       // Conditional enables
-      const hasMidi = synth && synth._lastNoteEvents;
+      const hasMidi = true; // MIDI export always available (uses frameToNoteEvents)
       const hasGltf = isGltfExportAvailable() && sceneBuilder;
       const hasVideo = typeof VideoEncoder !== 'undefined';
       document.getElementById('midiTabBtn').disabled = !hasMidi;
@@ -1267,8 +1267,14 @@ Add to `src/shell/app.js`:
     }
 
     function doExportMidi() {
-      if (!synth || !synth._lastNoteEvents) { setStatus('Play in Music mode first', true); return; }
-      const buf = noteEventsToMidi(synth._lastNoteEvents, {
+      const events = frameToNoteEvents(grid, renderer.current, {
+        bpm: grid.project.bpm || 120,
+        scale: grid.project.scale || 'chromatic',
+        rootNote: keyToMidi(grid.project.key || 'C'),
+        subdivision: 4
+      });
+      if (!events.length) { setStatus('No notes in frame', true); return; }
+      const buf = noteEventsToMidi(events, {
         bpm: grid.project.bpm || 120,
         trackName: grid.meta.name || 'GRID Export',
       });
