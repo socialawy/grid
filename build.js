@@ -33,7 +33,7 @@ const MODULES = [
   // Phase 6 exporters — uncomment as they land:
   'src/exporters/svg-exporter.js',
   'src/exporters/midi-exporter.js',
-  // 'src/exporters/gltf-exporter.js',
+  'src/exporters/gltf-exporter.js',
   // 'src/exporters/video-exporter.js',
 ];
 

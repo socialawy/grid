@@ -179,6 +179,11 @@ async function runAllTests() {
       name: 'MIDI File Exporter (Task 6.2 - NoteEvent[] to Standard MIDI File)',
       file: 'test-midi-exporter.js',
       environment: 'node'
+    },
+    {
+      name: 'glTF Exporter (Task 6.4 - THREE.Scene to glTF/glb)',
+      file: 'test-gltf-exporter.js',
+      environment: 'node'
     }
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {

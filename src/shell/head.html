@@ -13,6 +13,10 @@
       s.onload = () => {
         const btn = document.getElementById('mode3dBtn');
         if (btn) btn.hidden = false;
+        // Load GLTFExporter addon
+        const ge = document.createElement('script');
+        ge.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js';
+        document.head.appendChild(ge);
       };
       document.head.appendChild(s);
     })();
