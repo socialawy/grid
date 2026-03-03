@@ -191,6 +191,7 @@ async function runAllTests() {
       environment: 'node'
     },
     { name: 'Grid Describer', file: 'test-grid-describer.js' },
+    { name: 'Text-to-Grid', file: 'test-text-to-grid.js' },
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {
     //   name: 'Schema Validation',

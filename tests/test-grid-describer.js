@@ -379,4 +379,11 @@ console.log('\n--- describeGrid (invalid frame) ---');
 // RESULTS
 // ============================================================
 console.log(`\nGrid Describer: ${passed} passed, ${failed} failed`);
+
+const results = { passed, failed, skipped: 0 };
+export { results };
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { results };
+}
+
 if (failed > 0) process.exit(1);

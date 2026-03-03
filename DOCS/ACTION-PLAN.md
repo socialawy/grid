@@ -1041,9 +1041,13 @@ Modify: `tests/run-all.js` (add suite)
 
 
 ### The suite is registered.
-The count issue is that run-all.js likely parses the subprocess output for a specific pattern to extract pass/fail counts.
+The runner has two paths:
 
--But this is cosmetic — all tests pass, zero failures. The 93 describer tests run and succeed. The total just isn't aggregating them into the display number. We can fix this after 5.4a ships, or it might auto-fix if the runner uses a regex that matches the describer's output format.
+ESM import (line 60): looks for module.results.passed — the test module must export a results object
+Fallback (line 86-91): parses stdout for ✅/❌ emoji per line
+The describer test doesn't export results, and its summary line (Grid Describer: 93 passed, 0 failed) doesn't contain ✅/❌ emojis. So zero counts get added.
+
+Quick fix: add a results export to the bottom of test-grid-describer.js. But let's do it after 5.4a — I'll include the pattern in both files.
 
 - Bottom line: Task 5.1 is DONE.
 ✅ grid-describer.js — 93/93 tests, zero DOM, pure functions
@@ -1052,4 +1056,31 @@ The count issue is that run-all.js likely parses the subprocess output for a spe
 ✅ run-all.js: 0 failures
 
 ---
+
+## Task 5.4a — Text-to-Grid Generator (Template Engine) (x)
+
+**"Describe a place, get a grid"**
+
+### What It Does
+Pure function: takes a text description → returns a .grid object. No ML — this is a keyword-driven template engine that dispatches to existing generators and a new layout engine. The "AI" is structural: it parses intent from text and composes grid elements.
+
+This is where `Doxascope` "My verse, another project" worldbuilding happens: "A dense city seen from above, narrow alleys, central plaza with fountain, walls on north side" → populated .grid.
+
+### Files
+Create: `src/consumers/ai/text-to-grid.js`
+Create: `tests/test-text-to-grid.js`
+Modify: `build.js` (add at position 16)
+Modify: `tests/run-all.js`
+
+- Fixed: the describer test to export results — add at the bottom of tests/test-grid-describer.js, replace the last 3 lines (console.log + if (failed))
+- 865 passed, 0 failed. Both suites counting correctly now. Build at 20/20 modules.
+
+### Tasks 5.1 and 5.4a are done. The Tier 0 AI consumer is complete:
+
+✅ 5.1  grid-describer.js  — 93 tests, pure, zero DOM
+✅ 5.4a text-to-grid.js    — 105 tests, pure, zero DOM
+✅ Build: 20/20 modules, 8129 lines, 263.7 KB
+✅ Total: 865 passed, 0 failed, 1 skipped
+
+----
 
