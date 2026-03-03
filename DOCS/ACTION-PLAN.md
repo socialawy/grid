@@ -1072,7 +1072,34 @@ Create: `tests/test-text-to-grid.js`
 Modify: `build.js` (add at position 16)
 Modify: `tests/run-all.js`
 
-- Fixed: the describer test to export results — add at the bottom of tests/test-grid-describer.js, replace the last 3 lines (console.log + if (failed))
+### Parsing Pipeline
+```
+1. Tokenize prompt → lowercase words
+2. Match tokens against VOCABULARY triggers → collect zone intents
+3. Match modifier tokens → assign to nearest zone intent
+4. If no zones matched → fallback: whole-grid 'noise' generator
+5. Layout engine: divide grid into zones based on position modifiers
+6. For each zone: call appropriate generator with zone bounds + seed
+7. Compose zones into single frame
+8. Return { grid, interpretation } where interpretation shows the parse
+```
+
+### Layout Engine (Zone Allocation)
+
+Grid divided into 3×3 sectors:
+  ┌─────┬─────┬─────┐
+  │ NW  │  N  │ NE  │
+  ├─────┼─────┼─────┤
+  │  W  │  C  │  E  │
+  ├─────┼─────┼─────┤
+  │ SW  │  S  │ SE  │
+  └─────┴─────┴─────┘
+
+"walls on north side" → N sector: geometric generator
+"central plaza" → C sector: pulse generator
+"narrow alleys" → fill remaining sectors: rain generator, low density
+
+### Fixed: the describer test to export results — add at the bottom of tests/test-grid-describer.js, replace the last 3 lines (console.log + if (failed))
 - 865 passed, 0 failed. Both suites counting correctly now. Build at 20/20 modules.
 
 ### Tasks 5.1 and 5.4a are done. The Tier 0 AI consumer is complete:
@@ -1084,3 +1111,115 @@ Modify: `tests/run-all.js`
 
 ----
 
+## Task 5.UI — AI Consumer UI Integration
+
+**"The grid's AI surface"**
+
+### What It Does
+
+- Adds an AI panel to dist/index.html with:
+
+1. Describe button → runs 5.1, shows description, stores in project.ai_context
+2. Generate from Text input → runs 5.4a, creates new grid from prompt
+3. Tier indicator badge (0/1/2) based on detected capabilities
+4. Placeholder tabs for Tier 1 (upscale) and Tier 2 (Gemini) — wired in later tasks
+
+### Files
+
+- `src/shell/body.html` — add AI section to sidebar + modal
+- `src/shell/style.css` — AI panel styles
+- `src/shell/app.js` — wire describer + text-to-grid + tier detection
+- `build.js` — verify module order
+
+### UI Layout
+```
+SIDEBAR (below IMAGE IMPORT):
+┌─────────────────────────┐
+│ AI                      │
+│ ┌─────────────────────┐ │
+│ │ 🔍 Describe Grid    │ │  ← runs describeGrid(), shows modal
+│ └─────────────────────┘ │
+│ ┌─────────────────────┐ │
+│ │ ✨ Generate from Text│ │  ← opens text-to-grid modal
+│ └─────────────────────┘ │
+│ Tier: 0 (Offline)       │  ← auto-detected
+│                         │
+│ 🖼️ Upscale (Tier 1)    │  ← disabled, placeholder
+│ 🌐 Gemini (Tier 2)     │  ← disabled, placeholder
+└─────────────────────────┘
+```
+
+### Description Modal
+```
+┌──────────────────────────────────────┐
+│ 🔍 Grid Description                 │
+│                                      │
+│ Summary: An 86×118 dense grid...     │
+│                                      │
+│ Composition: 10,142 cells, 72% avg   │
+│ Palette: Cool, dominant #192123      │
+│ Semantics: 72% solid, 15% fluid...   │
+│ Regions: 5 detected                  │
+│   • top-center: emissive cluster     │
+│   • center: large solid mass         │
+│   ...                                │
+│                                      │
+│ AI Prompt:                           │
+│ ┌──────────────────────────────────┐ │
+│ │ A cool-toned dense composition...│ │  ← editable, copy-able
+│ └──────────────────────────────────┘ │
+│                                      │
+│ [Copy Prompt] [Save to Project]      │
+│                        [Close]       │
+└──────────────────────────────────────┘
+```
+
+- "Save to Project" writes the description to grid.project.ai_context.
+
+### Generate Modal
+
+```
+┌──────────────────────────────────────┐
+│ ✨ Generate Grid from Text           │
+│                                      │
+│ Describe a scene:                    │
+│ ┌──────────────────────────────────┐ │
+│ │ A mountain landscape with mist   │ │
+│ │ rolling through valleys, bright  │ │
+│ │ energy pulses at the peaks       │ │
+│ └──────────────────────────────────┘ │
+│                                      │
+│ Width: [40]  Height: [20]  Seed: [ ] │
+│                                      │
+│ Interpretation:                      │
+│   terrain → mountain (N+C zones)     │
+│   mist → fluid (S zone)              │
+│   energy → emissive (peaks)          │
+│                                      │
+│ [Preview] [Apply to Frame] [New Proj]│
+│                             [Close]  │
+└──────────────────────────────────────┘
+```
+
+### Tier Detection
+
+```js
+function detectAITier() {
+  // Tier 2: Gemini API key exists in localStorage
+  if (localStorage.getItem('grid_gemini_key')) return 2;
+  // Tier 1: Transformers.js or ONNX loaded (future CDN check)
+  if (window.TransformersApi || window.ort) return 1;
+  // Tier 0: Offline/template only
+  return 0;
+}
+```
+
+### Exit Criteria
+
+- Describe button → modal with full description + copyable prompt
+- Generate input → parsed → preview → apply to grid
+- Tier badge shows 0 (since no CDN models loaded yet)
+- Both work fully offline
+
+### Testing 
+- 

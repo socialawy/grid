@@ -557,3 +557,23 @@
       color: #fff;
       border-color: #666;
     }
+
+/* AI section badges */
+#aiTierBadge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-weight: bold;
+}
+#descPrompt:focus, #genPromptInput:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+#genInterpretation .gen-zone {
+  color: var(--accent);
+}
+#genInterpretation .gen-ignored {
+  color: var(--dim);
+  text-decoration: line-through;
+}

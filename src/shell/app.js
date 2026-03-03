@@ -872,3 +872,234 @@ function scheduleAutoSave() {
     catch (e) { setStatus('Auto-save failed: ' + e.message, true); }
   }, 2000);
 }
+
+// ============================================================
+// AI CONSUMER — UI WIRING (Task 5.UI)
+// ============================================================
+
+/** Detect current AI tier based on available capabilities */
+function detectAITier() {
+  if (typeof localStorage !== 'undefined' && localStorage.getItem('grid_gemini_key')) return 2;
+  if (typeof window !== 'undefined' && (window.TransformersApi || window.ort)) return 1;
+  return 0;
+}
+
+/** Update the tier badge in sidebar */
+function updateAITierBadge() {
+  const badge = document.getElementById('aiTierBadge');
+  if (!badge) return;
+  const tier = detectAITier();
+  const labels = ['0 (Offline)', '1 (Local AI)', '2 (Cloud AI)'];
+  const colors = ['var(--dim)', 'var(--accent)', 'var(--accent2)'];
+  badge.textContent = labels[tier] || labels[0];
+  badge.style.color = colors[tier] || colors[0];
+
+  // Enable/disable tier-gated buttons
+  const upscaleBtn = document.getElementById('aiUpscaleBtn');
+  const geminiBtn = document.getElementById('aiGeminiBtn');
+  if (upscaleBtn) { upscaleBtn.disabled = tier < 1; upscaleBtn.style.opacity = tier >= 1 ? '1' : '0.4'; }
+  if (geminiBtn) { geminiBtn.disabled = tier < 2; geminiBtn.style.opacity = tier >= 2 ? '1' : '0.4'; }
+}
+
+/** Describe the current grid and show the description modal */
+function describeCurrentGrid() {
+  if (typeof describeGrid !== 'function' && typeof GridDescriber === 'undefined') {
+    setStatus('Grid describer not available', true);
+    return;
+  }
+  const describeFn = typeof describeGrid === 'function' ? describeGrid :
+    (GridDescriber ? GridDescriber.describeGrid : null);
+  if (!describeFn) { setStatus('Grid describer not available', true); return; }
+
+  const fi = renderer ? renderer.current : 0;
+  const desc = describeFn(grid, fi, { detail: 'full' });
+
+  // Summary
+  const summaryEl = document.getElementById('descSummary');
+  if (summaryEl) summaryEl.textContent = desc.summary;
+
+  // Composition
+  const compEl = document.getElementById('descComposition');
+  if (compEl) {
+    compEl.innerHTML = `${desc.composition.dimensions}<br>` +
+      `${desc.composition.cellCount.toLocaleString()} cells (${(desc.composition.fillRatio * 100).toFixed(1)}% fill)<br>` +
+      `Density: ${desc.composition.densityAvg.toFixed(2)} (${desc.composition.densityDistribution})`;
+  }
+
+  // Palette
+  const palEl = document.getElementById('descPalette');
+  if (palEl) {
+    const swatches = [desc.palette.dominant, ...desc.palette.accent]
+      .map(c => `<span style="display:inline-block;width:14px;height:14px;background:${c};border:1px solid var(--border);border-radius:2px;vertical-align:middle"></span>`)
+      .join(' ');
+    palEl.innerHTML = `${swatches}<br>${desc.palette.warmth} · ${desc.palette.colorCount} colors`;
+  }
+
+  // Semantics
+  const semEl = document.getElementById('descSemantics');
+  if (semEl) {
+    const entries = Object.entries(desc.semantics)
+      .filter(([k]) => k !== 'distribution')
+      .map(([k, v]) => `${k}: ${(v * 100).toFixed(0)}%`)
+      .join(', ');
+    semEl.innerHTML = `${entries}<br><em>${desc.semantics.distribution}</em>`;
+  }
+
+  // Regions
+  const regionCountEl = document.getElementById('descRegionCount');
+  const regionsEl = document.getElementById('descRegions');
+  if (regionCountEl) regionCountEl.textContent = desc.regions.length;
+  if (regionsEl) {
+    regionsEl.innerHTML = desc.regions.length === 0
+      ? '<em style="color:var(--dim)">No distinct regions detected</em>'
+      : desc.regions.map(r => `• ${r.description}`).join('<br>');
+  }
+
+  // Prompt
+  const promptEl = document.getElementById('descPrompt');
+  if (promptEl) promptEl.value = desc.prompt;
+
+  openModal('describeModal');
+}
+
+/** Copy the AI prompt to clipboard */
+function copyDescPrompt() {
+  const promptEl = document.getElementById('descPrompt');
+  if (!promptEl) return;
+  navigator.clipboard.writeText(promptEl.value).then(() => {
+    setStatus('Prompt copied to clipboard');
+  }).catch(() => {
+    // Fallback: select all
+    promptEl.select();
+    setStatus('Select all — use Ctrl+C to copy');
+  });
+}
+
+/** Save description + prompt to grid.project.ai_context */
+function saveDescToProject() {
+  const promptEl = document.getElementById('descPrompt');
+  if (!promptEl) return;
+  grid.project = grid.project || {};
+  grid.project.ai_context = grid.project.ai_context || {};
+  grid.project.ai_context.description = promptEl.value;
+  grid.project.ai_context.described_at = new Date().toISOString();
+  grid.meta.modified = new Date().toISOString();
+  scheduleAutoSave();
+  setStatus('AI context saved to project');
+}
+
+/** Show the generate-from-text modal */
+function showGenerateModal() {
+  const interpEl = document.getElementById('genInterpretation');
+  if (interpEl) interpEl.innerHTML = '<em style="color:var(--dim)">Type a description and click Preview</em>';
+  // Clear previous preview
+  const canvas = document.getElementById('genPreviewCanvas');
+  if (canvas) { canvas.width = 1; canvas.height = 1; }
+  openModal('generateModal');
+  // Focus the prompt input
+  setTimeout(() => {
+    const input = document.getElementById('genPromptInput');
+    if (input) input.focus();
+  }, 100);
+}
+
+// Store last generated result for apply
+let _lastGenerateResult = null;
+
+/** Preview text-to-grid generation */
+function previewGenerate() {
+  const genFn = typeof textToGrid === 'function' ? textToGrid :
+    (typeof TextToGrid !== 'undefined' ? TextToGrid.textToGrid : null);
+  if (!genFn) { setStatus('Text-to-grid not available', true); return; }
+
+  const prompt = (document.getElementById('genPromptInput')?.value || '').trim();
+  if (!prompt) { setStatus('Enter a description first', true); return; }
+
+  const width = Math.max(5, Math.min(200, +(document.getElementById('genWidth')?.value) || 40));
+  const height = Math.max(5, Math.min(200, +(document.getElementById('genHeight')?.value) || 20));
+  const seedInput = document.getElementById('genSeed')?.value;
+  const seed = seedInput ? +seedInput : (Date.now() ^ 0xBEEF);
+
+  const result = genFn(prompt, { width, height, seed });
+  _lastGenerateResult = result;
+
+  // Show interpretation
+  const interpEl = document.getElementById('genInterpretation');
+  if (interpEl) {
+    const zones = result.interpretation.zones.map(z =>
+      `<span class="gen-zone">${z.vocab}</span> → ${z.generator} (${z.position})`
+    ).join('<br>');
+    const ignored = result.interpretation.tokensIgnored.length > 0
+      ? `<br><span class="gen-ignored">Ignored: ${result.interpretation.tokensIgnored.join(', ')}</span>`
+      : '';
+    interpEl.innerHTML = zones + ignored + (result.interpretation.fallbackUsed
+      ? '<br><em style="color:var(--accent2)">No keywords matched — using fallback noise</em>'
+      : '');
+  }
+
+  // Render preview to canvas
+  const canvas = document.getElementById('genPreviewCanvas');
+  if (canvas) {
+    const g = result.grid;
+    const fontSize = 8;
+    const cw = fontSize * 0.6;
+    const ch = fontSize;
+    canvas.width = g.canvas.width * cw;
+    canvas.height = g.canvas.height * ch;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = g.canvas.defaultColor || '#0a0a1a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = `${fontSize}px monospace`;
+    ctx.textBaseline = 'top';
+    for (const cell of g.frames[0].cells) {
+      ctx.fillStyle = cell.color || '#888';
+      ctx.fillText(cell.char, cell.x * cw, cell.y * ch);
+    }
+  }
+
+  // Update seed field if it was random
+  if (!seedInput) {
+    const seedEl = document.getElementById('genSeed');
+    if (seedEl) seedEl.value = seed;
+  }
+}
+
+/** Apply generated grid to current frame or as new project */
+function applyGenerate(asNewProject) {
+  if (!_lastGenerateResult) { setStatus('Preview first', true); return; }
+  const generated = _lastGenerateResult.grid;
+
+  if (asNewProject) {
+    grid = generated;
+  } else {
+    // Apply generated frame to current frame, resizing canvas if needed
+    grid.canvas.width = generated.canvas.width;
+    grid.canvas.height = generated.canvas.height;
+    grid.canvas.charset = generated.canvas.charset;
+    const fi = renderer ? renderer.current : 0;
+    grid.frames[fi] = generated.frames[0];
+    grid.frames[fi].id = grid.frames[fi].id || ('frame_' + String(fi + 1).padStart(3, '0'));
+  }
+
+  grid.meta.modified = new Date().toISOString();
+  if (generated.project?.ai_context) {
+    grid.project = grid.project || {};
+    grid.project.ai_context = generated.project.ai_context;
+  }
+
+  closeModal('generateModal');
+  selectedChar = grid.canvas.charset[0] || '@';
+  initRenderer();
+  updateFrameLabel();
+  scheduleAutoSave();
+  setStatus(asNewProject ? 'New project generated from text' : 'Generated grid applied to frame');
+}
+
+// Initialize tier badge on load
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    updateAITierBadge();
+  });
+  // Also update after a delay (CDN scripts may load late)
+  setTimeout(updateAITierBadge, 3000);
+}

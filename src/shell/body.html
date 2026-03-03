@@ -87,6 +87,17 @@
       </section>
 
       <section>
+        <h3>AI</h3>
+        <button onclick="describeCurrentGrid()" style="width:100%">🔍 Describe Grid</button>
+        <button onclick="showGenerateModal()" style="width:100%; margin-top:4px">✨ Generate from Text</button>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">
+          Tier: <span id="aiTierBadge">0 (Offline)</span>
+        </div>
+        <button id="aiUpscaleBtn" disabled style="width:100%;margin-top:4px;opacity:0.4">🖼️ Upscale (Tier 1)</button>
+        <button id="aiGeminiBtn" disabled style="width:100%;margin-top:4px;opacity:0.4">🌐 Gemini (Tier 2)</button>
+      </section>
+
+      <section>
         <h3>Display</h3>
         <label>Font Size: <span id="fontSizeVal">14</span>px</label>
         <input type="range" id="fontSizeSlider" min="6" max="32" value="14" oninput="updateFontSize(+this.value)">
@@ -355,6 +366,86 @@
           style="border-color:var(--accent);color:var(--accent);display:none">✓ Apply to Current Frame</button>
         <button id="imgNewBtn" onclick="applyImageImport(true)"
           style="border-color:var(--accent2);color:var(--accent2);display:none">+ Apply as New Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Describe Grid Modal -->
+  <div class="modal-overlay" id="describeModal">
+    <div class="modal" style="max-width:600px">
+      <h3>🔍 Grid Description</h3>
+      <div id="descSummary" style="font-size:13px;margin-bottom:8px;color:var(--fg)"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <div style="font-size:10px;color:var(--dim)">Composition</div>
+          <div id="descComposition" style="font-size:11px"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--dim)">Palette</div>
+          <div id="descPalette" style="font-size:11px"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--dim)">Semantics</div>
+          <div id="descSemantics" style="font-size:11px"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--dim)">Regions (<span id="descRegionCount">0</span>)</div>
+          <div id="descRegions" style="font-size:11px;max-height:80px;overflow-y:auto"></div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--dim);margin-bottom:4px">AI Prompt (editable)</div>
+      <textarea id="descPrompt" rows="3"
+        style="width:100%;resize:vertical;font-size:12px;background:var(--bg);color:var(--fg);border:1px solid var(--border);border-radius:3px;padding:6px;font-family:monospace"></textarea>
+      <div style="margin-top:8px;display:flex;gap:6px">
+        <button onclick="copyDescPrompt()">📋 Copy Prompt</button>
+        <button onclick="saveDescToProject()" style="border-color:var(--accent);color:var(--accent)">💾 Save to
+          Project</button>
+        <div style="flex:1"></div>
+        <button onclick="closeModal('describeModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generate from Text Modal -->
+  <div class="modal-overlay" id="generateModal">
+    <div class="modal" style="max-width:600px">
+      <h3>✨ Generate Grid from Text</h3>
+      <div style="margin-bottom:8px">
+        <label style="font-size:11px;color:var(--dim)">Describe a scene:</label>
+        <textarea id="genPromptInput" rows="3"
+          placeholder="A mountain landscape with mist rolling through valleys, bright energy pulses at the peaks"
+          style="width:100%;resize:vertical;font-size:12px;background:var(--bg);color:var(--fg);border:1px solid var(--border);border-radius:3px;padding:6px;font-family:monospace"></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <label style="font-size:10px;color:var(--dim)">Width</label>
+          <input type="number" id="genWidth" value="40" min="5" max="200" style="width:100%">
+        </div>
+        <div>
+          <label style="font-size:10px;color:var(--dim)">Height</label>
+          <input type="number" id="genHeight" value="20" min="5" max="200" style="width:100%">
+        </div>
+        <div>
+          <label style="font-size:10px;color:var(--dim)">Seed (blank=random)</label>
+          <input type="number" id="genSeed" value="" placeholder="random" style="width:100%">
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--dim);margin-bottom:4px">Interpretation:</div>
+      <div id="genInterpretation"
+        style="font-size:11px;background:var(--surface);padding:6px;border-radius:3px;min-height:30px;max-height:80px;overflow-y:auto;margin-bottom:8px;font-family:monospace">
+      </div>
+      <div id="genPreviewContainer" style="margin-bottom:8px">
+        <canvas id="genPreviewCanvas"
+          style="border:1px solid var(--border);border-radius:3px;max-width:100%;background:#000"></canvas>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button onclick="previewGenerate()">👁️ Preview</button>
+        <button onclick="applyGenerate(false)" style="border-color:var(--accent);color:var(--accent)">✓ Apply to
+          Frame</button>
+        <button onclick="applyGenerate(true)" style="border-color:var(--accent2);color:var(--accent2)">+ New
+          Project</button>
+        <div style="flex:1"></div>
+        <button onclick="closeModal('generateModal')">Close</button>
       </div>
     </div>
   </div>

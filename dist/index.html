@@ -592,6 +592,26 @@
       color: #fff;
       border-color: #666;
     }
+
+/* AI section badges */
+#aiTierBadge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-weight: bold;
+}
+#descPrompt:focus, #genPromptInput:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+#genInterpretation .gen-zone {
+  color: var(--accent);
+}
+#genInterpretation .gen-ignored {
+  color: var(--dim);
+  text-decoration: line-through;
+}
 </style>
 </head>
 <body>
@@ -680,6 +700,17 @@
         <button onclick="importImage()" style="width:100%">📷 Image → Grid</button>
         <div style="font-size:10px;color:var(--dim);margin-top:4px">Converts a photo to ASCII art using pixel sampling
         </div>
+      </section>
+
+      <section>
+        <h3>AI</h3>
+        <button onclick="describeCurrentGrid()" style="width:100%">🔍 Describe Grid</button>
+        <button onclick="showGenerateModal()" style="width:100%; margin-top:4px">✨ Generate from Text</button>
+        <div style="font-size:10px;color:var(--dim);margin-top:4px">
+          Tier: <span id="aiTierBadge">0 (Offline)</span>
+        </div>
+        <button id="aiUpscaleBtn" disabled style="width:100%;margin-top:4px;opacity:0.4">🖼️ Upscale (Tier 1)</button>
+        <button id="aiGeminiBtn" disabled style="width:100%;margin-top:4px;opacity:0.4">🌐 Gemini (Tier 2)</button>
       </section>
 
       <section>
@@ -951,6 +982,86 @@
           style="border-color:var(--accent);color:var(--accent);display:none">✓ Apply to Current Frame</button>
         <button id="imgNewBtn" onclick="applyImageImport(true)"
           style="border-color:var(--accent2);color:var(--accent2);display:none">+ Apply as New Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Describe Grid Modal -->
+  <div class="modal-overlay" id="describeModal">
+    <div class="modal" style="max-width:600px">
+      <h3>🔍 Grid Description</h3>
+      <div id="descSummary" style="font-size:13px;margin-bottom:8px;color:var(--fg)"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <div style="font-size:10px;color:var(--dim)">Composition</div>
+          <div id="descComposition" style="font-size:11px"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--dim)">Palette</div>
+          <div id="descPalette" style="font-size:11px"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--dim)">Semantics</div>
+          <div id="descSemantics" style="font-size:11px"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--dim)">Regions (<span id="descRegionCount">0</span>)</div>
+          <div id="descRegions" style="font-size:11px;max-height:80px;overflow-y:auto"></div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--dim);margin-bottom:4px">AI Prompt (editable)</div>
+      <textarea id="descPrompt" rows="3"
+        style="width:100%;resize:vertical;font-size:12px;background:var(--bg);color:var(--fg);border:1px solid var(--border);border-radius:3px;padding:6px;font-family:monospace"></textarea>
+      <div style="margin-top:8px;display:flex;gap:6px">
+        <button onclick="copyDescPrompt()">📋 Copy Prompt</button>
+        <button onclick="saveDescToProject()" style="border-color:var(--accent);color:var(--accent)">💾 Save to
+          Project</button>
+        <div style="flex:1"></div>
+        <button onclick="closeModal('describeModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generate from Text Modal -->
+  <div class="modal-overlay" id="generateModal">
+    <div class="modal" style="max-width:600px">
+      <h3>✨ Generate Grid from Text</h3>
+      <div style="margin-bottom:8px">
+        <label style="font-size:11px;color:var(--dim)">Describe a scene:</label>
+        <textarea id="genPromptInput" rows="3"
+          placeholder="A mountain landscape with mist rolling through valleys, bright energy pulses at the peaks"
+          style="width:100%;resize:vertical;font-size:12px;background:var(--bg);color:var(--fg);border:1px solid var(--border);border-radius:3px;padding:6px;font-family:monospace"></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <label style="font-size:10px;color:var(--dim)">Width</label>
+          <input type="number" id="genWidth" value="40" min="5" max="200" style="width:100%">
+        </div>
+        <div>
+          <label style="font-size:10px;color:var(--dim)">Height</label>
+          <input type="number" id="genHeight" value="20" min="5" max="200" style="width:100%">
+        </div>
+        <div>
+          <label style="font-size:10px;color:var(--dim)">Seed (blank=random)</label>
+          <input type="number" id="genSeed" value="" placeholder="random" style="width:100%">
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--dim);margin-bottom:4px">Interpretation:</div>
+      <div id="genInterpretation"
+        style="font-size:11px;background:var(--surface);padding:6px;border-radius:3px;min-height:30px;max-height:80px;overflow-y:auto;margin-bottom:8px;font-family:monospace">
+      </div>
+      <div id="genPreviewContainer" style="margin-bottom:8px">
+        <canvas id="genPreviewCanvas"
+          style="border:1px solid var(--border);border-radius:3px;max-width:100%;background:#000"></canvas>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button onclick="previewGenerate()">👁️ Preview</button>
+        <button onclick="applyGenerate(false)" style="border-color:var(--accent);color:var(--accent)">✓ Apply to
+          Frame</button>
+        <button onclick="applyGenerate(true)" style="border-color:var(--accent2);color:var(--accent2)">+ New
+          Project</button>
+        <div style="flex:1"></div>
+        <button onclick="closeModal('generateModal')">Close</button>
       </div>
     </div>
   </div>
@@ -8123,6 +8234,237 @@ function scheduleAutoSave() {
     try { await saveProject(grid); }
     catch (e) { setStatus('Auto-save failed: ' + e.message, true); }
   }, 2000);
+}
+
+// ============================================================
+// AI CONSUMER — UI WIRING (Task 5.UI)
+// ============================================================
+
+/** Detect current AI tier based on available capabilities */
+function detectAITier() {
+  if (typeof localStorage !== 'undefined' && localStorage.getItem('grid_gemini_key')) return 2;
+  if (typeof window !== 'undefined' && (window.TransformersApi || window.ort)) return 1;
+  return 0;
+}
+
+/** Update the tier badge in sidebar */
+function updateAITierBadge() {
+  const badge = document.getElementById('aiTierBadge');
+  if (!badge) return;
+  const tier = detectAITier();
+  const labels = ['0 (Offline)', '1 (Local AI)', '2 (Cloud AI)'];
+  const colors = ['var(--dim)', 'var(--accent)', 'var(--accent2)'];
+  badge.textContent = labels[tier] || labels[0];
+  badge.style.color = colors[tier] || colors[0];
+
+  // Enable/disable tier-gated buttons
+  const upscaleBtn = document.getElementById('aiUpscaleBtn');
+  const geminiBtn = document.getElementById('aiGeminiBtn');
+  if (upscaleBtn) { upscaleBtn.disabled = tier < 1; upscaleBtn.style.opacity = tier >= 1 ? '1' : '0.4'; }
+  if (geminiBtn) { geminiBtn.disabled = tier < 2; geminiBtn.style.opacity = tier >= 2 ? '1' : '0.4'; }
+}
+
+/** Describe the current grid and show the description modal */
+function describeCurrentGrid() {
+  if (typeof describeGrid !== 'function' && typeof GridDescriber === 'undefined') {
+    setStatus('Grid describer not available', true);
+    return;
+  }
+  const describeFn = typeof describeGrid === 'function' ? describeGrid :
+    (GridDescriber ? GridDescriber.describeGrid : null);
+  if (!describeFn) { setStatus('Grid describer not available', true); return; }
+
+  const fi = renderer ? renderer.current : 0;
+  const desc = describeFn(grid, fi, { detail: 'full' });
+
+  // Summary
+  const summaryEl = document.getElementById('descSummary');
+  if (summaryEl) summaryEl.textContent = desc.summary;
+
+  // Composition
+  const compEl = document.getElementById('descComposition');
+  if (compEl) {
+    compEl.innerHTML = `${desc.composition.dimensions}<br>` +
+      `${desc.composition.cellCount.toLocaleString()} cells (${(desc.composition.fillRatio * 100).toFixed(1)}% fill)<br>` +
+      `Density: ${desc.composition.densityAvg.toFixed(2)} (${desc.composition.densityDistribution})`;
+  }
+
+  // Palette
+  const palEl = document.getElementById('descPalette');
+  if (palEl) {
+    const swatches = [desc.palette.dominant, ...desc.palette.accent]
+      .map(c => `<span style="display:inline-block;width:14px;height:14px;background:${c};border:1px solid var(--border);border-radius:2px;vertical-align:middle"></span>`)
+      .join(' ');
+    palEl.innerHTML = `${swatches}<br>${desc.palette.warmth} · ${desc.palette.colorCount} colors`;
+  }
+
+  // Semantics
+  const semEl = document.getElementById('descSemantics');
+  if (semEl) {
+    const entries = Object.entries(desc.semantics)
+      .filter(([k]) => k !== 'distribution')
+      .map(([k, v]) => `${k}: ${(v * 100).toFixed(0)}%`)
+      .join(', ');
+    semEl.innerHTML = `${entries}<br><em>${desc.semantics.distribution}</em>`;
+  }
+
+  // Regions
+  const regionCountEl = document.getElementById('descRegionCount');
+  const regionsEl = document.getElementById('descRegions');
+  if (regionCountEl) regionCountEl.textContent = desc.regions.length;
+  if (regionsEl) {
+    regionsEl.innerHTML = desc.regions.length === 0
+      ? '<em style="color:var(--dim)">No distinct regions detected</em>'
+      : desc.regions.map(r => `• ${r.description}`).join('<br>');
+  }
+
+  // Prompt
+  const promptEl = document.getElementById('descPrompt');
+  if (promptEl) promptEl.value = desc.prompt;
+
+  openModal('describeModal');
+}
+
+/** Copy the AI prompt to clipboard */
+function copyDescPrompt() {
+  const promptEl = document.getElementById('descPrompt');
+  if (!promptEl) return;
+  navigator.clipboard.writeText(promptEl.value).then(() => {
+    setStatus('Prompt copied to clipboard');
+  }).catch(() => {
+    // Fallback: select all
+    promptEl.select();
+    setStatus('Select all — use Ctrl+C to copy');
+  });
+}
+
+/** Save description + prompt to grid.project.ai_context */
+function saveDescToProject() {
+  const promptEl = document.getElementById('descPrompt');
+  if (!promptEl) return;
+  grid.project = grid.project || {};
+  grid.project.ai_context = grid.project.ai_context || {};
+  grid.project.ai_context.description = promptEl.value;
+  grid.project.ai_context.described_at = new Date().toISOString();
+  grid.meta.modified = new Date().toISOString();
+  scheduleAutoSave();
+  setStatus('AI context saved to project');
+}
+
+/** Show the generate-from-text modal */
+function showGenerateModal() {
+  const interpEl = document.getElementById('genInterpretation');
+  if (interpEl) interpEl.innerHTML = '<em style="color:var(--dim)">Type a description and click Preview</em>';
+  // Clear previous preview
+  const canvas = document.getElementById('genPreviewCanvas');
+  if (canvas) { canvas.width = 1; canvas.height = 1; }
+  openModal('generateModal');
+  // Focus the prompt input
+  setTimeout(() => {
+    const input = document.getElementById('genPromptInput');
+    if (input) input.focus();
+  }, 100);
+}
+
+// Store last generated result for apply
+let _lastGenerateResult = null;
+
+/** Preview text-to-grid generation */
+function previewGenerate() {
+  const genFn = typeof textToGrid === 'function' ? textToGrid :
+    (typeof TextToGrid !== 'undefined' ? TextToGrid.textToGrid : null);
+  if (!genFn) { setStatus('Text-to-grid not available', true); return; }
+
+  const prompt = (document.getElementById('genPromptInput')?.value || '').trim();
+  if (!prompt) { setStatus('Enter a description first', true); return; }
+
+  const width = Math.max(5, Math.min(200, +(document.getElementById('genWidth')?.value) || 40));
+  const height = Math.max(5, Math.min(200, +(document.getElementById('genHeight')?.value) || 20));
+  const seedInput = document.getElementById('genSeed')?.value;
+  const seed = seedInput ? +seedInput : (Date.now() ^ 0xBEEF);
+
+  const result = genFn(prompt, { width, height, seed });
+  _lastGenerateResult = result;
+
+  // Show interpretation
+  const interpEl = document.getElementById('genInterpretation');
+  if (interpEl) {
+    const zones = result.interpretation.zones.map(z =>
+      `<span class="gen-zone">${z.vocab}</span> → ${z.generator} (${z.position})`
+    ).join('<br>');
+    const ignored = result.interpretation.tokensIgnored.length > 0
+      ? `<br><span class="gen-ignored">Ignored: ${result.interpretation.tokensIgnored.join(', ')}</span>`
+      : '';
+    interpEl.innerHTML = zones + ignored + (result.interpretation.fallbackUsed
+      ? '<br><em style="color:var(--accent2)">No keywords matched — using fallback noise</em>'
+      : '');
+  }
+
+  // Render preview to canvas
+  const canvas = document.getElementById('genPreviewCanvas');
+  if (canvas) {
+    const g = result.grid;
+    const fontSize = 8;
+    const cw = fontSize * 0.6;
+    const ch = fontSize;
+    canvas.width = g.canvas.width * cw;
+    canvas.height = g.canvas.height * ch;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = g.canvas.defaultColor || '#0a0a1a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.font = `${fontSize}px monospace`;
+    ctx.textBaseline = 'top';
+    for (const cell of g.frames[0].cells) {
+      ctx.fillStyle = cell.color || '#888';
+      ctx.fillText(cell.char, cell.x * cw, cell.y * ch);
+    }
+  }
+
+  // Update seed field if it was random
+  if (!seedInput) {
+    const seedEl = document.getElementById('genSeed');
+    if (seedEl) seedEl.value = seed;
+  }
+}
+
+/** Apply generated grid to current frame or as new project */
+function applyGenerate(asNewProject) {
+  if (!_lastGenerateResult) { setStatus('Preview first', true); return; }
+  const generated = _lastGenerateResult.grid;
+
+  if (asNewProject) {
+    grid = generated;
+  } else {
+    // Apply generated frame to current frame, resizing canvas if needed
+    grid.canvas.width = generated.canvas.width;
+    grid.canvas.height = generated.canvas.height;
+    grid.canvas.charset = generated.canvas.charset;
+    const fi = renderer ? renderer.current : 0;
+    grid.frames[fi] = generated.frames[0];
+    grid.frames[fi].id = grid.frames[fi].id || ('frame_' + String(fi + 1).padStart(3, '0'));
+  }
+
+  grid.meta.modified = new Date().toISOString();
+  if (generated.project?.ai_context) {
+    grid.project = grid.project || {};
+    grid.project.ai_context = generated.project.ai_context;
+  }
+
+  closeModal('generateModal');
+  selectedChar = grid.canvas.charset[0] || '@';
+  initRenderer();
+  updateFrameLabel();
+  scheduleAutoSave();
+  setStatus(asNewProject ? 'New project generated from text' : 'Generated grid applied to frame');
+}
+
+// Initialize tier badge on load
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    updateAITierBadge();
+  });
+  // Also update after a delay (CDN scripts may load late)
+  setTimeout(updateAITierBadge, 3000);
 }
   </script>
 </body>
