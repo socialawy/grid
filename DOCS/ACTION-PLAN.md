@@ -887,4 +887,11 @@ Imported images are now "full citizens" of the GRID engine, with audio and spati
 
 ----
 
+## New issue
+
+The 5307ms violation is real — showExportModal() calls serializeGrid(grid) synchronously, and Clair de Lune has 150 frames × ~1600 cells. That freezes the main thread for 5+ seconds before the modal even opens.
+
+But that's a large-project optimization issue, not a broken app. Normal projects (40×20, 1-7 frames) serialize in <50ms. Fix it properly during Phase 5/8.
+
+
 - `docs\plans\2026-03-03-phase-5-plan.md`

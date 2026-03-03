@@ -33,20 +33,6 @@ const renderer = createRenderer(canvas, grid);
 renderer.renderFrame();
 ```
 
-## Phase 0 Status ✅
-
-- [x] **Schema Definition** - Complete .grid format v0.1.0 specification
-- [x] **JSON Schema** - AJV-compatible validation schema
-- [x] **Core Library** - Pure JavaScript logic (33 functions, zero dependencies)
-- [x] **Canvas Renderer** - 2D rendering with animation support
-- [x] **Example Files** - 3 validated examples (minimal, heartbeat, mist-demo)
-
-## Files
-
-### Core
-- `grid-core.js` - Pure logic library, works in Node/Browser/Deno
-- `canvas-renderer.js` - Canvas2D renderer with playback API
-
 ### Specification
 - `schemas/grid.schema.json` - JSON Schema for validation
 - `schemas/grid-spec-v0.1.0.md` - Complete format specification
@@ -119,12 +105,27 @@ cd E:\co\GRID; npx serve . -p 3000
 
 ## Phase 4 (The 3D Consumer) is now complete. I have integrated the Three.js-based 3D spatial view into the GRID application.
 
-Key updates:
+## What Already Exists (Foundation from Phases 0–4 + 6)
 
-3D Mode: Click the new "🧊 3D" button in the toolbar to enter a spatial view of your grid.
-Heightmap Engine: Cells are mapped to 3D voxels based on density and semantic types.
-Camera Controls: Orbit around the scene or use the new presets (Orbit, Flyover, Top).
-Verification: 661 tests (including new heightmap tests) are passing, and manual verification in the browser confirmed full functionality.
+| Asset | Detail | Phase 5 Uses It For |
+| --- | --- | --- |
+| getGridStats(grid) | Cell count, frame count, canvas size | 5.1 composition summary |
+| getDensityMap(frame, canvas) | 2D float array [0-1] | 5.1 region detection, 5.2 upscale source |
+| getSemanticMap(frame, canvas) | 2D string array | 5.1 semantic composition |
+| getColorMap(frame, canvas) | 2D hex array | 5.1 palette extraction |
+| getCharMap(frame, canvas) | 2D char array | 5.1 pattern detection |
+| getCellsBySemantic(frame, s) | Filter cells by type | 5.1 region counting |
+| getCellsByChannel(frame, ch) | Filter by channel | 5.1 audio/spatial summary |
+| imageToGrid(img, opts) | Image → .grid (pixel sampling) | 5.4b builds on top |
+| Schema: channel.ai | additionalProperties: true | 5.4 stores AI metadata per cell |
+| Schema: project | additionalProperties: true | 5.1 writes ai_context here |
+| CDN pattern | Three.js dynamic inject + feature detect | 5.2/5.3 model loading |
+| Zero npm deps | package.json has "dependencies": {} | 5.2 CDN-only, no npm |
+| 667 tests, 0 failures | Clean baseline | Phase 5 adds ~200 tests |
+| Build: 18 modules, 803-line app.js | Room for 3-4 new modules | AI consumer slots in at position 15-17 |
+
+### Key insight:
+- The reading infrastructure is complete. grid-core.js has every query function Phase 5 needs. The schema already reserves channel.ai and allows additionalProperties on project. No schema changes required. The browser confirmed full functionality.
 
 ## License
 
@@ -133,4 +134,5 @@ Copyright (c) 2026 Socialawy. All rights reserved.
 
 ---
 
-**GRID v0.1.0** - Phase 2 Complete ✅
+**GRID v0.1.0** - Phases 0, 1, 2, 3, 4, 6 Complete ✅
+5 -> 7 -> 8
