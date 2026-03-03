@@ -1,0 +1,5645 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "ccead39c-06ad-4a7d-a096-4c3ace7e2a30",
+    "name": "Sky Islands",
+    "created": "2026-03-03T12:10:53.694Z",
+    "modified": "2026-03-03T12:10:53.694Z"
+  },
+  "canvas": {
+    "width": 40,
+    "height": 20,
+    "charset": " .:-=+*#%@",
+    "defaultChar": " ",
+    "defaultColor": "#00ff00",
+    "background": "#000000"
+  },
+  "frames": [
+    {
+      "id": "frame_0",
+      "index": 0,
+      "cells": [
+        {
+          "x": 0,
+          "y": 10,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 10,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 11,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 12,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 12,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 5,
+          "y": 13,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 5,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 5,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 5,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 5,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 5,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 5,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 6,
+          "y": 13,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 6,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 6,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 6,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 6,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 6,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 6,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 7,
+          "y": 13,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 7,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 7,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 7,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 7,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 7,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 7,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 13,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 9,
+          "y": 13,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 9,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 9,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 9,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 9,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 9,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 9,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 13,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 11,
+          "y": 13,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 11,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 11,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 11,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 11,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 11,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 11,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 12,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 13,
+          "y": 12,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 13,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 13,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 13,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 13,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 13,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 13,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 13,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 14,
+          "y": 11,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 14,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 14,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 14,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 14,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 14,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 14,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 14,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 14,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 10,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 15,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 9,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 8,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 8,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 7,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.65,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 8,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 6,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.7,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 7,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.65,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 8,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 6,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.7,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 7,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.65,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 8,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 6,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.7,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 7,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.65,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 8,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 6,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.7,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 7,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.65,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 8,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 23,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 6,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.7,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 7,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.65,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 8,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 6,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.7,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 7,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.65,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 8,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 6,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.7,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 7,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.65,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 8,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 6,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.7,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 7,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.65,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 8,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 7,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.65,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 8,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 8,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 8,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.6,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 9,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 9,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.55,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 10,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 31,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 10,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.5,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 11,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 11,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 11,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.45,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 12,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 12,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.4,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 13,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 36,
+          "y": 13,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 36,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 36,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 36,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 36,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 36,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 36,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 13,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 38,
+          "y": 13,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 38,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 38,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 38,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 38,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 38,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 38,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 39,
+          "y": 13,
+          "char": "#",
+          "color": "#00ff88",
+          "density": 1,
+          "semantic": "solid",
+          "channel": {
+            "spatial": {
+              "height": 0.35,
+              "material": "grass"
+            }
+          }
+        },
+        {
+          "x": 39,
+          "y": 14,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.3,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 39,
+          "y": 15,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.25,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 39,
+          "y": 16,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.2,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 39,
+          "y": 17,
+          "char": ".",
+          "color": "#553300",
+          "density": 0.5,
+          "semantic": "void",
+          "channel": {
+            "spatial": {
+              "height": 0.15,
+              "material": "dirt"
+            }
+          }
+        },
+        {
+          "x": 39,
+          "y": 18,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        },
+        {
+          "x": 39,
+          "y": 19,
+          "char": "~",
+          "color": "#0088ff",
+          "density": 0.3,
+          "semantic": "fluid",
+          "channel": {
+            "spatial": {
+              "height": 0.1,
+              "material": "water"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "project": {
+    "bpm": 120,
+    "scale": "minor",
+    "key": "A"
+  }
+}

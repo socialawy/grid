@@ -1,0 +1,120 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "classical-minuet-g3k7f2",
+    "name": "J.S. Bach - Minuet in G (BWV Anh. 114) – first 8 bars",
+    "author": "J.S. Bach (transcribed for GRID)",
+    "notes": "8 measures in G major. Yellow = melody (Arp), orange = drums. BPM 120, scale 'major', key 'G'. Each frame is one measure; columns 0‑3 are quarter notes. Audio channel explicitly sets MIDI notes."
+  },
+  "canvas": {
+    "width": 40,
+    "height": 24,
+    "charset": "█▓▒░· ",
+    "defaultChar": " ",
+    "background": "#050a05"
+  },
+  "project": {
+    "bpm": 120,
+    "scale": "major",
+    "key": "G"
+  },
+  "frames": [
+    {
+      "id": "f0",
+      "index": 0,
+      "cells": [
+        { "x":0, "y":12, "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":55,"velocity":90,"duration":1}} },
+        { "x":1, "y":10, "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":59,"velocity":85,"duration":1}} },
+        { "x":2, "y":8,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":62,"velocity":80,"duration":1}} },
+        { "x":3, "y":6,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":67,"velocity":75,"duration":1}} },
+        { "x":0, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":36,"velocity":70,"duration":1}} },
+        { "x":2, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":38,"velocity":65,"duration":1}} }
+      ]
+    },
+    {
+      "id": "f1",
+      "index": 1,
+      "cells": [
+        { "x":0, "y":11, "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":57,"velocity":90,"duration":1}} },
+        { "x":1, "y":9,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":60,"velocity":85,"duration":1}} },
+        { "x":2, "y":7,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":64,"velocity":80,"duration":1}} },
+        { "x":3, "y":5,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":69,"velocity":75,"duration":1}} },
+        { "x":0, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":36,"velocity":70,"duration":1}} },
+        { "x":2, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":38,"velocity":65,"duration":1}} }
+      ]
+    },
+    {
+      "id": "f2",
+      "index": 2,
+      "cells": [
+        { "x":0, "y":10, "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":59,"velocity":90,"duration":1}} },
+        { "x":1, "y":8,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":62,"velocity":85,"duration":1}} },
+        { "x":2, "y":6,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":67,"velocity":80,"duration":1}} },
+        { "x":3, "y":4,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":71,"velocity":75,"duration":1}} },
+        { "x":0, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":36,"velocity":70,"duration":1}} },
+        { "x":2, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":38,"velocity":65,"duration":1}} }
+      ]
+    },
+    {
+      "id": "f3",
+      "index": 3,
+      "cells": [
+        { "x":0, "y":9,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":60,"velocity":90,"duration":1}} },
+        { "x":1, "y":7,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":64,"velocity":85,"duration":1}} },
+        { "x":2, "y":5,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":69,"velocity":80,"duration":1}} },
+        { "x":3, "y":3,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":72,"velocity":75,"duration":1}} },
+        { "x":0, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":36,"velocity":70,"duration":1}} },
+        { "x":2, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":38,"velocity":65,"duration":1}} }
+      ]
+    },
+    {
+      "id": "f4",
+      "index": 4,
+      "cells": [
+        { "x":0, "y":8,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":62,"velocity":90,"duration":1}} },
+        { "x":1, "y":6,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":66,"velocity":85,"duration":1}} },
+        { "x":2, "y":4,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":69,"velocity":80,"duration":1}} },
+        { "x":3, "y":2,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":74,"velocity":75,"duration":1}} },
+        { "x":0, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":36,"velocity":70,"duration":1}} },
+        { "x":2, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":38,"velocity":65,"duration":1}} }
+      ]
+    },
+    {
+      "id": "f5",
+      "index": 5,
+      "cells": [
+        { "x":0, "y":7,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":64,"velocity":90,"duration":1}} },
+        { "x":1, "y":5,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":67,"velocity":85,"duration":1}} },
+        { "x":2, "y":3,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":71,"velocity":80,"duration":1}} },
+        { "x":3, "y":1,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":76,"velocity":75,"duration":1}} },
+        { "x":0, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":36,"velocity":70,"duration":1}} },
+        { "x":2, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":38,"velocity":65,"duration":1}} }
+      ]
+    },
+    {
+      "id": "f6",
+      "index": 6,
+      "cells": [
+        { "x":0, "y":6,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":67,"velocity":90,"duration":1}} },
+        { "x":1, "y":4,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":69,"velocity":85,"duration":1}} },
+        { "x":2, "y":2,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":74,"velocity":80,"duration":1}} },
+        { "x":3, "y":0,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":79,"velocity":75,"duration":1}} },
+        { "x":0, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":36,"velocity":70,"duration":1}} },
+        { "x":2, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":38,"velocity":65,"duration":1}} }
+      ]
+    },
+    {
+      "id": "f7",
+      "index": 7,
+      "cells": [
+        { "x":0, "y":5,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":69,"velocity":90,"duration":1}} },
+        { "x":1, "y":3,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":71,"velocity":85,"duration":1}} },
+        { "x":2, "y":1,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":76,"velocity":80,"duration":1}} },
+        { "x":3, "y":0,  "char":"█", "color":"#ffff00", "density":0.9, "semantic":"note", "channel":{"audio":{"note":79,"velocity":75,"duration":1}} },
+        { "x":0, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":36,"velocity":70,"duration":1}} },
+        { "x":2, "y":22, "char":"▓", "color":"#ff8800", "density":0.8, "semantic":"note", "channel":{"audio":{"note":38,"velocity":65,"duration":1}} }
+      ]
+    }
+  ]
+}

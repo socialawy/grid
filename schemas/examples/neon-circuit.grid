@@ -1,0 +1,1751 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "6b26809d-c107-434c-84e5-4268df5c090a",
+    "name": "Neon Circuit",
+    "created": "2026-03-03T12:10:53.693Z",
+    "modified": "2026-03-03T12:10:53.694Z"
+  },
+  "canvas": {
+    "width": 64,
+    "height": 32,
+    "charset": " .:-=+*#%@",
+    "defaultChar": " ",
+    "defaultColor": "#00ff00",
+    "background": "#000000"
+  },
+  "frames": [
+    {
+      "id": "frame_0",
+      "index": 0,
+      "cells": [
+        {
+          "x": 0,
+          "y": 29,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 27,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 3,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 9,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 27,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 11,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 27,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 29,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 19,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 27,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 27,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 27,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 27,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 35,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 36,
+          "y": 27,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 40,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 41,
+          "y": 27,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 42,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 43,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 44,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 48,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 49,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 50,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 51,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 52,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 56,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 57,
+          "y": 29,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 58,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 59,
+          "y": 29,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 60,
+          "y": 28,
+          "char": "=",
+          "color": "#00ff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 10,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 1,
+          "y": 11,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 2,
+          "y": 10,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 13,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 5,
+          "y": 12,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 6,
+          "y": 12,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 14,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 9,
+          "y": 14,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 10,
+          "y": 14,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 15,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 13,
+          "y": 15,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 14,
+          "y": 15,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 15,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 17,
+          "y": 14,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 18,
+          "y": 13,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 12,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 21,
+          "y": 12,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 22,
+          "y": 12,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 9,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 25,
+          "y": 9,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 26,
+          "y": 9,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 8,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 29,
+          "y": 8,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 30,
+          "y": 9,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 6,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 33,
+          "y": 6,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 34,
+          "y": 6,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 36,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 37,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 38,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 40,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 41,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 42,
+          "y": 5,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 44,
+          "y": 6,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 45,
+          "y": 6,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 46,
+          "y": 6,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 48,
+          "y": 8,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 49,
+          "y": 8,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 50,
+          "y": 8,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 52,
+          "y": 11,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 53,
+          "y": 10,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 54,
+          "y": 11,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 56,
+          "y": 13,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 57,
+          "y": 14,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 58,
+          "y": 13,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 60,
+          "y": 14,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 61,
+          "y": 14,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 62,
+          "y": 14,
+          "char": "*",
+          "color": "#ffff00",
+          "density": 0.9,
+          "semantic": "solid",
+          "channel": {
+            "audio": {
+              "velocity": 100
+            },
+            "spatial": {
+              "height": 0.8
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "char": "#ff00ff",
+          "color": "O",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 8,
+          "y": 2,
+          "char": "#ff00ff",
+          "color": "O",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 12,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 16,
+          "y": 2,
+          "char": "#ff00ff",
+          "color": "O",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 20,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 24,
+          "y": 2,
+          "char": "#ff00ff",
+          "color": "O",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 28,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 32,
+          "y": 2,
+          "char": "#ff00ff",
+          "color": "O",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 36,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 40,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 40,
+          "y": 2,
+          "char": "#ff00ff",
+          "color": "O",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 44,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 48,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 48,
+          "y": 2,
+          "char": "#ff00ff",
+          "color": "O",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 52,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 56,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 56,
+          "y": 2,
+          "char": "#ff00ff",
+          "color": "O",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        },
+        {
+          "x": 60,
+          "y": 1,
+          "char": "#ff00ff",
+          "color": "@",
+          "density": 1,
+          "semantic": "emissive",
+          "channel": {
+            "audio": {
+              "velocity": 127
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "project": {
+    "bpm": 128,
+    "scale": "minor_penta",
+    "key": "A"
+  }
+}

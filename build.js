@@ -30,6 +30,7 @@ const MODULES = [
   'src/consumers/music/midi-output.js',
   'src/consumers/spatial/heightmap.js',
   'src/consumers/spatial/scene-builder.js',
+  'src/consumers/ai/grid-describer.js',
   // Phase 6 exporters — uncomment as they land:
   'src/exporters/svg-exporter.js',
   'src/exporters/midi-exporter.js',

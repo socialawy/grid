@@ -189,7 +189,8 @@ async function runAllTests() {
       name: 'Video Exporter (Task 6.5 - WebCodecs MP4 Encoding)',
       file: 'test-video-exporter.js',
       environment: 'node'
-    }
+    },
+    { name: 'Grid Describer', file: 'test-grid-describer.js' },
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {
     //   name: 'Schema Validation',
