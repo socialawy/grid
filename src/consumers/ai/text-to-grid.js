@@ -579,7 +579,7 @@ function textToGrid(prompt, options) {
 // EXPORTS
 // ============================================================
 
-const _internals = {
+const _textToGridInternals = {
     VOCABULARY,
     POSITION_KEYWORDS,
     DENSITY_KEYWORDS,
@@ -596,9 +596,9 @@ const _internals = {
 };
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { textToGrid, _internals };
+    module.exports = { textToGrid, _internals: _textToGridInternals };
 }
 if (typeof window !== 'undefined') {
-    window.TextToGrid = { textToGrid, _internals };
+    window.TextToGrid = { textToGrid, _internals: _textToGridInternals };
 }
-export { textToGrid, _internals };
+export { textToGrid, _textToGridInternals as _internals };

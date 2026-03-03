@@ -1222,4 +1222,42 @@ function detectAITier() {
 - Both work fully offline
 
 ### Testing 
-- 
+- Three errors, all the same root cause: the build system's stripModuleDestructuring regex strips export { ... } lines but both grid-describer.js and text-to-grid.js export a symbol called _internals. When both are concatenated into the same <script>, the second const _internals declaration collides.
+
+The other two errors (importGrid, showNewProjectModal) are pre-existing — they're onclick handlers in body.html that reference functions defined further down in app.js, but they work once the page fully loads. The _internals collision is the blocker.
+
+**Fixed:**  Each module needs a unique name for its internals export.`const _describerInternals = {`
+
+![alt text](image-3.png)
+![alt text](image-4.png)
+![alt text](image-5.png)
+![alt text](image-6.png)
+
+### That's the Tier 0 AI consumer working end-to-end:
+
+- Describe Grid → modal with composition stats, palette swatches, semantic breakdown, 3 regions detected, editable AI prompt
+- Generate from Text → "mountain north water south" → parser splits into terrain (top) + wave (bottom) → preview canvas → apply to frame
+- Applied grid → 496 cells, terrain characters at top (@#%&*+=), wave characters at bottom (~-.), colors from vocabulary hints
+- Music mode → toggled on, ready to play the generated landscape as sound
+- Tier badge → "0 (Offline)" correct
+
+### Task 5.UI is DONE. 
+✅ 5.1  grid-describer.js   — 93 tests
+✅ 5.4a text-to-grid.js     — 105 tests  
+✅ 5.UI AI panel + modals    — browser verified
+✅ Build: 20/20 modules, 8471 lines, 277.6 KB
+✅ Total: 865 passed, 0 failed
+
+**This is the offline gate from the Phase 5 plan:**
+- Everything works on airplane mode. No CDN, no models, no API keys. Commit this.
+
+----
+
+## The remaining Phase 5 tasks are all Tier 1/2 progressive enhancements:
+
+| Task | Tier | What it adds | Complexity |
+| --- | --- | --- | --- |
+| 5.2 Upscaler | 1 | Canvas → ONNX → HD image | High (tensors, tiling) |
+| 5.4b Smart Import | 1 | ML-enriched image→grid | Medium (wraps 1.6) |
+| 5.3 Gemini Bridge | 2 | API → Imagen/Veo | Medium (fetch wrapper) |
+| 5.5 Circuit Breaker | 2 | Quota tracking | Low (state machine) |

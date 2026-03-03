@@ -610,7 +610,7 @@ function describeGrid(grid, frameIndex, options) {
 // ============================================================
 
 // Expose internals for testing
-const _internals = {
+const _describerInternals = {
     hexToRgb,
     rgbToHsl,
     classifyHue,
@@ -625,9 +625,9 @@ const _internals = {
 };
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { describeGrid, _internals };
+    module.exports = { describeGrid, _internals: _describerInternals };
 }
 if (typeof window !== 'undefined') {
-    window.GridDescriber = { describeGrid, _internals };
+    window.GridDescriber = { describeGrid, _internals: _describerInternals };
 }
-export { describeGrid, _internals };
+export { describeGrid, _describerInternals as _internals };
