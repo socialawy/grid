@@ -1131,89 +1131,6 @@ Grid divided into 3×3 sectors:
 - `src/shell/app.js` — wire describer + text-to-grid + tier detection
 - `build.js` — verify module order
 
-### UI Layout
-```
-SIDEBAR (below IMAGE IMPORT):
-┌─────────────────────────┐
-│ AI                      │
-│ ┌─────────────────────┐ │
-│ │ 🔍 Describe Grid    │ │  ← runs describeGrid(), shows modal
-│ └─────────────────────┘ │
-│ ┌─────────────────────┐ │
-│ │ ✨ Generate from Text│ │  ← opens text-to-grid modal
-│ └─────────────────────┘ │
-│ Tier: 0 (Offline)       │  ← auto-detected
-│                         │
-│ 🖼️ Upscale (Tier 1)    │  ← disabled, placeholder
-│ 🌐 Gemini (Tier 2)     │  ← disabled, placeholder
-└─────────────────────────┘
-```
-
-### Description Modal
-```
-┌──────────────────────────────────────┐
-│ 🔍 Grid Description                 │
-│                                      │
-│ Summary: An 86×118 dense grid...     │
-│                                      │
-│ Composition: 10,142 cells, 72% avg   │
-│ Palette: Cool, dominant #192123      │
-│ Semantics: 72% solid, 15% fluid...   │
-│ Regions: 5 detected                  │
-│   • top-center: emissive cluster     │
-│   • center: large solid mass         │
-│   ...                                │
-│                                      │
-│ AI Prompt:                           │
-│ ┌──────────────────────────────────┐ │
-│ │ A cool-toned dense composition...│ │  ← editable, copy-able
-│ └──────────────────────────────────┘ │
-│                                      │
-│ [Copy Prompt] [Save to Project]      │
-│                        [Close]       │
-└──────────────────────────────────────┘
-```
-
-- "Save to Project" writes the description to grid.project.ai_context.
-
-### Generate Modal
-
-```
-┌──────────────────────────────────────┐
-│ ✨ Generate Grid from Text           │
-│                                      │
-│ Describe a scene:                    │
-│ ┌──────────────────────────────────┐ │
-│ │ A mountain landscape with mist   │ │
-│ │ rolling through valleys, bright  │ │
-│ │ energy pulses at the peaks       │ │
-│ └──────────────────────────────────┘ │
-│                                      │
-│ Width: [40]  Height: [20]  Seed: [ ] │
-│                                      │
-│ Interpretation:                      │
-│   terrain → mountain (N+C zones)     │
-│   mist → fluid (S zone)              │
-│   energy → emissive (peaks)          │
-│                                      │
-│ [Preview] [Apply to Frame] [New Proj]│
-│                             [Close]  │
-└──────────────────────────────────────┘
-```
-
-### Tier Detection
-
-```js
-function detectAITier() {
-  // Tier 2: Gemini API key exists in localStorage
-  if (localStorage.getItem('grid_gemini_key')) return 2;
-  // Tier 1: Transformers.js or ONNX loaded (future CDN check)
-  if (window.TransformersApi || window.ort) return 1;
-  // Tier 0: Offline/template only
-  return 0;
-}
-```
-
 ### Exit Criteria
 
 - Describe button → modal with full description + copyable prompt
@@ -1261,3 +1178,99 @@ The other two errors (importGrid, showNewProjectModal) are pre-existing — they
 | 5.4b Smart Import | 1 | ML-enriched image→grid | Medium (wraps 1.6) |
 | 5.3 Gemini Bridge | 2 | API → Imagen/Veo | Medium (fetch wrapper) |
 | 5.5 Circuit Breaker | 2 | Quota tracking | Low (state machine) |
+
+![alt text](image-7.png)
+
+## Deferred Tasks
+- Task 1.2 – WebGPU path (deferred to Phase 4+)
+- Task 1.3 – textmode.js bridge (deferred)
+- Task 3.3 – Glicol WASM Integration (deferred to Phase 8)
+- Task 3.5 – Orca-compatible Grid Mode (deferred to Phase 7)
+- Phase 4.3 – VSP bridge (deferred to Phase 8)
+- Phase 4.4 – glTF export (deferred to Phase 6, later implemented)
+
+## Open Points / Questions
+- Binary packing for large grids (1000×1000) – revisit at Phase 4
+- Delta encoding (diff-from-previous) for frames – defer, optimize when needed
+- Add generator field to cells (provenance) – v0.2.0 if needed
+- Large project serialization performance (5307ms freeze) – fix in Phase 5/8
+- New examples “not nailed yet” – demo scripts needing work
+- Distinction between Frame Time (animation) and Project Time (music) – clarification needed
+- Auto-pan patch for camera following music – enhancement suggestion
+
+## Actually Have
+A system that can:
+
+Paint ASCII art → hear it as music → see it as 3D → export to MIDI/glTF/MP4/SVG
+Import any image → get a playable, extrudable .grid
+Type "mountain north water south" → get a populated grid with all 5 channels
+Describe any grid → get a structured AI prompt
+768 nodes. 865 tests. Zero failures. 20 modules. Single HTML file.
+
+----
+
+## NEXT:
+
+### Step 1: Ship 5.5 (Circuit Breaker) + 5.3 (Gemini Bridge) — ~1 session
+
+These are the two that change what's possible, not just what's better. With Gemini connected:
+
+- Describe a grid → edit the prompt → Imagen generates an HD illustration
+- That illustration is my novel's artwork, generated from ASCII
+- The circuit breaker is 25 tests of pure logic. The Gemini bridge is a fetch wrapper. Neither is architecturally complex. And they unlock the publishing pipeline for `Doxascope.`
+
+### Step 2: Defer 5.2 (Upscaler) and 5.4b (Smart Import) to Phase 8
+These are quality-of-life improvements on pipelines that already work. The local ONNX upscaler is cool but Gemini's image generation supersedes it for my use case. Smart import with segmentation is nice but the current importer already produces full 5-channel grids with color.
+
+--
+
+## A small round, very useful - Audio to Grid Layout Converter (x)
+
+### Vision
+
+- Decoupling the conversion logic from the main GRID Studio keeps the core lightweight (adhering to the "Offline Floor" principle) while allowing powerful conversion tools to exist in the ecosystem.
+
+### The Architecture: music2grid
+
+- This tool runs locally on machine. It takes an input file (or text description) and outputs a .grid JSON file, which can be loaded into GRID Studio.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    MUSIC2GRID CLI                            │
+│              "The Grid Music Compiler"                       │
+├──────────────────────────────────────────────────────────────┤
+│  Inputs:                                                     │
+│  1. text  "C4 Major Chord at 0:00"                           │
+│  2. midi  "song.mid"                                         │
+│  3. audio "song.mp3" (requires basic-pitch/ML)               │
+│  4. sheet "song.xml" (MusicXML)                              │
+├──────────────────────────────────────────────────────────────┤
+│  Process:                                                    │
+│  ┌─────────────┐    ┌──────────────┐    ┌──────────────┐     │
+│  │ Parse Input │ -> │ Normalize to │ -> │ Grid Mapper  │     │
+│  │ (Libraries) │    │ Note Stream  │    │ (X=Time,Y=Hz)│     │
+│  └─────────────┘    └──────────────┘    └──────────────┘     │
+├──────────────────────────────────────────────────────────────┤
+│  Output:                                                     │
+│  -> song.grid (JSON)                                         │
+└──────────────────────────────────────────────────────────────┘
+```
+
+## Task 5.5 — Circuit Breaker (x)
+
+**"The grid protects itself"**
+
+### What It Does
+
+- Tracks API usage, automatically falls back when quotas are hit. Prevents surprise bills and handles the free→paid tier boundary.
+
+### Files
+
+- Files
+
+- Create: `src/consumers/ai/circuit-breaker.js`
+- Create: `tests/test-circuit-breaker.js`
+- Modify: `src/consumers/ai/gemini-bridge.js` (wrap calls through breaker)
+- Modify: `build.js`, `tests/run-all.js`
+
+

@@ -192,6 +192,7 @@ async function runAllTests() {
     },
     { name: 'Grid Describer', file: 'test-grid-describer.js' },
     { name: 'Text-to-Grid', file: 'test-text-to-grid.js' },
+    { name: 'Circuit Breaker', file: 'test-circuit-breaker.js' },
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {
     //   name: 'Schema Validation',

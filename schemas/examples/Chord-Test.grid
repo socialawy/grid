@@ -1,0 +1,44 @@
+{
+  "grid": "grid",
+  "version": "0.1.0",
+  "meta": {
+    "id": "polyphony-test-fixed-001",
+    "name": "I - IV - V - I Progression (Fixed)",
+    "notes": "C Major -> F Major -> G Major -> C Major. Anchored to Y=19 (C4)."
+  },
+  "canvas": {
+    "width": 40,
+    "height": 24,
+    "charset": "█▓▒░· ",
+    "defaultChar": " ",
+    "background": "#050a05"
+  },
+  "project": {
+    "bpm": 75,
+    "scale": "chromatic",
+    "key": "C"
+  },
+  "frames": [
+    {
+      "id": "f0",
+      "index": 0,
+      "cells": [
+        { "x": 0, "y": 19, "char": "█", "color": "#ffff00", "density": 0.8, "channel": { "audio": { "velocity": 80, "duration": 2 } }},
+        { "x": 0, "y": 15, "char": "█", "color": "#ffff00", "density": 0.8, "channel": { "audio": { "velocity": 80, "duration": 2 } }},
+        { "x": 0, "y": 12, "char": "█", "color": "#ffff00", "density": 0.8, "channel": { "audio": { "velocity": 80, "duration": 2 } }},
+
+        { "x": 10, "y": 14, "char": "█", "color": "#00ff00", "density": 0.8, "channel": { "audio": { "velocity": 80, "duration": 2 } }},
+        { "x": 10, "y": 10, "char": "█", "color": "#00ff00", "density": 0.8, "channel": { "audio": { "velocity": 80, "duration": 2 } }},
+        { "x": 10, "y": 7,  "char": "█", "color": "#00ff00", "density": 0.8, "channel": { "audio": { "velocity": 80, "duration": 2 } }},
+
+        { "x": 20, "y": 12, "char": "█", "color": "#00ffff", "density": 0.8, "channel": { "audio": { "velocity": 80, "duration": 2 } }},
+        { "x": 20, "y": 8,  "char": "█", "color": "#00ffff", "density": 0.8, "channel": { "audio": { "velocity": 80, "duration": 2 } }},
+        { "x": 20, "y": 5,  "char": "█", "color": "#00ffff", "density": 0.8, "channel": { "audio": { "velocity": 80, "duration": 2 } }},
+
+        { "x": 30, "y": 19, "char": "█", "color": "#ff00ff", "density": 0.8, "channel": { "audio": { "velocity": 90, "duration": 4 } }},
+        { "x": 30, "y": 15, "char": "█", "color": "#ff00ff", "density": 0.8, "channel": { "audio": { "velocity": 90, "duration": 4 } }},
+        { "x": 30, "y": 12, "char": "█", "color": "#ff00ff", "density": 0.8, "channel": { "audio": { "velocity": 90, "duration": 4 } }}
+      ]
+    }
+  ]
+}

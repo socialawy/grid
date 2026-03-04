@@ -32,7 +32,7 @@ const MODULES = [
   'src/consumers/spatial/scene-builder.js',
   'src/consumers/ai/grid-describer.js',
   'src/consumers/ai/text-to-grid.js',
-  // Phase 6 exporters — uncomment as they land:
+  'src/consumers/ai/circuit-breaker.js',
   'src/exporters/svg-exporter.js',
   'src/exporters/midi-exporter.js',
   'src/exporters/gltf-exporter.js',
