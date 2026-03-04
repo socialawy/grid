@@ -780,6 +780,7 @@ function showProjectSettings() {
   document.getElementById('psCharset').value = grid.canvas.charset || '';
   const paletteObj = grid.project.palette || {};
   document.getElementById('psPalette').value = Object.values(paletteObj).join(',');
+  document.getElementById('psGeminiKey').value = localStorage.getItem('grid_gemini_key') || '';
   openModal('projectSettingsModal');
 }
 
@@ -790,6 +791,8 @@ function applyProjectSettings() {
   const scale = document.getElementById('psScale').value || 'chromatic';
   const charset = document.getElementById('psCharset').value || grid.canvas.charset;
   const paletteStr = document.getElementById('psPalette').value.trim();
+  const geminiKey = document.getElementById('psGeminiKey').value.trim();
+
   grid.meta.name = name; grid.project.bpm = bpm;
   grid.project.key = key; grid.project.scale = scale;
   grid.canvas.charset = charset;
@@ -798,6 +801,11 @@ function applyProjectSettings() {
     const palette = {}; colors.forEach((c, i) => { palette[i] = c; });
     grid.project.palette = palette;
   } else { grid.project.palette = {}; }
+
+  if (geminiKey) localStorage.setItem('grid_gemini_key', geminiKey);
+  else localStorage.removeItem('grid_gemini_key');
+  updateAITierBadge();
+
   grid.meta.modified = new Date().toISOString();
   buildCharPalette(); updateUI();
   closeModal('projectSettingsModal'); scheduleAutoSave();
@@ -1093,6 +1101,133 @@ function applyGenerate(asNewProject) {
   updateFrameLabel();
   scheduleAutoSave();
   setStatus(asNewProject ? 'New project generated from text' : 'Generated grid applied to frame');
+}
+
+// ================================================================
+// GEMINI UI WIRING (Task 5.3 UI)
+// ================================================================
+
+/** Open Gemini modal — pre-fill prompt from ai_context or run describer */
+function openGeminiModal() {
+  const existing = grid.project?.ai_context?.description;
+  const promptEl = document.getElementById('geminiPrompt');
+  if (promptEl) {
+    if (existing) {
+      promptEl.value = existing;
+    } else {
+      // Auto-describe
+      const describeFn = typeof describeGrid === 'function' ? describeGrid :
+        (typeof GridDescriber !== 'undefined' ? GridDescriber.describeGrid : null);
+      if (describeFn) {
+        const fi = renderer ? renderer.current : 0;
+        const desc = describeFn(grid, fi, { detail: 'standard' });
+        promptEl.value = desc.prompt || '';
+      } else {
+        promptEl.value = '';
+      }
+    }
+  }
+  document.getElementById('geminiResult').style.display = 'none';
+  document.getElementById('geminiStatus').textContent = '';
+  openModal('geminiModal');
+}
+
+/** Call Imagen 4 via Gemini bridge */
+async function doGeminiGenerate() {
+  const promptEl = document.getElementById('geminiPrompt');
+  const statusEl = document.getElementById('geminiStatus');
+  const resultEl = document.getElementById('geminiResult');
+  const imgEl = document.getElementById('geminiResultImg');
+  const btn = document.getElementById('geminiGenerateBtn');
+
+  if (!promptEl || !promptEl.value.trim()) {
+    if (statusEl) statusEl.textContent = 'Enter a prompt first';
+    return;
+  }
+
+  const createBridge = typeof createGeminiBridge === 'function' ? createGeminiBridge :
+    (typeof GeminiBridge !== 'undefined' ? GeminiBridge.createGeminiBridge : null);
+  const createBreaker = typeof createCircuitBreaker === 'function' ? createCircuitBreaker :
+    (typeof CircuitBreaker !== 'undefined' ? CircuitBreaker.createCircuitBreaker : null);
+
+  if (!createBridge) {
+    if (statusEl) statusEl.textContent = 'Gemini bridge not available';
+    return;
+  }
+
+  const breaker = createBreaker ? createBreaker({ maxRPM: 10, maxRPD: 250 }) : null;
+  const bridge = createBridge({ breaker });
+
+  if (!bridge.isAvailable()) {
+    if (statusEl) statusEl.textContent = 'Set API key in Settings first';
+    return;
+  }
+
+  if (btn) btn.disabled = true;
+  if (statusEl) statusEl.textContent = 'Generating...';
+  if (resultEl) resultEl.style.display = 'none';
+
+  const result = await bridge.generateImage(promptEl.value.trim());
+
+  if (btn) btn.disabled = false;
+
+  if (result.ok && result.base64) {
+    if (imgEl) {
+      imgEl.src = 'data:' + (result.mimeType || 'image/png') + ';base64,' + result.base64;
+      imgEl._base64 = result.base64;
+      imgEl._mimeType = result.mimeType || 'image/png';
+    }
+    if (resultEl) resultEl.style.display = 'block';
+    if (statusEl) statusEl.textContent = 'Done!';
+  } else {
+    const msgs = {
+      rate_limit: 'Rate limited — try again in a minute',
+      auth: 'Invalid API key — check Settings',
+      breaker_open: 'Too many requests — cooldown active',
+      no_key: 'Set API key in Settings first',
+      network: 'Network error — check connection',
+      empty_prompt: 'Enter a prompt'
+    };
+    if (statusEl) statusEl.textContent = msgs[result.error] || ('Error: ' + result.error);
+  }
+}
+
+/** Download the generated image */
+function downloadGeminiImage() {
+  const imgEl = document.getElementById('geminiResultImg');
+  if (!imgEl || !imgEl._base64) return;
+  const ext = (imgEl._mimeType || '').includes('jpeg') ? 'jpg' : 'png';
+  const name = (grid.meta.name || 'grid').replace(/[^a-z0-9_-]/gi, '_') + '_gemini.' + ext;
+  const bin = atob(imgEl._base64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  const blob = new Blob([arr], { type: imgEl._mimeType || 'image/png' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = name; a.click();
+  URL.revokeObjectURL(url);
+  setStatus('Gemini image downloaded');
+}
+
+/** Import generated image back into grid */
+function geminiImageToGrid() {
+  const imgEl = document.getElementById('geminiResultImg');
+  if (!imgEl || !imgEl.src) return;
+  const img = new Image();
+  img.onload = () => {
+    const importFn = typeof imageToGrid === 'function' ? imageToGrid :
+      (typeof ImageImporter !== 'undefined' ? ImageImporter.imageToGrid : null);
+    if (!importFn) { setStatus('Image importer not available', true); return; }
+    const result = importFn(img, { width: grid.canvas.width, height: grid.canvas.height });
+    const fi = renderer ? renderer.current : 0;
+    grid.frames[fi] = result.frames[0];
+    grid.frames[fi].id = 'frame_' + String(fi + 1).padStart(3, '0');
+    grid.meta.modified = new Date().toISOString();
+    closeModal('geminiModal');
+    initRenderer();
+    scheduleAutoSave();
+    setStatus('Gemini image imported to grid');
+  };
+  img.src = imgEl.src;
 }
 
 // Initialize tier badge on load

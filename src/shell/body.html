@@ -94,7 +94,8 @@
           Tier: <span id="aiTierBadge">0 (Offline)</span>
         </div>
         <button id="aiUpscaleBtn" disabled style="width:100%;margin-top:4px;opacity:0.4">🖼️ Upscale (Tier 1)</button>
-        <button id="aiGeminiBtn" disabled style="width:100%;margin-top:4px;opacity:0.4">🌐 Gemini (Tier 2)</button>
+        <button id="aiGeminiBtn" disabled style="width:100%;margin-top:4px;opacity:0.4" onclick="openGeminiModal()">🌐
+          Gemini (Tier 2)</button>
       </section>
 
       <section>
@@ -330,9 +331,43 @@
           <input type="text" id="psPalette" placeholder="#ff0000,#00ff00,#0000ff" style="width:100%">
         </div>
       </div>
+      <div class="settings-grid full" style="margin-top:8px">
+        <div>
+          <label>Gemini API Key (Tier 2)</label>
+          <input type="password" id="psGeminiKey" placeholder="AIza..." style="width:100%">
+          <span style="font-size:0.75em;color:var(--dim)">Stored locally. Never sent anywhere except Google's
+            API.</span>
+        </div>
+      </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
         <button onclick="closeModal('projectSettingsModal')">Cancel</button>
         <button onclick="applyProjectSettings()" style="border-color:var(--accent);color:var(--accent)">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gemini AI Modal -->
+  <div class="modal-overlay" id="geminiModal">
+    <div class="modal" style="max-width:560px">
+      <h2>🌐 Gemini — Generate Image</h2>
+      <p style="font-size:0.85em;color:var(--dim)">Sends the AI prompt to Imagen 4. Requires API key in Settings.</p>
+      <label>Prompt</label>
+      <textarea id="geminiPrompt" rows="4"
+        style="width:100%;font-family:inherit;background:var(--bg);color:var(--fg);border:1px solid var(--dim);padding:6px;resize:vertical"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+        <button id="geminiGenerateBtn" onclick="doGeminiGenerate()"
+          style="border-color:var(--accent);color:var(--accent)">Generate Image</button>
+        <span id="geminiStatus" style="font-size:0.8em;color:var(--dim)"></span>
+      </div>
+      <div id="geminiResult" style="margin-top:12px;text-align:center;display:none">
+        <img id="geminiResultImg" style="max-width:100%;max-height:400px;border:1px solid var(--dim);border-radius:4px">
+        <div style="margin-top:8px;display:flex;gap:8px;justify-content:center">
+          <button onclick="downloadGeminiImage()">💾 Download PNG</button>
+          <button onclick="geminiImageToGrid()">📥 Import to Grid</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button onclick="closeModal('geminiModal')">Close</button>
       </div>
     </div>
   </div>
