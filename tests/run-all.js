@@ -190,9 +190,10 @@ async function runAllTests() {
       file: 'test-video-exporter.js',
       environment: 'node'
     },
-    { name: 'Grid Describer', file: 'test-grid-describer.js' },
-    { name: 'Text-to-Grid', file: 'test-text-to-grid.js' },
-    { name: 'Circuit Breaker', file: 'test-circuit-breaker.js' },
+    { name: 'Grid Describer - (Task 5.1)', file: 'test-grid-describer.js' },
+    { name: 'Text-to-Grid - (Task 5.4a)', file: 'test-text-to-grid.js' },
+    { name: 'Circuit Breaker - (Task 5.5)', file: 'test-circuit-breaker.js' },
+    { name: 'Gemini Bridge - (Task 5.3)', file: 'test-gemini-bridge.js' },
     // Schema validation temporarily skipped due to CJS/ESM compatibility issues
     // {
     //   name: 'Schema Validation',

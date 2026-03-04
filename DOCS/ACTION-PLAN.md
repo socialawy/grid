@@ -1274,3 +1274,38 @@ These are quality-of-life improvements on pipelines that already work. The local
 - Modify: `build.js`, `tests/run-all.js`
 
 
+### 47 tests, 0 failures. 21/21 modules. 912 total (865 shown because run-all counts differently — standalone confirms 47).
+
+Task 5.5 is DONE
+
+----
+
+## Task 5.3 — Gemini API Integration (Tier 2) (x)
+
+**"The grid reaches the cloud"**
+
+### What It Does
+
+- Connects to Google Gemini API for three capabilities:
+
+1. Grid → Image: Send `describeGrid()` prompt → Imagen 4 → HD image
+2. Grid → Video: Send multi-frame storyboard description → Veo → video
+3. Image → Description: Send imported image → Gemini vision → richer `ai_context`
+
+- All behind API key stored in `localStorage`. All optional. All degrade to Tier 1/0.
+
+### Files
+
+- Create: `src/consumers/ai/gemini-bridge.js`
+- Create: `tests/test-gemini-bridge.js`
+- Modify: `src/shell/app.js` (settings modal: API key input, Gemini buttons in AI panel)
+- Modify: `build.js`, `tests/run-all.js`
+
+- 51/51. 22/22 modules. Both suites green standalone.
+
+The run-all count issue is the same stdout parsing pattern — suites run but counts aren't aggregated. #TODO
+
+### Tasks 5.5 + 5.3 DONE
+
+----
+

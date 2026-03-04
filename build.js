@@ -33,6 +33,7 @@ const MODULES = [
   'src/consumers/ai/grid-describer.js',
   'src/consumers/ai/text-to-grid.js',
   'src/consumers/ai/circuit-breaker.js',
+  'src/consumers/ai/gemini-bridge.js',
   'src/exporters/svg-exporter.js',
   'src/exporters/midi-exporter.js',
   'src/exporters/gltf-exporter.js',
