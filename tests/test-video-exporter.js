@@ -1,11 +1,11 @@
 // tests/test-video-exporter.js
 
 let passed = 0, failed = 0;
-const results = [];
+const testOutputs = [];
 
 function assert(cond, msg) {
-    if (cond) { passed++; results.push({ status: 'pass', name: msg }); }
-    else { failed++; results.push({ status: 'fail', name: msg }); console.error('  FAIL:', msg); }
+    if (cond) { passed++; testOutputs.push({ status: 'pass', name: msg }); }
+    else { failed++; testOutputs.push({ status: 'fail', name: msg }); console.error('  FAIL:', msg); }
 }
 
 class MockVideoEncoder {
@@ -85,4 +85,9 @@ console.log('\n🧪 Video Exporter (Task 6.5)\n' + '='.repeat(50));
 }
 
 console.log(`\ntest-video-exporter.js: ${passed} passed, ${failed} failed\n`);
-export { results, passed, failed };
+export const results = {
+    passed,
+    failed,
+    skipped: 0,
+    summary: `Video Exporter: ${passed} passed, ${failed} failed`
+};

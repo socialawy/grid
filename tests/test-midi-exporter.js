@@ -7,11 +7,11 @@
 import { noteEventsToMidi, midiExportDefaults } from '../src/exporters/midi-exporter.js';
 
 let passed = 0, failed = 0;
-const results = [];
+const testOutputs = [];
 
 function assert(cond, msg) {
-  if (cond) { passed++; results.push({ status: 'pass', name: msg }); }
-  else { failed++; results.push({ status: 'fail', name: msg }); console.error('  FAIL:', msg); }
+  if (cond) { passed++; testOutputs.push({ status: 'pass', name: msg }); }
+  else { failed++; testOutputs.push({ status: 'fail', name: msg }); console.error('  FAIL:', msg); }
 }
 
 function assertEq(a, b, msg) {
@@ -159,36 +159,36 @@ function makeEvent(time, note, velocity = 100, duration = 1, channel = 0) {
   const events = [];
   for (let i = 0; i < 10; i++) events.push(makeEvent(i, 48 + i, 80, 1));
   const buf = noteEventsToMidi(events);
-  
+
   let noteOns = 0, noteOffs = 0;
-  
+
   // Start after track header and skip meta events properly
   let i = 22; // Skip MTrk header + length
-  
+
   // Skip track name meta event (00 FF 03 0b "GRID Export")
   i += 1; // Skip delta 0x00
   i += 1; // Skip FF
   i += 1; // Skip 03
   i += 1; // Skip length 0x0b
   i += 11; // Skip "GRID Export" (11 bytes)
-  
+
   // Skip tempo meta event (00 FF 51 03 07 a1 20 00)
   i += 1; // Skip delta 0x00
   i += 1; // Skip FF
   i += 1; // Skip 51
   i += 1; // Skip 03
   i += 3; // Skip tempo bytes (07 a1 20)
-  
+
   // Now i should be at the first note-on (byte 45)
-  
+
   while (i < buf.length - 2) {
     // Skip VLQ delta time (bytes with high bit set)
     while (i < buf.length && (buf[i] & 0x80)) i++;
     if (i >= buf.length) break;
     i++; // Skip the last delta byte (high bit clear)
-    
+
     if (i >= buf.length) break;
-    
+
     const status = buf[i];
     if ((status & 0xF0) === 0x90 && buf[i + 2] > 0) {
       noteOns++;
@@ -208,7 +208,7 @@ function makeEvent(time, note, velocity = 100, duration = 1, channel = 0) {
       i++; // Skip unknown byte
     }
   }
-  
+
   assertEq(noteOns, 10, '10 note-ons');
   assertEq(noteOffs, 10, '10 note-offs');
 }
@@ -250,4 +250,9 @@ function makeEvent(time, note, velocity = 100, duration = 1, channel = 0) {
 
 // ── Summary ───────────────────────────────────────
 console.log(`\ntest-midi-exporter.js: ${passed} passed, ${failed} failed\n`);
-export { results, passed, failed };
+export const results = {
+  passed,
+  failed,
+  skipped: 0,
+  summary: `MIDI Exporter: ${passed} passed, ${failed} failed`
+};

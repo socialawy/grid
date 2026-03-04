@@ -9,11 +9,11 @@ import GridCore from '../src/core/grid-core.js';
 const { createGrid, setCell, createFrame } = GridCore;
 
 let passed = 0, failed = 0;
-const results = [];
+const testOutputs = [];
 
 function assert(cond, msg) {
-  if (cond) { passed++; results.push({ status: 'pass', name: msg }); }
-  else { failed++; results.push({ status: 'fail', name: msg }); console.error('  FAIL:', msg); }
+  if (cond) { passed++; testOutputs.push({ status: 'pass', name: msg }); }
+  else { failed++; testOutputs.push({ status: 'fail', name: msg }); console.error('  FAIL:', msg); }
 }
 
 function makeGrid(w, h) {
@@ -169,4 +169,9 @@ console.log('\n🧪 SVG Exporter (Task 6.1)\n' + '='.repeat(50));
 }
 
 console.log(`\ntest-svg-exporter.js: ${passed} passed, ${failed} failed\n`);
-export { results, passed, failed };
+export const results = {
+  passed,
+  failed,
+  skipped: 0,
+  summary: `SVG Exporter: ${passed} passed, ${failed} failed`
+};

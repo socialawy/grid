@@ -279,6 +279,10 @@ console.log(`\nCircuit Breaker: ${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);
 
 // Export for run-all.js
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { results: { passed, failed } };
-}
+// Export results for unified runner
+export const results = {
+    passed,
+    failed,
+    skipped: 0,
+    summary: `Circuit Breaker: ${passed} passed, ${failed} failed`
+};

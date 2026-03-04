@@ -1303,7 +1303,18 @@ Task 5.5 is DONE
 
 - 51/51. 22/22 modules. Both suites green standalone.
 
-The run-all count issue is the same stdout parsing pattern — suites run but counts aren't aggregated. #TODO
+The run-all count issue is the same stdout parsing pattern — suites run but counts aren't aggregated. (x) - Fixed
+
+[x] Fix `fetchFn` assignment in [gemini-bridge.js](file:///e:/co/GRID/tests/test-gemini-bridge.js)
+- [/] Fix test count discrepancy in [run-all.js](file:///e:/co/GRID/tests/run-all.js)
+    - [x] Draft Implementation Plan
+    - [x] Update [test-gemini-bridge.js](file:///e:/co/GRID/tests/test-gemini-bridge.js)
+    - [x] Update [test-circuit-breaker.js](file:///e:/co/GRID/tests/test-circuit-breaker.js)
+    - [x] Update [test-video-exporter.js](file:///e:/co/GRID/tests/test-video-exporter.js)
+    - [x] Update [test-svg-exporter.js](file:///e:/co/GRID/tests/test-svg-exporter.js)
+    - [x] Update [test-midi-exporter.js](file:///e:/co/GRID/tests/test-midi-exporter.js)
+    - [x] Update [test-gltf-exporter.js](file:///e:/co/GRID/tests/test-gltf-exporter.js)
+
 
 ### Tasks 5.5 + 5.3 DONE
 
