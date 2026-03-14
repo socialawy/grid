@@ -1327,9 +1327,219 @@ The run-all count issue is the same stdout parsing pattern — suites run but co
 
 ### Wiring the UI
 
+### ONLY PRO KEY worked so far for Gemini/Imagen
+![alt text](image-8.png)
 
+Task	Status	Tests
+5.1 Grid Describer	✅	93
+5.4a Text-to-Grid	✅	105
+5.UI AI Panel	✅	—
+5.5 Circuit Breaker	✅	47
+5.3 Gemini Bridge	✅	51
+5.2 Upscaler	deferred → Phase 8	—
+5.4b Smart Import	deferred → Phase 8	—
+Totals: 1043 tests, 22 modules, 299.7 KB, single HTML file.
 
 ### Tasks 5.5 + 5.3 DONE
 
 ----
 
+## 3D ASCII Cinema — Proof of Concept (2026-03-15)
+
+**Status: PROVEN**
+
+The full ASCII cinema pipeline is working end-to-end:
+
+- `local-files/make-3d-movie.mjs` → generates `local-files/donut-3d.grid`
+  - 72 frames × 12fps = 6s loop
+  - 34,066 cells, 5.5 MB
+  - Algorithm: Andy Sloane's `donut.c` — perspective projection + Z-buffer + surface-normal lighting
+- GRID app → Load → Play → rotating 3D torus with starfield parallax
+- Phase 6.5 video export → `local-files\DONUT___3D_ASCII_Cinema.mp4` ← confirmed playing (image-9.png)
+
+What makes it genuinely 3D — not just ASCII art:
+
+| Cell property | Encoding |
+|---|---|
+| `char` | Luminance char from `surface_normal · light_direction` (12 levels) |
+| `density` | Surface brightness (visual channel) |
+| `channel.spatial.height` | Perspective depth — `1/z` normalized (3D channel) |
+| `color` | Green glow scaled by luminance + depth |
+
+Generator script follows `make-clair-de-lune.mjs` pattern — uses `grid-core.js` + `serializer.js`.
+Run: `node local-files/make-3d-movie.mjs`
+
+---
+
+## WHAT WE ACTUALLY HAVE — Full Stack Inventory (2026-03-15)
+
+A system that can:
+
+- Paint ASCII art → hear it as music → see it as 3D → export to MIDI/glTF/MP4/SVG
+- Import any image → get a playable, extrudable .grid
+- Type "mountain north water south" → get a populated grid with all 5 channels
+- Describe any grid → get a structured AI prompt → Gemini → HD illustration
+- Generate a synthetic 3D scene → export as ASCII cinema MP4
+- Run entirely offline (Tier 0) or with Gemini cloud (Tier 2), same file
+
+**1,043 tests. 0 failures. 22 modules. 299.7 KB. Single HTML file. PWA-installable.**
+
+---
+
+# THE TARGET: Novel Media Carrier (doxascope.com)
+
+**"A .grid file is a chapter. The studio is the book."**
+
+GRID is the publishing medium for the Doxascope novel.
+Every `.grid` file is simultaneously:
+
+| Consumer | What the reader/viewer gets |
+|---|---|
+| Visual | ASCII art scene — the environment, rendered |
+| Music | Ambient score — mood from the grid's cells |
+| 3D | Navigable landscape — the world extruded |
+| AI | Gemini-generated HD illustration — the chapter painting |
+| Video | ASCII cinematic interlude — mood/transition sequence |
+| Narrative | Entities, triggers, branching — the story engine (Phase 7) |
+
+### The publishing pipeline — works today
+
+1. Write intent → `text-to-grid` → `.grid` (Tier 0, offline)
+2. `.grid` → `describeGrid` → edit prompt → Gemini → Imagen 4 → chapter illustration (Tier 2)
+3. `.grid` → Music mode → play → export MIDI → chapter ambient score
+4. `.grid` → 3D mode → export glTF → Blender render → world illustration
+5. `.grid` → Video export → ASCII cinema interlude → `.mp4`
+6. Same `.grid` file → Phase 7 → interactive chapter environment (reader navigates)
+
+### The one feature that completes ASCII cinema (< 100 lines of new code)
+
+A **video importer** would close the loop from real footage → ASCII movie:
+
+```
+Input: any MP4/WebM/video file
+Pipeline:
+  HTMLVideoElement (browser-native decode, no VRAM overhead)
+  → canvas.drawImage(video, frame) at target fps
+  → imageToGrid(canvas, { charRamp, cellSize, contrast })   ← already exists
+  → .grid frame with depth in density + channel.spatial.height
+  → stack into sequences[]
+Output: real footage as ASCII cinema, playable + exportable immediately
+```
+
+No new infrastructure. `imageToGrid()` exists. Video export exists. OPFS exists.
+The only missing piece: frame-stepping the video element + packing into sequence.
+File: `src/importers/video-importer.js` + `local-files/make-video-from-mp4.mjs`
+
+---
+
+# PHASE 7: THE NARRATIVE CONSUMER
+
+**"The grid tells stories"**
+
+Phase 7 is what turns GRID from a creative tool into a **novel medium**.
+
+## Dependency on current state
+
+Everything Phase 7 needs already exists:
+- Entity semantics: `semantic: 'entity'` already in the schema
+- Cell state: `channel` object is per-cell, `additionalProperties: true`
+- Spatial queries: `getCellsBySemantic()`, `getCellsByChannel()` in grid-core.js
+- 3D consumer: scene-builder.js produces navigable Three.js scenes
+- AI consumer: grid-describer.js produces text descriptions of any frame
+
+## Task 7.1 — Entity System
+
+**"Characters live in the grid"**
+
+- `src/consumers/narrative/entity-system.js`
+- Cells with `semantic: 'entity'` are actors with state machines
+- Collision detection on grid topology
+- Per-entity state: `{ id, position, state, transitions, triggers }`
+- State transitions driven by: player proximity, frame index, grid cell values
+
+```js
+const world = createEntityWorld(frame, canvas);
+world.tick(playerX, playerY);  // → { events: [{type, entity, data}] }
+world.getEntitiesAt(x, y);     // → Entity[]
+```
+
+Exit criteria:
+- Player cursor moves on grid, entities react
+- Collision zones block movement
+- State machines fire on proximity/interaction
+
+## Task 7.2 — Doxascope Bridge
+
+**"The grid is a chapter"**
+
+- `src/consumers/narrative/doxascope-bridge.js`
+- Export `.grid` as Doxascope chapter data: environment + entities + triggers
+- Import Doxascope character/location data → populate grid cells
+- Grid frame = chapter scene; sequences = chapter timeline
+
+```js
+const chapter = exportChapter(grid, frameIndex, entityWorld);
+// → { environment, entities, triggers, ambient, illustration_prompt }
+```
+
+## Task 7.3 — MAKTABA Bridge
+
+**"The world map is a grid"**
+
+- `src/consumers/narrative/maktaba-bridge.js`
+- MAKTABA geography → `.grid` layout (regions → zones → cells)
+- Semantic mapping: MAKTABA terrain types → grid semantic enum
+- Each location in MAKTABA world = a `.grid` file (navigable via 3D consumer)
+
+## Task 7.4 — Reader Mode
+
+**"The reader is in the grid"**
+
+- `src/shell/` additions: reader mode tab, first-person navigation overlay
+- Player cursor on grid (entity system drives movement)
+- Real-time entity interaction → branching narrative events
+- Ambient audio follows player position (spatial audio via Web Audio)
+- Each cell the player touches → potential trigger → story event
+
+## Phase 7 Exit Criteria
+
+```
+[ ] Entity cells have state machines, react to player proximity
+[ ] Collision zones work on grid topology
+[ ] Doxascope bridge: .grid → chapter data export (JSON handoff format)
+[ ] MAKTABA bridge: world map data → .grid layout
+[ ] Reader mode: navigate a .grid frame as a 2D world
+[ ] All entity/narrative code has Node-passing tests
+[ ] build.js + run-all.js stay green
+```
+
+---
+
+# PHASE 8: THE STUDIO (deferred)
+
+After Phase 7 ships the story engine, Phase 8 unifies everything:
+
+- **8.1** Unified UI shell — all consumers in tabs (Visual, Music, 3D, AI, Narrative)
+- **8.2** Timeline / sequencer — multi-frame: visual + audio + narrative aligned
+- **8.3** Preset library — starter grids, community sharing
+- **8.4** Device tier detection — auto Tier 0/1/2, manual override
+- **8.5** Documentation site — format spec, API reference, tutorials per consumer
+
+Phase 8 is the authoring environment for the novel.
+Phase 7 is the story engine. **Start Phase 7.**
+
+---
+
+## Immediate Next Steps
+
+1. **Video importer** (< 100 lines) — `src/importers/video-importer.js`
+   Completes the ASCII cinema story. Real footage → ASCII → `.grid` → MP4.
+
+2. **Task 7.1 Entity System** — the first Phase 7 task
+   Characters in the grid. State machines. Collision.
+
+3. **Task 7.2 Doxascope Bridge** — GRID becomes the novel's native format
+   Each `.grid` file = a chapter environment.
+
+The path from here to "novel media carrier" is 2-3 focused sessions.
+Everything else is already built.
